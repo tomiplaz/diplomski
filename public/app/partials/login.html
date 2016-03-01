@@ -6,27 +6,29 @@
 
         <md-input-container>
             <label>Email</label>
-            <input type="text" name="email" ng-model="email" required>
-            <div ng-messages="loginForm.name.$error">
+            <input type="text" name="email" ng-model="loginCtrl.email" required>
+            <div ng-messages="loginForm.email.$error">
                 <div ng-message="required">Email je potreban!</div>
             </div>
         </md-input-container>
 
         <md-input-container>
             <label>Lozinka</label>
-            <input type="password" name="password" ng-model="password" required>
+            <input type="password" name="password" ng-model="loginCtrl.password" required>
             <div ng-messages="loginForm.password.$error">
                 <div ng-message="required">Lozinka je potrebna!</div>
             </div>
         </md-input-container>
 
-        <md-button class="md-raised" ng-click="loginCtrl.yolo()" ng-disabled="loginForm.$invalid" aria-label="Potvrdi">
-            <md-icon md-svg-src="common/icons/ic_input_black_24px.svg"></md-icon>
+        <md-button class="md-raised" ng-click="loginCtrl.login()" ng-disabled="loginForm.$invalid" aria-label="Potvrdi">
+            <md-icon md-svg-src="app/common/icons/ic_input_black_24px.svg"></md-icon>
             Potvrdi
         </md-button>
 
     </form>
 
     <p>{{ loginCtrl.users.length }}</p>
+    <p>{{ loginCtrl.email }}</p>
+    <p>{{ loginCtrl.password }}</p>
 
 </div>

@@ -19,6 +19,9 @@ Route::group(['prefix' => 'api/v1'], function() {
     Route::get('users', function() {
         return App\User::all();
     });
+
+    Route::resource('auth', 'AuthController', ['only' => ['index']]);
+    Route::post('auth', 'AuthController@authenticate');
 });
 
 /*
