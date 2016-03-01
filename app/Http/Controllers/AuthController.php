@@ -7,16 +7,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\User;
 
 class AuthController extends Controller
 {
     public function __construct() {
         $this->middleware('jwt.auth', ['except' => ['authenticate']]);
-    }
-
-    public function index() {
-        return User::all();
     }
 
     public function authenticate(Request $request) {

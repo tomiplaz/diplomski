@@ -16,11 +16,12 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'api/v1'], function() {
-    Route::get('users', function() {
-        return App\User::all();
+    Route::group(['middleware' => 'jwt.auth'], function() {
+        Route::get('users', function() {
+            return App\User::all();
+        });
     });
 
-    Route::resource('auth', 'AuthController', ['only' => ['index']]);
     Route::post('auth', 'AuthController@authenticate');
 });
 
