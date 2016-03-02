@@ -21,5 +21,9 @@
     "angular-ui-router": "^0.2.18",
     "restangular": "^1.5.2",
     "satellizer": "^0.14.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0"
   }
 }
