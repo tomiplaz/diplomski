@@ -23,6 +23,7 @@ Route::group(['prefix' => 'api/v1'], function() {
     });
 
     Route::post('auth', 'AuthController@authenticate');
+    Route::get('auth/user', 'AuthController@getAuthenticatedUser');
 });
 
 /*
