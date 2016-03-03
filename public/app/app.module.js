@@ -2,5 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'login']);
+        .module('app', [
+            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'login', 'users'
+        ]);
 })();

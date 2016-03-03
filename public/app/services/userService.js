@@ -2,30 +2,18 @@
     'use strict';
 
     angular
-        .module('diplomski')
+        .module('app')
         .factory('userService', userService);
 
     userService.$inject = ['Restangular'];
     function userService(Restangular) {
-        var user = null;
-
         return {
-            getUser: getUser,
-            setUser: setUser
+            getUser: getUser
         };
 
         function getUser() {
-            if (!user) {
-                return Restangular.all('auth').customGET('user').then(function(res) {
-                    user = res.user;
-                });
-            }
-            return user;
-        }
-
-        function setUser() {
-            Restangular.all('auth').customGET('user').then(function(res) {
-                user = res.user;
+            return Restangular.all('auth').customGET('user').then(function(res) {
+                return res.user;
             });
         }
     }

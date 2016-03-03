@@ -17,9 +17,7 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'api/v1'], function() {
     Route::group(['middleware' => 'jwt.auth'], function() {
-        Route::get('users', function() {
-            return App\User::all();
-        });
+
     });
 
     Route::post('auth', 'AuthController@authenticate');
