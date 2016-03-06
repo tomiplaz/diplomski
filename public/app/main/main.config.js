@@ -8,7 +8,7 @@
     function configure($stateProvider) {
         $stateProvider
             .state('main', {
-                abastract: true,
+                abstract: true,
                 url: '/main',
                 templateUrl: 'app/main/main.html',
                 controller: 'MainCtrl as main',
