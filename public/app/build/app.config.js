@@ -8,9 +8,9 @@
     function configure($urlRouterProvider, RestangularProvider, $mdThemingProvider, $authProvider) {
         $mdThemingProvider
             .theme('default')
-            .primaryPalette('green')
-            .accentPalette('indigo')
-            .warnPalette('amber')
+            .primaryPalette('light-green')
+            .accentPalette('amber')
+            .warnPalette('red')
             .backgroundPalette('grey');
 
         $authProvider.loginUrl = 'api/v1/auth';

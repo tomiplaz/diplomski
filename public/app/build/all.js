@@ -3,7 +3,7 @@
 
     angular
         .module('app', [
-            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'login', 'users'
+            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'login', 'main'
         ]);
 })();
 
@@ -17,9 +17,9 @@
     function configure($urlRouterProvider, RestangularProvider, $mdThemingProvider, $authProvider) {
         $mdThemingProvider
             .theme('default')
-            .primaryPalette('light-green')
-            .accentPalette('amber')
-            .warnPalette('red')
+            .primaryPalette('green')
+            .accentPalette('indigo')
+            .warnPalette('amber')
             .backgroundPalette('grey');
 
         $authProvider.loginUrl = 'api/v1/auth';
@@ -36,8 +36,8 @@
         .module('app')
         .factory('userService', userService);
 
-    userService.$inject = ['Restangular'];
-    function userService(Restangular) {
+    userService.$inject = ['Restangular', '$state'];
+    function userService(Restangular, $state) {
         return {
             getUser: getUser
         };
@@ -45,6 +45,9 @@
         function getUser() {
             return Restangular.all('auth').customGET('user').then(function(res) {
                 return res.user;
+            }, function(error) {
+                // show error message maybe
+                $state.go('login');
             });
         }
     }
@@ -78,17 +81,17 @@
         .module('login')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$auth', '$state', 'userService'];
-    function LoginCtrl($auth, $state, userService) {
+    LoginCtrl.$inject = ['$auth', '$state'];
+    function LoginCtrl($auth, $state) {
         var vm = this;
         vm.login = login;
         vm.user = null;
 
         function login() {
             $auth.login({ email: vm.email, password: vm.password }).then(function() {
-                userService.getUser().then(function(user) {
-                    $state.go('users.' + user.type + '.home');
-                });
+                $state.go('main.home');
+            }, function(error) {
+                // show error message
             });
         }
     }
@@ -97,28 +100,44 @@
     'use strict';
 
     angular
-        .module('users', ['users.0', 'users.1']);
+        .module('main', []);
 })();
 
 (function() {
     'use strict';
 
     angular
-        .module('users')
+        .module('main')
         .config(configure);
 
     function configure($stateProvider) {
         $stateProvider
-            .state('users', {
+            .state('main', {
                 abastract: true,
-                url: '/users',
-                templateUrl: 'app/users/users.html',
-                controller: 'UsersCtrl as users',
+                url: '/main',
+                templateUrl: 'app/main/main.html',
+                controller: 'MainCtrl as main',
                 resolve: {
                     user: function(userService) {
                         return userService.getUser();
                     }
                 }
+            })
+            .state('main.home', {
+                url: '/home',
+                templateUrl: 'app/main/main.home.html'
+            })
+            .state('main.new-request-n', {
+                url: '/new-request-n',
+                templateUrl: 'app/main/main.new-request-n.html'
+            })
+            .state('main.new-request-z', {
+                url: '/new-request-z',
+                templateUrl: 'app/main/main.new-request-z.html'
+            })
+            .state('main.sent-requests', {
+                url: '/sent-requests',
+                templateUrl: 'app/main/main.sent-requests.html'
             });
     }
 })();
@@ -127,98 +146,57 @@
     'use strict';
 
     angular
-        .module('users')
-        .controller('UsersCtrl', UsersCtrl);
+        .module('main')
+        .controller('MainCtrl', MainCtrl);
 
-    UsersCtrl.$inject = ['user'];
-    function UsersCtrl(user) {
+    MainCtrl.$inject = ['user', '$state', '$auth'];
+    function MainCtrl(user, $state, $auth) {
         var vm = this;
+
         vm.user = user;
-    }
-})();
+        vm.openDial = false;
+        vm.logout = logout;
+        vm.goToState = goToState;
 
-(function() {
-    'use strict';
+        vm.allStates = [
+            {
+                name: 'main.home',
+                label: 'Početna',
+                icon: 'app/icons/ic_home_black_24px.svg',
+                type: [0, 1, 2, 3]
+            },
+            {
+                name: 'main.new-request-n',
+                label: 'Novi zahtjev za nastavnu aktivnost',
+                icon: 'app/icons/ic_library_add_black_24px.svg',
+                type: [0]
+            },
+            {
+                name: 'main.new-request-z',
+                label: 'Novi zahtjev za znanstvenu aktivnost',
+                icon: 'app/icons/ic_library_add_black_24px.svg',
+                type: [0]
+            },
+            {
+                name: 'main.sent-requests',
+                label: 'Poslani zahtjevi',
+                icon: 'app/icons/ic_library_books_black_24px.svg',
+                type: [0]
+            }
+        ];
 
-    angular
-        .module('users.0', []);
-})();
+        vm.userStates = _.filter(vm.allStates, function(state) {
+            return _.includes(state.type, user.type);
+        });
 
-(function() {
-    'use strict';
+        function logout() {
+            $auth.logout().then(function() {
+                $state.go('login');
+            });
+        }
 
-    angular
-        .module('users.0')
-        .config(configure);
-
-    function configure($stateProvider) {
-        $stateProvider
-            .state('users.0', {
-                abastract: true,
-                url: '/0',
-                templateUrl: 'app/users/0/users.0.html'
-            })
-            .state('users.0.home', {
-                url: '/home',
-                templateUrl: 'app/users/0/users.0.home.html',
-                controller: 'Users0Ctrl as users0'
-            })
-    }
-})();
-
-(function() {
-    'use strict';
-
-    angular
-        .module('users.0')
-        .controller('Users0Ctrl', Users0Ctrl);
-
-    Users0Ctrl.$inject = [];
-    function Users0Ctrl() {
-        var vm = this;
-        vm.hey = 'Hey!';
-    }
-})();
-
-(function() {
-    'use strict';
-
-    angular
-        .module('users.1', []);
-})();
-
-(function() {
-    'use strict';
-
-    angular
-        .module('users.1')
-        .config(configure);
-
-    function configure($stateProvider) {
-        $stateProvider
-            .state('users.1', {
-                abastract: true,
-                url: '/1',
-                templateUrl: 'app/users/1/users.1.html'
-            })
-            .state('users.1.home', {
-                url: '/home',
-                templateUrl: 'app/users/1/users.1.home.html',
-                controller: 'Users1Ctrl as users1'
-            })
-    }
-})();
-
-(function() {
-    'use strict';
-
-    angular
-        .module('users.1')
-        .controller('Users1Ctrl', Users1Ctrl);
-
-    Users1Ctrl.$inject = [];
-    function Users1Ctrl() {
-        var vm = this;
-        vm.hey = 'Hey!';
+        function goToState(state) {
+            $state.go(state);
+        }
     }
 })();

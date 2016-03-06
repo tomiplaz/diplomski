@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('users.1', []);
+        .module('main', []);
 })();

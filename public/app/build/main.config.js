@@ -2,21 +2,25 @@
     'use strict';
 
     angular
-        .module('users')
+        .module('main')
         .config(configure);
 
     function configure($stateProvider) {
         $stateProvider
-            .state('users', {
+            .state('main', {
                 abastract: true,
-                url: '/users',
-                templateUrl: 'app/users/users.html',
-                controller: 'UsersCtrl as users',
+                url: '/main',
+                templateUrl: 'app/main/main.html',
+                controller: 'MainCtrl as main',
                 resolve: {
                     user: function(userService) {
                         return userService.getUser();
                     }
                 }
-            });
+            })
+            .state('main.home', {
+                url: '/home',
+                templateUrl: 'app/main/main.home.html'
+            })
     }
 })();

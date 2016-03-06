@@ -4,12 +4,13 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>Aplikacija za upravljanje službenim putovanjima</title>
+        <title>USP</title>
         <link rel="stylesheet" href="node_modules/angular-material/angular-material.css">
+        <link rel="stylesheet" href="app/build/main.css">
     </head>
 
-    <body ng-app="app" ng-cloak>
-        <div ui-view></div>
+    <body ng-app="app">
+        <div ui-view ng-cloak></div>
 
         <script src="node_modules/angular/angular.js"></script>
         <script src="node_modules/angular-animate/angular-animate.js"></script>

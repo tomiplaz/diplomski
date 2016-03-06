@@ -1,0 +1,32 @@
+<div layout="column" layout-align="center center">
+
+    <header layout="row" layout-align="space-around center" layout-fill>
+        <md-fab-speed-dial md-direction="right" md-open="main.openDial" class="md-fling"
+                ng-mouseenter="main.openDial = true" ng-mouseleave="main.openDial = false">
+            <md-fab-trigger>
+                <md-button class="md-fab" aria-label="Izbor">
+                    <md-icon md-svg-src="app/icons/ic_menu_black_24px.svg"></md-icon>
+                </md-button>
+            </md-fab-trigger>
+            <md-fab-actions>
+                <div ng-repeat="state in main.userStates">
+                    <md-button class="md-fab md-mini md-raised" ng-click="main.goToState(state.name)"
+                               ng-disabled="state.name | isState" aria-label="{{ state.label }}">
+                        <md-tooltip>
+                            {{ state.label }}
+                        </md-tooltip>
+                        <md-icon md-svg-src="{{ state.icon }}"></md-icon>
+                    </md-button>
+                </div>
+            </md-fab-actions>
+        </md-fab-speed-dial>
+
+        <md-button class="md-fab md-mini md-accent" ng-click="main.logout()" aria-label="Odjavi se">
+            <md-tooltip>Odjavi se</md-tooltip>
+            <md-icon md-svg-src="app/icons/ic_close_black_24px.svg"></md-icon>
+        </md-button>
+    </header>
+
+    <div ui-view ng-cloak></div>
+
+</div>
