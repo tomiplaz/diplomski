@@ -1,6 +1,6 @@
 <div layout="column" layout-align="center center">
 
-    <header layout="row" layout-align="space-around center" layout-fill>
+    <header layout="row" layout-align="space-between center" layout-fill>
         <md-fab-speed-dial md-direction="right" md-open="main.openDial" class="md-fling"
                 ng-mouseenter="main.openDial = true" ng-mouseleave="main.openDial = false">
             <md-fab-trigger>
@@ -27,6 +27,6 @@
         </md-button>
     </header>
 
-    <div ui-view ng-cloak></div>
+    <div class="main-content" ui-view ng-cloak></div>
 
 </div>

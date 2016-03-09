@@ -1,4 +1,29 @@
-body header button.md-mini:not([disabled]):hover {
-  background-color: green !important; }
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif; }
+  body header {
+    padding: 1% 5%; }
+    body header button.md-mini:not([disabled]):hover {
+      background-color: #4caf50 !important; }
+  body .main-content {
+    width: 80%; }
+  body .time-date .control .full-title {
+    background-color: #4caf50;
+    color: #000; }
+  body .time-date .control .slider .date-control .headers {
+    color: #000; }
+  body .time-date .control .slider .date-control .days .day-cell.today {
+    color: #4caf50; }
+  body .time-date .control .slider .date-control .days .day-cell.selected {
+    color: #fff;
+    background-color: #4caf50; }
+  body .time-date .control .slider .date-control .days .day-cell:hover, body .time-date .control .slider .date-control .days .day-cell:active {
+    color: #fff;
+    background-color: #4caf50; }
+  body .time-date button i {
+    color: #4caf50; }
+  body .time-date.full-mode .buttons {
+    background-color: #4caf50; }
+    body .time-date.full-mode .buttons button {
+      color: #000 !important; }
 
 /*# sourceMappingURL=main.css.map */

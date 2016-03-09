@@ -1,7 +1,61 @@
+$font-default: Roboto, "Helvetica Neue", sans-serif;
+$md-primary: rgb(76, 175, 80);
+$md-accent: rgb(68, 138, 255);
+$md-warn: rgb(255, 171, 0);
+
 body {
+  font-family: $font-default;
+
   header {
+    padding: 1% 5%;
+
     button.md-mini:not([disabled]):hover{
-      background-color: green !important;
+      background-color: $md-primary !important;
+    }
+  }
+
+  .main-content {
+    width: 80%;
+  }
+
+  .time-date {
+    .control {
+      .full-title {
+        background-color: $md-primary;
+        color: #000;
+      }
+
+      .slider .date-control {
+        .headers {
+          color: #000;
+        }
+
+        .days .day-cell {
+          &.today {
+            color: $md-primary;
+          }
+          &.selected {
+            color: #fff;
+            background-color: $md-primary;
+          }
+          &:hover, &:active {
+            color: #fff;
+            background-color: $md-primary;
+          }
+        }
+      }
+    }
+
+    button i {
+      color: $md-primary;
+    }
+
+    &.full-mode .buttons {
+      background-color: $md-primary;
+
+      button {
+        color: #000 !important;
+      }
     }
   }
 }

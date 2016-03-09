@@ -22,8 +22,8 @@ class CreateRequestNsTable extends Migration
             $table->string('for_place', 50);
             $table->string('for_faculty', 50);
             $table->string('for_subject', 50);
-            $table->timestamp('start_timestamp');
-            $table->timestamp('end_timestamp');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->text('purpose');
             $table->string('transportation', 50);
             $table->string('expenses_responsible', 50);

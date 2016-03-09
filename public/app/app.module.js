@@ -3,6 +3,6 @@
 
     angular
         .module('app', [
-            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'login', 'main'
+            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'scDateTime', 'login', 'main'
         ]);
 })();

@@ -23,13 +23,13 @@
             },
             {
                 name: 'main.new-request-n',
-                label: 'Novi zahtjev za nastavnu aktivnost',
+                label: 'Novi zahtjev (nastavna aktivnost)',
                 icon: 'app/icons/ic_library_add_black_24px.svg',
                 type: [0]
             },
             {
                 name: 'main.new-request-z',
-                label: 'Novi zahtjev za znanstvenu aktivnost',
+                label: 'Novi zahtjev (znanstvena aktivnost)',
                 icon: 'app/icons/ic_library_add_black_24px.svg',
                 type: [0]
             },

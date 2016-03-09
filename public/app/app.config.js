@@ -1,15 +1,45 @@
 (function() {
     'use strict';
 
+    var scDateTimeI18n = {
+        previousMonth: "Prethodni mjesec",
+        nextMonth: "Sljedeći mjesec",
+        incrementHours: "Inkrementiraj sate",
+        decrementHours: "Dekrementiraj sate",
+        incrementMinutes: "Inkrementiraj minute",
+        decrementMinutes: "Dekrementiraj minute",
+        switchAmPm: "Promjeni AM/PM",
+        now: "Sada",
+        cancel: "Poništi",
+        save: "Spremi",
+        weekdays: ['N', 'P', 'U', 'S', 'Č', 'P', 'S'],
+        switchTo: 'Promjeni na',
+        clock: 'Sat',
+        calendar: 'Kalendar'
+    };
+
+    var scDateTimeConfig = {
+        defaultTheme: 'material',
+        autosave: false,
+        defaultMode: 'time',
+        defaultDate: undefined,
+        displayMode: 'full',
+        defaultOrientation: false,
+        displayTwentyfour: true,
+        compact: false
+    };
+
     angular
         .module('app')
-        .config(configure);
+        .config(configure)
+        .value('scDateTimeI18n', scDateTimeI18n)
+        .value('scDateTimeConfig', scDateTimeConfig);
 
     function configure($urlRouterProvider, RestangularProvider, $mdThemingProvider, $authProvider) {
         $mdThemingProvider
             .theme('default')
             .primaryPalette('green')
-            .accentPalette('indigo')
+            .accentPalette('blue')
             .warnPalette('amber')
             .backgroundPalette('grey');
 
@@ -19,4 +49,6 @@
 
         $urlRouterProvider.otherwise('/login');
     }
+
+
 })();

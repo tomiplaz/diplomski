@@ -8,7 +8,7 @@
             <label>Email</label>
             <input type="text" name="email" ng-model="login.email" required>
             <div ng-messages="loginForm.email.$error">
-                <div ng-message="required">Email je potreban!</div>
+                <div ng-message="required">Potrebno!</div>
             </div>
         </md-input-container>
 
@@ -16,13 +16,14 @@
             <label>Lozinka</label>
             <input type="password" name="password" ng-model="login.password" required>
             <div ng-messages="loginForm.password.$error">
-                <div ng-message="required">Lozinka je potrebna!</div>
+                <div ng-message="required">Potrebno!</div>
             </div>
         </md-input-container>
 
-        <md-button class="md-raised" ng-click="login.login()" ng-disabled="loginForm.$invalid" aria-label="Potvrdi">
+        <md-button class="md-fab md-mini md-raised" ng-click="login.login()" ng-disabled="loginForm.$invalid"
+                   aria-label="Prijavi se">
+            <md-tooltip>Prijavi se</md-tooltip>
             <md-icon md-svg-src="app/icons/ic_check_black_24px.svg"></md-icon>
-            Potvrdi
         </md-button>
 
     </form>

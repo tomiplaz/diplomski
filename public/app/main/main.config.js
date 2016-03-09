@@ -24,7 +24,8 @@
             })
             .state('main.new-request-n', {
                 url: '/new-request-n',
-                templateUrl: 'app/main/main.new-request-n.html'
+                templateUrl: 'app/main/main.new-request-n.html',
+                controller: 'NewRequestNCtrl as newRequestN'
             })
             .state('main.new-request-z', {
                 url: '/new-request-z',
