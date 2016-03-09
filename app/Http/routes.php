@@ -17,7 +17,8 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'api/v1'], function() {
     Route::group(['middleware' => 'jwt.auth'], function() {
-
+        Route::get('request-ns', 'MainController@getRequestNs');
+        Route::post('request-ns', 'MainController@newRequestN');
     });
 
     Route::post('auth', 'AuthController@authenticate');

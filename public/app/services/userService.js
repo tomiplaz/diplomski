@@ -12,10 +12,11 @@
         };
 
         function getUser() {
+            // change request structure?
             return Restangular.all('auth').customGET('user').then(function(res) {
                 return res.user;
             }, function(error) {
-                // show error message maybe
+                // show error message?
                 $state.go('login');
             });
         }

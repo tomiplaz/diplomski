@@ -25,7 +25,7 @@
 
         function save($value) {
             $scope[data.ctrl][data.property + 'Raw'] = $value;
-            $scope[data.ctrl][data.property] = $filter('date')(new Date($value), "dd.MM.yyyy., HH:mm");
+            $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
 
             $mdDialog.hide();
         }

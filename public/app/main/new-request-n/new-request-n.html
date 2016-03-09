@@ -9,26 +9,29 @@
             <div layout="row" layout-align="start center">
                 <md-input-container>
                     <label>Ime</label>
-                    <input type="text" name="name" ng-model="newRequestN.name" required ng-maxlength="20">
+                    <input type="text" name="name" ng-model="newRequestN.name" required ng-minlength="2" ng-maxlength="20">
                     <div ng-messages="newRequestNForm.name.$error">
                         <div ng-message="required">Potrebno!</div>
+                        <div ng-message="minlength">Prekratko!</div>
                         <div ng-message="maxlength">Predugačko!</div>
                     </div>
                 </md-input-container>
                 <md-input-container>
                     <label>Prezime</label>
-                    <input type="text" name="surname" ng-model="newRequestN.surname" required ng-maxlength="20">
+                    <input type="text" name="surname" ng-model="newRequestN.surname" required ng-minlength="2" ng-maxlength="20">
                     <div ng-messages="newRequestNForm.surname.$error">
                         <div ng-message="required">Potrebno!</div>
+                        <div ng-message="minlength">Prekratko!</div>
                         <div ng-message="maxlength">Predugačko!</div>
                     </div>
                 </md-input-container>
 
                 <md-input-container>
                     <label>Radno mjesto</label>
-                    <input type="text" name="workplace" ng-model="newRequestN.workplace" required ng-maxlength="50">
+                    <input type="text" name="workplace" ng-model="newRequestN.workplace" required ng-minlength="3" ng-maxlength="50">
                     <div ng-messages="newRequestNForm.workplace.$error">
                         <div ng-message="required">Potrebno!</div>
+                        <div ng-message="minlength">Prekratko!</div>
                         <div ng-message="maxlength">Predugačko!</div>
                     </div>
                 </md-input-container>
@@ -37,27 +40,30 @@
             <div layout="row" layout-align="start center">
                 <md-input-container>
                     <label>Mjesto</label>
-                    <input type="text" name="forPlace" ng-model="newRequestN.forPlace" required ng-maxlength="50">
+                    <input type="text" name="forPlace" ng-model="newRequestN.forPlace" required ng-minlength="3" ng-maxlength="50">
                     <div ng-messages="newRequestNForm.forPlace.$error">
                         <div ng-message="required">Potrebno!</div>
+                        <div ng-message="minlength">Prekratko!</div>
                         <div ng-message="maxlength">Predugačko!</div>
                     </div>
                 </md-input-container>
 
                 <md-input-container>
                     <label>Fakultet</label>
-                    <input type="text" name="forFaculty" ng-model="newRequestN.forFaculty" required ng-maxlength="50">
+                    <input type="text" name="forFaculty" ng-model="newRequestN.forFaculty" required ng-minlength="3" ng-maxlength="50">
                     <div ng-messages="newRequestNForm.forFaculty.$error">
                         <div ng-message="required">Potrebno!</div>
+                        <div ng-message="minlength">Prekratko!</div>
                         <div ng-message="maxlength">Predugačko!</div>
                     </div>
                 </md-input-container>
 
                 <md-input-container>
                     <label>Kolegij</label>
-                    <input type="text" name="forSubject" ng-model="newRequestN.forSubject" required ng-maxlength="50">
+                    <input type="text" name="forSubject" ng-model="newRequestN.forSubject" required ng-minlength="3" ng-maxlength="50">
                     <div ng-messages="newRequestNForm.forSubject.$error">
                         <div ng-message="required">Potrebno!</div>
+                        <div ng-message="minlength">Prekratko!</div>
                         <div ng-message="maxlength">Predugačko!</div>
                     </div>
                 </md-input-container>
@@ -66,18 +72,18 @@
             <div layout="row" layout-align="start center">
                 <md-input-container>
                     <label>Vrijeme polaska</label>
-                    <input type="text" name="startTime" ng-model="newRequestN.startTime" required readonly
-                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme polaska', 'newRequestN', 'startTime')">
-                    <div ng-messages="newRequestNForm.startTime.$error">
+                    <input type="text" name="startTimestamp" ng-model="newRequestN.startTimestamp" required readonly
+                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme polaska', 'newRequestN', 'startTimestamp')">
+                    <div ng-messages="newRequestNForm.startTimestamp.$error">
                         <div ng-message="required">Potrebno!</div>
                     </div>
                 </md-input-container>
 
                 <md-input-container>
                     <label>Vrijeme povratka</label>
-                    <input type="text" name="endTime" ng-model="newRequestN.endTime" required readonly
-                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme povratka', 'newRequestN', 'endTime')">
-                    <div ng-messages="newRequestNForm.endTime.$error">
+                    <input type="text" name="endTimestamp" ng-model="newRequestN.endTimestamp" required readonly
+                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme povratka', 'newRequestN', 'endTimestamp')">
+                    <div ng-messages="newRequestNForm.endTimestamp.$error">
                         <div ng-message="required">Potrebno!</div>
                     </div>
                 </md-input-container>

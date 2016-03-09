@@ -108,6 +108,31 @@
     }
 })();
 (function() {
+    'use strict'
+
+    angular
+        .module('app')
+        .factory('toastService', toastService);
+
+    toastService.$inject = ['$mdToast'];
+    function toastService($mdToast) {
+        return {
+            show: show
+        };
+
+        function show(text, duration) {
+            $mdToast.show(
+                $mdToast
+                    .simple()
+                    .textContent(text)
+                    .position('top right')
+                    .capsule(true)
+                    .hideDelay(duration == undefined ? 1500 : duration)
+            );
+        }
+    }
+})();
+(function() {
     'use strict';
 
     angular
@@ -121,10 +146,11 @@
         };
 
         function getUser() {
+            // change request structure?
             return Restangular.all('auth').customGET('user').then(function(res) {
                 return res.user;
             }, function(error) {
-                // show error message maybe
+                // show error message?
                 $state.go('login');
             });
         }
@@ -307,7 +333,7 @@
 
         function save($value) {
             $scope[data.ctrl][data.property + 'Raw'] = $value;
-            $scope[data.ctrl][data.property] = $filter('date')(new Date($value), "dd.MM.yyyy., HH:mm");
+            $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
 
             $mdDialog.hide();
         }
@@ -340,8 +366,8 @@
         .module('main')
         .controller('NewRequestNCtrl', NewRequestNCtrl);
 
-    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter', '$mdToast'];
-    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter, $mdToast) {
+    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter', 'Restangular', 'toastService'];
+    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter, Restangular, toastService) {
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
@@ -367,13 +393,27 @@
         }
 
         function saveDocument() {
-            $mdToast.show(
-                $mdToast
-                    .simple()
-                    .textContent("Dokument spremljen!")
-                    .position('top right')
-                    .hideDelay(1500)
-            );
+            var newRequestN = {
+                document_date: $filter('date')(new Date(), 'yyyy-MM-dd'),
+                name: vm.name,
+                surname: vm.surname,
+                workplace: vm.workplace,
+                for_place: vm.forPlace,
+                for_faculty: vm.forFaculty,
+                for_subject: vm.forSubject,
+                start_timestamp: $filter('date')(new Date(vm.startTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
+                end_timestamp: $filter('date')(new Date(vm.endTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
+                purpose: vm.purpose,
+                transportation: vm.transportation,
+                expenses_responsible: vm.expensesResponsible,
+                expenses_explanation: vm.expensesExplanation
+            };
+
+            Restangular.all('request-ns').post(newRequestN).then(function() {
+                toastService.show("Dokument spremljen!");
+            }, function() {
+                toastService.show("Greška tijekom spremanja dokumenta!", 3000);
+            });
         }
 
         function showDocument($event) {
