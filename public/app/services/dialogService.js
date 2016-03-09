@@ -7,13 +7,14 @@
 
     function dialogService() {
         return {
-            getDialogObject: getDialogObject
+            getDateTimeDialogObject: getDateTimeDialogObject,
+            getDocumentDialogObject: getDocumentDialogObject
         };
 
-        function getDialogObject(scope, event, label, ctrl, property) {
+        function getDateTimeDialogObject(scope, event, label, ctrl, property, mindate, maxdate) {
             return {
                 controller: 'DateTimeDialogCtrl as dateTimeDialog',
-                templateUrl: 'app/main/main.date-time-dialog.html',
+                templateUrl: 'app/main/date-time-dialog/date-time-dialog.html',
                 parent: angular.element(document.body),
                 scope: scope,
                 preserveScope: true,
@@ -24,9 +25,23 @@
                     data: {
                         label: label,
                         ctrl: ctrl,
-                        property: property
+                        property: property,
+                        mindate: mindate,
+                        maxdate: maxdate
                     }
                 }
+            }
+        }
+
+        function getDocumentDialogObject(scope, event) {
+            return {
+                controller: 'DocumentDialogCtrl as documentDialog',
+                templateUrl: 'app/main/document-dialog/document-dialog.html',
+                parent: angular.element(document.body),
+                scope: scope,
+                preserveScope: true,
+                targetEvent: event,
+                clickOutsideToClose: true
             }
         }
     }

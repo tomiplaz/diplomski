@@ -58,8 +58,6 @@
 
         $urlRouterProvider.otherwise('/login');
     }
-
-
 })();
 (function() {
     'use strict'
@@ -70,13 +68,14 @@
 
     function dialogService() {
         return {
-            getDialogObject: getDialogObject
+            getDateTimeDialogObject: getDateTimeDialogObject,
+            getDocumentDialogObject: getDocumentDialogObject
         };
 
-        function getDialogObject(scope, event, label, ctrl, property) {
+        function getDateTimeDialogObject(scope, event, label, ctrl, property, mindate, maxdate) {
             return {
                 controller: 'DateTimeDialogCtrl as dateTimeDialog',
-                templateUrl: 'app/main/main.date-time-dialog.html',
+                templateUrl: 'app/main/date-time-dialog/date-time-dialog.html',
                 parent: angular.element(document.body),
                 scope: scope,
                 preserveScope: true,
@@ -87,9 +86,23 @@
                     data: {
                         label: label,
                         ctrl: ctrl,
-                        property: property
+                        property: property,
+                        mindate: mindate,
+                        maxdate: maxdate
                     }
                 }
+            }
+        }
+
+        function getDocumentDialogObject(scope, event) {
+            return {
+                controller: 'DocumentDialogCtrl as documentDialog',
+                templateUrl: 'app/main/document-dialog/document-dialog.html',
+                parent: angular.element(document.body),
+                scope: scope,
+                preserveScope: true,
+                targetEvent: event,
+                clickOutsideToClose: true
             }
         }
     }
@@ -194,16 +207,16 @@
             })
             .state('main.new-request-n', {
                 url: '/new-request-n',
-                templateUrl: 'app/main/main.new-request-n.html',
+                templateUrl: 'app/main/new-request-n/new-request-n.html',
                 controller: 'NewRequestNCtrl as newRequestN'
             })
             .state('main.new-request-z', {
                 url: '/new-request-z',
-                templateUrl: 'app/main/main.new-request-z.html'
+                templateUrl: 'app/main/new-request-z/new-request-z.html'
             })
             .state('main.sent-requests', {
                 url: '/sent-requests',
-                templateUrl: 'app/main/main.sent-requests.html'
+                templateUrl: 'app/main/sent-requests/sent-requests.html'
             });
     }
 })();
@@ -279,6 +292,9 @@
         var vm = this;
 
         vm.label = data.label;
+        vm.mindate = data.mindate;
+        vm.maxdate = data.maxdate;
+
         vm.cancel = cancel;
         vm.save = save;
         vm.hide = hide;
@@ -290,6 +306,7 @@
         }
 
         function save($value) {
+            $scope[data.ctrl][data.property + 'Raw'] = $value;
             $scope[data.ctrl][data.property] = $filter('date')(new Date($value), "dd.MM.yyyy., HH:mm");
 
             $mdDialog.hide();
@@ -301,19 +318,73 @@
     }
 })();
 (function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('DocumentDialogCtrl', DocumentDialogCtrl);
+
+    DocumentDialogCtrl.$inject = ['$mdDialog'];
+    function DocumentDialogCtrl($mdDialog) {
+        var vm = this;
+
+        vm.hide = hide;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+    }
+})();
+(function() {
     angular
         .module('main')
         .controller('NewRequestNCtrl', NewRequestNCtrl);
 
-    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog'];
-    function NewRequestNCtrl($scope, dialogService, $mdDialog) {
+    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter', '$mdToast'];
+    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter, $mdToast) {
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
+        vm.showDocument = showDocument;
+        vm.saveDocument = saveDocument;
 
         function showDateTimeDialog($event, label, ctrl, property) {
-            var dialogObject = dialogService.getDialogObject($scope, $event, label, ctrl, property);
-            $mdDialog.show(dialogObject);
+            var mindate = formatDate();
+            var maxdate;
+
+            if (property == 'startTime') {
+                if (vm.endTime) {
+                    maxdate = formatDate(vm.endTimeRaw);
+                }
+            } else if (property == 'endTime') {
+                if (vm.startTime) {
+                    mindate = formatDate(vm.startTimeRaw);
+                }
+            }
+
+            var dateTimeDialogObject = dialogService.getDateTimeDialogObject($scope, $event, label, ctrl, property, mindate, maxdate);
+            $mdDialog.show(dateTimeDialogObject);
+        }
+
+        function saveDocument() {
+            $mdToast.show(
+                $mdToast
+                    .simple()
+                    .textContent("Dokument spremljen!")
+                    .position('top right')
+                    .hideDelay(1500)
+            );
+        }
+
+        function showDocument($event) {
+            var documentDialogObject = dialogService.getDocumentDialogObject($scope, $event);
+            $mdDialog.show(documentDialogObject);
+        }
+
+        function formatDate(value) {
+            return $filter('date')(!value ? new Date() : new Date(value), "yyyy/MM/dd");
         }
     }
+
+    // explanation to text; test pdf and use ng-maxlength for each
 })();

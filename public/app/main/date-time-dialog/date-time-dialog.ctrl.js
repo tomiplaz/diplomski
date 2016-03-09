@@ -10,6 +10,9 @@
         var vm = this;
 
         vm.label = data.label;
+        vm.mindate = data.mindate;
+        vm.maxdate = data.maxdate;
+
         vm.cancel = cancel;
         vm.save = save;
         vm.hide = hide;
@@ -21,6 +24,7 @@
         }
 
         function save($value) {
+            $scope[data.ctrl][data.property + 'Raw'] = $value;
             $scope[data.ctrl][data.property] = $filter('date')(new Date($value), "dd.MM.yyyy., HH:mm");
 
             $mdDialog.hide();

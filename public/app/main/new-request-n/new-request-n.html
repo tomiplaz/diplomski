@@ -1,0 +1,145 @@
+<div ng-if="main.user.type == 0">
+
+    <h6 class="md-title">Novi zahtjev za putni nalog (nastavna aktivnost)</h6>
+
+    <div layout="row" layout-align="space-around end">
+
+        <form name="newRequestNForm" layout="column" layout-align="center start" flex>
+
+            <div layout="row" layout-align="start center">
+                <md-input-container>
+                    <label>Ime</label>
+                    <input type="text" name="name" ng-model="newRequestN.name" required ng-maxlength="20">
+                    <div ng-messages="newRequestNForm.name.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Prezime</label>
+                    <input type="text" name="surname" ng-model="newRequestN.surname" required ng-maxlength="20">
+                    <div ng-messages="newRequestNForm.surname.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Radno mjesto</label>
+                    <input type="text" name="workplace" ng-model="newRequestN.workplace" required ng-maxlength="50">
+                    <div ng-messages="newRequestNForm.workplace.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start center">
+                <md-input-container>
+                    <label>Mjesto</label>
+                    <input type="text" name="forPlace" ng-model="newRequestN.forPlace" required ng-maxlength="50">
+                    <div ng-messages="newRequestNForm.forPlace.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Fakultet</label>
+                    <input type="text" name="forFaculty" ng-model="newRequestN.forFaculty" required ng-maxlength="50">
+                    <div ng-messages="newRequestNForm.forFaculty.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Kolegij</label>
+                    <input type="text" name="forSubject" ng-model="newRequestN.forSubject" required ng-maxlength="50">
+                    <div ng-messages="newRequestNForm.forSubject.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start center">
+                <md-input-container>
+                    <label>Vrijeme polaska</label>
+                    <input type="text" name="startTime" ng-model="newRequestN.startTime" required readonly
+                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme polaska', 'newRequestN', 'startTime')">
+                    <div ng-messages="newRequestNForm.startTime.$error">
+                        <div ng-message="required">Potrebno!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Vrijeme povratka</label>
+                    <input type="text" name="endTime" ng-model="newRequestN.endTime" required readonly
+                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme povratka', 'newRequestN', 'endTime')">
+                    <div ng-messages="newRequestNForm.endTime.$error">
+                        <div ng-message="required">Potrebno!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <md-input-container>
+                <label>Svrha</label>
+                <textarea name="purpose" ng-model="newRequestN.purpose" required></textarea>
+                <div ng-messages="newRequestNForm.purpose.$error">
+                    <div ng-message="required">Potrebno!</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container>
+                <label>Vrsta prijevoza</label>
+                <input type="text" name="transportation" ng-model="newRequestN.transportation" required ng-maxlength="50">
+                <div ng-messages="newRequestNForm.transportation.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+
+            <div layout="row" layout-align="start center">
+                <md-input-container>
+                    <label>Troškovi terete</label>
+                    <input type="text" name="expensesResponsible" ng-model="newRequestN.expensesResponsible" required ng-maxlength="50">
+                    <div ng-messages="newRequestNForm.expensesResponsible.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Obrazloženje</label>
+                    <input type="text" name="expensesExplanation" ng-model="newRequestN.expensesExplanation" required ng-maxlength="100">
+                    <div ng-messages="newRequestNForm.expensesExplanation.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+        </form>
+
+        <div layout="column" layout-align="center center">
+
+            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.saveDocument()" aria-label="Spremi" ng-disabled="!newRequestNForm.$valid">
+                <md-tooltip md-direction="left">Spremi</md-tooltip>
+                <md-icon md-svg-src="app/icons/ic_save_black_24px.svg"></md-icon>
+            </md-button>
+
+            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.showDocument($event)" aria-label="Prikaži dokument">
+                <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
+                <md-icon md-svg-src="app/icons/ic_picture_as_pdf_black_24px.svg"></md-icon>
+            </md-button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div ng-if="main.user.type != 0">
+    not authorized
+</div>

@@ -4,7 +4,7 @@
         <md-fab-speed-dial md-direction="right" md-open="main.openDial" class="md-fling"
                 ng-mouseenter="main.openDial = true" ng-mouseleave="main.openDial = false">
             <md-fab-trigger>
-                <md-button class="md-fab" aria-label="Izbor">
+                <md-button class="md-fab md-primary" aria-label="Izbor">
                     <md-icon md-svg-src="app/icons/ic_menu_black_24px.svg"></md-icon>
                 </md-button>
             </md-fab-trigger>
@@ -21,7 +21,7 @@
             </md-fab-actions>
         </md-fab-speed-dial>
 
-        <md-button class="md-fab md-mini md-accent" ng-click="main.logout()" aria-label="Odjavi se">
+        <md-button class="md-fab md-mini md-primary" ng-click="main.logout()" aria-label="Odjavi se">
             <md-tooltip>Odjavi se</md-tooltip>
             <md-icon md-svg-src="app/icons/ic_close_black_24px.svg"></md-icon>
         </md-button>

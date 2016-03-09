@@ -8,9 +8,15 @@ body {
 
   header {
     padding: 1% 5%;
+  }
 
-    button.md-mini:not([disabled]):hover{
-      background-color: $md-primary !important;
+  button.md-mini:not([disabled]){
+    &[ng-click="main.logout()"]:hover {
+      background-color: $md-warn !important;
+    }
+
+    &:hover {
+      background-color: $md-accent !important;
     }
   }
 

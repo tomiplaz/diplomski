@@ -49,6 +49,4 @@
 
         $urlRouterProvider.otherwise('/login');
     }
-
-
 })();

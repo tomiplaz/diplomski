@@ -24,16 +24,16 @@
             })
             .state('main.new-request-n', {
                 url: '/new-request-n',
-                templateUrl: 'app/main/main.new-request-n.html',
+                templateUrl: 'app/main/new-request-n/new-request-n.html',
                 controller: 'NewRequestNCtrl as newRequestN'
             })
             .state('main.new-request-z', {
                 url: '/new-request-z',
-                templateUrl: 'app/main/main.new-request-z.html'
+                templateUrl: 'app/main/new-request-z/new-request-z.html'
             })
             .state('main.sent-requests', {
                 url: '/sent-requests',
-                templateUrl: 'app/main/main.sent-requests.html'
+                templateUrl: 'app/main/sent-requests/sent-requests.html'
             });
     }
 })();

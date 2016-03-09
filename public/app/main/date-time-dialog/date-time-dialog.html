@@ -1,8 +1,7 @@
 <md-dialog aria-label="{{ dateTimeDialog.label }}" ng-cloak>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>{{ dateTimeDialog.label }}</h2>
-            <span flex></span>
+            <h2 flex>{{ dateTimeDialog.label }}</h2>
             <md-button class="md-icon-button" ng-click="dateTimeDialog.hide()">
                 <md-icon md-svg-src="app/icons/ic_close_black_24px.svg" aria-label="Close dialog"></md-icon>
             </md-button>
@@ -13,7 +12,9 @@
             <time-date-picker
                     ng-model="dateTimeDialog.value"
                     on-save="dateTimeDialog.save($value)"
-                    on-cancel="dateTimeDialog.cancel()">
+                    on-cancel="dateTimeDialog.cancel()"
+                    mindate="{{ dateTimeDialog.mindate }}"
+                    maxdate="{{ dateTimeDialog.maxdate }}">
             </time-date-picker>
         </div>
     </md-dialog-content>

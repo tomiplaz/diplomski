@@ -5,7 +5,7 @@ var jsSrc = [
     'app/app.module.js', 'app/*.js',
     'app/services/*.js',
     'app/login/login.module.js', 'app/login/*.js',
-    'app/main/main.module.js', 'app/main/*.js'
+    'app/main/main.module.js', 'app/main/*.js', 'app/main/**/*.js'
 ];
 
 gulp.task('default', function() {
