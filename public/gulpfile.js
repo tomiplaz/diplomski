@@ -15,6 +15,6 @@ gulp.task('default', function() {
 gulp.task('concat', function() {
     gulp
         .src(jsSrc)
-        .pipe(concat('all.js'))
+        .pipe(concat('app.js'))
         .pipe(gulp.dest('app/build'));
 });

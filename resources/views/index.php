@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="node_modules/angular-material/angular-material.css">
         <link rel="stylesheet" href="node_modules/sc-date-time/sc-date-time.css">
         <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" href="app/build/main.css">
+        <link rel="stylesheet" href="app/build/app.css">
     </head>
 
     <body ng-app="app">
@@ -25,7 +25,7 @@
         <script src="node_modules/restangular/node_modules/lodash/lodash.js"></script>
         <script src="node_modules/restangular/dist/restangular.js"></script>
         <script src="node_modules/sc-date-time/sc-date-time.js"></script>
-        <script src="app/build/all.js"></script>
+        <script src="app/build/app.js"></script>
     </body>
 
 </html>
