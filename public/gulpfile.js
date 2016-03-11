@@ -1,5 +1,7 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
 var jsSrc = [
     'app/app.module.js', 'app/*.js',
@@ -18,3 +20,10 @@ gulp.task('concat', function() {
         .pipe(concat('app.js'))
         .pipe(gulp.dest('app/build'));
 });
+
+gulp.task('browserify', function() {
+    return browserify('node_modules/require.js')
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('app/build'));
+})

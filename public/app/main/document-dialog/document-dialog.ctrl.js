@@ -14,5 +14,13 @@
         function hide() {
             $mdDialog.hide();
         }
+
+        (function() {
+            var doc = { content: "Sveučilište J.J. Strossmayera u Osijeku" };
+            pdfMake.createPdf(doc).getDataUrl(function(url) {
+                var iframe = angular.element(document.querySelector('.document-dialog iframe'));
+                iframe.attr('src', url);
+            });
+        })();
     }
 })();

@@ -14,17 +14,7 @@
     <body ng-app="app">
         <div ui-view ng-cloak></div>
 
-        <script src="node_modules/angular/angular.js"></script>
-        <script src="node_modules/angular/i18n/angular-locale_hr-hr.js"></script>
-        <script src="node_modules/angular-animate/angular-animate.js"></script>
-        <script src="node_modules/angular-aria/angular-aria.js"></script>
-        <script src="node_modules/angular-messages/angular-messages.js"></script>
-        <script src="node_modules/angular-material/angular-material.js"></script>
-        <script src="node_modules/angular-ui-router/release/angular-ui-router.js"></script>
-        <script src="node_modules/satellizer/satellizer.js"></script>
-        <script src="node_modules/restangular/node_modules/lodash/lodash.js"></script>
-        <script src="node_modules/restangular/dist/restangular.js"></script>
-        <script src="node_modules/sc-date-time/sc-date-time.js"></script>
+        <script src="app/build/bundle.js"></script>
         <script src="app/build/app.js"></script>
     </body>
 
