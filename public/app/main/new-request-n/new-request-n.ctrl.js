@@ -15,13 +15,13 @@
             var mindate = formatDate();
             var maxdate;
 
-            if (property == 'startTime') {
+            if (property == 'startTimestamp') {
                 if (vm.endTime) {
-                    maxdate = formatDate(vm.endTimeRaw);
+                    maxdate = formatDate(vm.endTimestampRaw);
                 }
-            } else if (property == 'endTime') {
+            } else if (property == 'endTimestamp') {
                 if (vm.startTime) {
-                    mindate = formatDate(vm.startTimeRaw);
+                    mindate = formatDate(vm.startTimestampRaw);
                 }
             }
 
@@ -54,7 +54,24 @@
         }
 
         function showDocument($event) {
-            var documentDialogObject = dialogService.getDocumentDialogObject($scope, $event);
+            var data = {
+                type: 'n',
+                documentDate: $filter('date')(new Date(), 'dd.MM.yyyy.'),
+                name: vm.name,
+                surname: vm.surname,
+                workplace: vm.workplace,
+                forPlace: vm.forPlace,
+                forFaculty: vm.forFaculty,
+                forSubject: vm.forSubject,
+                startTimestamp: vm.startTimestamp,
+                endTimestamp: vm.endTimestamp,
+                purpose: vm.purpose,
+                transportation: vm.transportation,
+                expensesResponsible: vm.expensesResponsible,
+                expensesExplanation: vm.expensesExplanation
+            };
+
+            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
             $mdDialog.show(documentDialogObject);
         }
 

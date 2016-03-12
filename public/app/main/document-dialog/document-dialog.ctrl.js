@@ -5,8 +5,8 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog'];
-    function DocumentDialogCtrl($mdDialog) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', 'data'];
+    function DocumentDialogCtrl($mdDialog, documentService, data) {
         var vm = this;
 
         vm.hide = hide;
@@ -16,11 +16,14 @@
         }
 
         (function() {
-            var doc = { content: "Sveučilište J.J. Strossmayera u Osijeku" };
-            pdfMake.createPdf(doc).getDataUrl(function(url) {
-                var iframe = angular.element(document.querySelector('.document-dialog iframe'));
-                iframe.attr('src', url);
-            });
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
+                    iframe.attr('src', url);
+                });
         })();
     }
 })();

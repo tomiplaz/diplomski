@@ -22,11 +22,81 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.37904125">
+            <state vertical-scroll-proportion="-13.076923">
               <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="document-dialog.ctrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.ctrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="new-request-n.ctrl.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.ctrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.44745395">
+              <caret line="53" column="9" selection-start-line="53" selection-start-column="9" selection-end-line="53" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="new-request-n.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-20.26923">
+              <caret line="85" column="75" selection-start-line="85" selection-start-column="75" selection-end-line="85" selection-end-column="75" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dialogService.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/services/dialogService.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="34" column="55" selection-start-line="34" selection-start-column="55" selection-end-line="34" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="date-time-dialog.ctrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/main/date-time-dialog/date-time-dialog.ctrl.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="27" column="101" selection-start-line="27" selection-start-column="101" selection-end-line="27" selection-end-column="101" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="documentService.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/services/documentService.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="40" column="79" selection-start-line="40" selection-start-column="79" selection-end-line="40" selection-end-column="79" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/build/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="452" column="0" selection-start-line="452" selection-start-column="0" selection-end-line="452" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -37,7 +107,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/database/migrations/2016_02_29_163353_create_users_table.php" />
         <option value="$PROJECT_DIR$/database/seeds/UserTableSeeder.php" />
         <option value="$PROJECT_DIR$/app/NARequest.php" />
         <option value="$PROJECT_DIR$/database/seeds/UsersTableSeeder.php" />
@@ -69,7 +138,6 @@
         <option value="$PROJECT_DIR$/public/app/main/main.date-time-dialog.html" />
         <option value="$PROJECT_DIR$/public/app/main/main.new-request-n.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/main.new-request-n.html" />
-        <option value="$PROJECT_DIR$/public/app/services/dialogService.js" />
         <option value="$PROJECT_DIR$/public/app/main/main.config.js" />
         <option value="$PROJECT_DIR$/public/app/app.config.js" />
         <option value="$PROJECT_DIR$/database/migrations/2016_03_06_173923_create_request_ns_table.php" />
@@ -84,10 +152,12 @@
         <option value="$PROJECT_DIR$/public/package.json" />
         <option value="$PROJECT_DIR$/resources/views/index.php" />
         <option value="$PROJECT_DIR$/public/node_modules/require.js" />
-        <option value="$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.html" />
         <option value="$PROJECT_DIR$/public/app/app.scss" />
+        <option value="$PROJECT_DIR$/public/app/services/dialogService.js" />
         <option value="$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.ctrl.js" />
+        <option value="$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.ctrl.js" />
+        <option value="$PROJECT_DIR$/public/app/services/documentService.js" />
       </list>
     </option>
   </component>
@@ -136,6 +206,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -543,7 +614,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -552,7 +622,7 @@
     <property name="FullScreen" value="false" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="SearchEverywhereHistoryKey" value="main&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.html&#10;main.php&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;sc-d&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;angular.js&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular/angular.js&#10;-local&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;angular-lo&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;main.p&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;angular&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;sc-da&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc-date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;font-awe&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/font-awesome/css/font-awesome.css&#10;app.mod&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.module.js&#10;app.co&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;main.ph&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;main.ct&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;an&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.js&#10;angular-&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;mai&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;resta&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/restangular/src/restangular.js" />
+    <property name="SearchEverywhereHistoryKey" value="docume&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;main&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.html&#10;main.php&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;sc-d&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;angular.js&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular/angular.js&#10;-local&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;angular-lo&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;main.p&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;angular&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;sc-da&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc-date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;font-awe&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/font-awesome/css/font-awesome.css&#10;app.mod&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.module.js&#10;app.co&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;main.ph&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;main.ct&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;an&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.js&#10;angular-&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;mai&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;resta&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/restangular/src/restangular.js" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -611,10 +681,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1928" height="1044" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -650,20 +720,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/User.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11371238">
-          <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/seeds/UsersTableSeeder.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.07580825">
-          <caret line="5" column="11" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/app.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="3.979933">
@@ -860,20 +916,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="75" selection-start-line="85" selection-start-column="75" selection-end-line="85" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/services/dialogService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11050921">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/app/services/userService.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33152762">
@@ -944,35 +986,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/date-time-dialog/date-time-dialog.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49729145">
-          <caret line="27" column="101" selection-start-line="27" selection-start-column="101" selection-end-line="27" selection-end-column="101" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.17056856">
           <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7605634">
-          <caret line="57" column="49" selection-start-line="57" selection-start-column="49" selection-end-line="57" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46045503">
-          <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -980,7 +997,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5905963">
           <caret line="61" column="14" selection-start-line="61" selection-start-column="14" selection-end-line="61" selection-end-column="14" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -988,7 +1004,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18952063">
           <caret line="10" column="30" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -996,7 +1011,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22101842">
           <caret line="12" column="43" selection-start-line="12" selection-start-column="43" selection-end-line="12" selection-end-column="43" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1004,19 +1018,70 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1457720780542" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1457720780542" expanded="true" signature="-1:-1" placeholder="[...]" />
-            <marker date="1457720780542" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1457720780542" expanded="true" signature="-1:-1" placeholder="/** @license AngularJS v1.5.0 ...*/" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37904125">
+        <state vertical-scroll-proportion="-13.076923">
           <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.26923">
+          <caret line="85" column="75" selection-start-line="85" selection-start-column="75" selection-end-line="85" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/build/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="452" column="0" selection-start-line="452" selection-start-column="0" selection-end-line="452" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/services/dialogService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="55" selection-start-line="34" selection-start-column="55" selection-end-line="34" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/date-time-dialog/date-time-dialog.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="101" selection-start-line="27" selection-start-column="101" selection-end-line="27" selection-end-column="101" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/services/documentService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="79" selection-start-line="40" selection-start-column="79" selection-end-line="40" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44745395">
+          <caret line="53" column="9" selection-start-line="53" selection-start-column="9" selection-end-line="53" selection-end-column="9" />
           <folding />
         </state>
       </provider>

@@ -81,7 +81,6 @@
                 preserveScope: true,
                 targetEvent: event,
                 clickOutsideToClose: true,
-                fullscreen: false,
                 locals: {
                     data: {
                         label: label,
@@ -94,16 +93,102 @@
             }
         }
 
-        function getDocumentDialogObject(scope, event) {
+        function getDocumentDialogObject(event, data) {
             return {
                 controller: 'DocumentDialogCtrl as documentDialog',
                 templateUrl: 'app/main/document-dialog/document-dialog.html',
                 parent: angular.element(document.body),
-                scope: scope,
-                preserveScope: true,
                 targetEvent: event,
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
+                locals: {
+                    data: data
+                }
             }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .factory('documentService', documentService);
+
+    function documentService() {
+        return {
+            getDocument: getDocument
+        };
+
+        function getDocument(data) {
+            return data.type == 'n' ? getRequestNDocument(data) : getRequestZDocument(data);
+        }
+
+        function getRequestNDocument(data) {
+            return {
+                content: [
+                    { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
+                    { text: "Elektrotehnički fakultet", style: 'header' },
+                    { text: "U Osijeku, " + data.documentDate, style: 'documentDate' },
+                    { text: "Dekanu Elektrotehničkog fakulteta Osijek".toUpperCase(), style: ['title', 'titleTop'] },
+                    { text: "Zahtjev za izdavanje putnog naloga".toUpperCase(), style: ['title', 'titleMiddle'] },
+                    { text: "Najkasnije 7 dana prije putovanja", style: ['title', 'titleBottom'] },
+                    { text: "Ime, prezime i radno mjesto:", style: 'regular' },
+                    { text: data.name + " " + data.surname + ", " + data.workplace, style: 'input' },
+                    { text: "Molim odobrenje službenog puta za (mjesto, fakultet, kolegij):", style: 'regular' },
+                    { text: data.forPlace + ", " + data.forFaculty + ", " + data.forSubject, style: 'input' },
+                    {
+                        columns: [
+                            { text: "Datum polaska:", style: 'regular', width: '*' },
+                            { text: "Datum povratka:", style: 'regular', width: '*' },
+                            { text: "Trajanje putovanja:", style: 'regular', width: '*' }
+                        ]
+                    },
+                    {
+                        columns: [
+                            { text: data.startTimestamp, style: 'input', width: '*' },
+                            { text: data.endTimestamp, style: 'input', width: '*' },
+                            { text: data.duration, style: 'input', width: '*' }
+                        ]
+                    }
+
+                ],
+                styles: {
+                    header: {
+                        fontSize: 16,
+                        bold: true
+                    },
+                    documentDate: {
+                        fontSize: 12,
+                        margin: [0, 8, 0, 30]
+                    },
+                    title: {
+                        alignment: 'center'
+                    },
+                    titleTop: {
+                        fontSize: 12
+                    },
+                    titleMiddle: {
+                        fontSize: 15,
+                        bold: true
+                    },
+                    titleBottom: {
+                        fontSize: 13,
+                        margin: [0, 0, 0, 26]
+                    },
+                    regular: {
+                        fontSize: 11,
+                        bold: true
+                    },
+                    input: {
+                        fontSize: 13,
+                        margin: [0, 0, 0, 8]
+                    }
+                }
+            }
+        }
+
+        function getRequestZDocument() {
+
         }
     }
 })();
@@ -350,8 +435,8 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog'];
-    function DocumentDialogCtrl($mdDialog) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', 'data'];
+    function DocumentDialogCtrl($mdDialog, documentService, data) {
         var vm = this;
 
         vm.hide = hide;
@@ -361,11 +446,14 @@
         }
 
         (function() {
-            var doc = { content: "Sveučilište J.J. Strossmayera u Osijeku" };
-            pdfMake.createPdf(doc).getDataUrl(function(url) {
-                var iframe = angular.element(document.querySelector('.document-dialog iframe'));
-                iframe.attr('src', url);
-            });
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
+                    iframe.attr('src', url);
+                });
         })();
     }
 })();
@@ -386,13 +474,13 @@
             var mindate = formatDate();
             var maxdate;
 
-            if (property == 'startTime') {
+            if (property == 'startTimestamp') {
                 if (vm.endTime) {
-                    maxdate = formatDate(vm.endTimeRaw);
+                    maxdate = formatDate(vm.endTimestampRaw);
                 }
-            } else if (property == 'endTime') {
+            } else if (property == 'endTimestamp') {
                 if (vm.startTime) {
-                    mindate = formatDate(vm.startTimeRaw);
+                    mindate = formatDate(vm.startTimestampRaw);
                 }
             }
 
@@ -425,7 +513,24 @@
         }
 
         function showDocument($event) {
-            var documentDialogObject = dialogService.getDocumentDialogObject($scope, $event);
+            var data = {
+                type: 'n',
+                documentDate: $filter('date')(new Date(), 'dd.MM.yyyy.'),
+                name: vm.name,
+                surname: vm.surname,
+                workplace: vm.workplace,
+                forPlace: vm.forPlace,
+                forFaculty: vm.forFaculty,
+                forSubject: vm.forSubject,
+                startTimestamp: vm.startTimestamp,
+                endTimestamp: vm.endTimestamp,
+                purpose: vm.purpose,
+                transportation: vm.transportation,
+                expensesResponsible: vm.expensesResponsible,
+                expensesExplanation: vm.expensesExplanation
+            };
+
+            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
             $mdDialog.show(documentDialogObject);
         }
 

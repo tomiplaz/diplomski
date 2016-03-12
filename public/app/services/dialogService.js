@@ -20,7 +20,6 @@
                 preserveScope: true,
                 targetEvent: event,
                 clickOutsideToClose: true,
-                fullscreen: false,
                 locals: {
                     data: {
                         label: label,
@@ -33,15 +32,16 @@
             }
         }
 
-        function getDocumentDialogObject(scope, event) {
+        function getDocumentDialogObject(event, data) {
             return {
                 controller: 'DocumentDialogCtrl as documentDialog',
                 templateUrl: 'app/main/document-dialog/document-dialog.html',
                 parent: angular.element(document.body),
-                scope: scope,
-                preserveScope: true,
                 targetEvent: event,
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
+                locals: {
+                    data: data
+                }
             }
         }
     }
