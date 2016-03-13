@@ -25,7 +25,14 @@
 
         function save($value) {
             $scope[data.ctrl][data.property + 'Raw'] = $value;
-            $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+
+            if (data.property == 'endTimestamp') {
+                if ($scope[data.ctrl]['startTimestamp'] != undefined && new Date($value) > new Date($scope[data.ctrl]['startTimestampRaw'])) {
+                    $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                }
+            } else {
+                $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+            }
 
             $mdDialog.hide();
         }

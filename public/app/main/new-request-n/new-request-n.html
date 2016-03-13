@@ -2,9 +2,9 @@
 
     <h6 class="md-title">Novi zahtjev za putni nalog (nastavna aktivnost)</h6>
 
-    <div layout="row" layout-align="space-around end">
+    <div layout="row" layout-align="space-between end">
 
-        <form name="newRequestNForm" layout="column" layout-align="center start" flex>
+        <form name="newRequestNForm" layout="column" layout-align="center start">
 
             <div layout="row" layout-align="start center">
                 <md-input-container>
@@ -89,9 +89,9 @@
                 </md-input-container>
             </div>
 
-            <md-input-container>
+            <md-input-container layout-fill>
                 <label>Svrha</label>
-                <textarea name="purpose" ng-model="newRequestN.purpose" required></textarea>
+                <textarea name="purpose" ng-model="newRequestN.purpose" required md-maxlength="300"></textarea>
                 <div ng-messages="newRequestNForm.purpose.$error">
                     <div ng-message="required">Potrebno!</div>
                 </div>
@@ -106,7 +106,7 @@
                 </div>
             </md-input-container>
 
-            <div layout="row" layout-align="start center">
+            <div layout="row" layout-align="start center" layout-fill>
                 <md-input-container>
                     <label>Troškovi terete</label>
                     <input type="text" name="expensesResponsible" ng-model="newRequestN.expensesResponsible" required ng-maxlength="50">
@@ -116,9 +116,9 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container>
+                <md-input-container flex>
                     <label>Obrazloženje</label>
-                    <input type="text" name="expensesExplanation" ng-model="newRequestN.expensesExplanation" required ng-maxlength="100">
+                    <textarea name="expensesExplanation" ng-model="newRequestN.expensesExplanation" required md-maxlength="150"></textarea>
                     <div ng-messages="newRequestNForm.expensesExplanation.$error">
                         <div ng-message="required">Potrebno!</div>
                         <div ng-message="maxlength">Predugačko!</div>
@@ -130,12 +130,14 @@
 
         <div layout="column" layout-align="center center">
 
-            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.saveDocument()" aria-label="Spremi" ng-disabled="!newRequestNForm.$valid">
+            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.saveDocument()"
+                       ng-disabled="!newRequestNForm.$valid" aria-label="Spremi">
                 <md-tooltip md-direction="left">Spremi</md-tooltip>
                 <md-icon md-svg-src="app/icons/ic_save_black_24px.svg"></md-icon>
             </md-button>
 
-            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.showDocument($event)" aria-label="Prikaži dokument">
+            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.showDocument($event)"
+                       ng-disabled="!newRequestNForm.$valid" aria-label="Prikaži dokument">
                 <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
                 <md-icon md-svg-src="app/icons/ic_picture_as_pdf_black_24px.svg"></md-icon>
             </md-button>

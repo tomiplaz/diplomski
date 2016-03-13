@@ -24,10 +24,10 @@ class CreateRequestNsTable extends Migration
             $table->string('for_subject', 50);
             $table->timestamp('start_timestamp');
             $table->timestamp('end_timestamp');
-            $table->text('purpose');
+            $table->text('purpose', 300);
             $table->string('transportation', 50);
             $table->string('expenses_responsible', 50);
-            $table->string('expenses_explanation', 100);
+            $table->text('expenses_explanation', 150);
             // $table->string('applicant', 50);
             // $table->string('approved_by', 50);
 

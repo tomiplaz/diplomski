@@ -125,32 +125,59 @@
 
         function getRequestNDocument(data) {
             return {
+                pageSize: 'A4',
+                pageMargins: [60, 60],
                 content: [
                     { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
                     { text: "Elektrotehnički fakultet", style: 'header' },
                     { text: "U Osijeku, " + data.documentDate, style: 'documentDate' },
-                    { text: "Dekanu Elektrotehničkog fakulteta Osijek".toUpperCase(), style: ['title', 'titleTop'] },
-                    { text: "Zahtjev za izdavanje putnog naloga".toUpperCase(), style: ['title', 'titleMiddle'] },
-                    { text: "Najkasnije 7 dana prije putovanja", style: ['title', 'titleBottom'] },
+                    { text: "Dekanu Elektrotehničkog fakulteta Osijek".toUpperCase(), style: ['center', 'titleTop'] },
+                    { text: "Zahtjev za izdavanje putnog naloga".toUpperCase(), style: ['center', 'titleMiddle'] },
+                    { text: "Najkasnije 7 dana prije putovanja", style: ['center', 'titleBottom'] },
                     { text: "Ime, prezime i radno mjesto:", style: 'regular' },
                     { text: data.name + " " + data.surname + ", " + data.workplace, style: 'input' },
-                    { text: "Molim odobrenje službenog puta za (mjesto, fakultet, kolegij):", style: 'regular' },
+                    { text: "Molim odobrenje službenog puta za (mjesto, fakultet, kolegij):", style: ['regular', 'topMargin10'] },
                     { text: data.forPlace + ", " + data.forFaculty + ", " + data.forSubject, style: 'input' },
                     {
                         columns: [
-                            { text: "Datum polaska:", style: 'regular', width: '*' },
-                            { text: "Datum povratka:", style: 'regular', width: '*' },
-                            { text: "Trajanje putovanja:", style: 'regular', width: '*' }
+                            { text: "Vrijeme polaska:", style: ['regular', 'topMargin10'], width: '*' },
+                            { text: "Vrijeme povratka:", style: ['regular', 'topMargin10'], width: '*' },
+                            { text: "Trajanje putovanja:", style: ['regular', 'topMargin10'], width: '*' }
                         ]
                     },
                     {
                         columns: [
                             { text: data.startTimestamp, style: 'input', width: '*' },
                             { text: data.endTimestamp, style: 'input', width: '*' },
-                            { text: data.duration, style: 'input', width: '*' }
+                            { text: getDuration(data.startTimestampRaw, data.endTimestampRaw), style: 'input', width: '*' }
+                        ]
+                    },
+                    { text: "Svrha:", style: ['regular', 'topMargin10'] },
+                    { text: data.purpose, style: 'input' },
+                    { text: "Vrsta prijevoza:", style: ['regular', 'topMargin10'] },
+                    { text: data.transportation, style: 'input' },
+                    { text: "Troškovi terete:", style: ['regular', 'topMargin10'] },
+                    { text: data.expensesResponsible, style: 'input' },
+                    { text: "Obrazloženje:", style: 'regular' },
+                    { text: data.expensesExplanation, style: 'input' },
+                    {
+                        columns: [
+                            { text: "Podnositelj zahtjeva:", style: ['regular', 'topMargin80', 'left'] },
+                            { text: "Odobrava:", style: ['regular', 'topMargin80', 'right'] }
+                        ]
+                    },
+                    {
+                        columns: [
+                            { text: "___________________", style: ['input', 'left'] },
+                            { text: "___________________", style: ['input', 'right'] }
+                        ]
+                    },
+                    {
+                        columns: [
+                            { text: "", style: ['regular', 'left'] },
+                            { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regular', 'right'] }
                         ]
                     }
-
                 ],
                 styles: {
                     header: {
@@ -161,7 +188,7 @@
                         fontSize: 12,
                         margin: [0, 8, 0, 30]
                     },
-                    title: {
+                    center: {
                         alignment: 'center'
                     },
                     titleTop: {
@@ -173,7 +200,7 @@
                     },
                     titleBottom: {
                         fontSize: 13,
-                        margin: [0, 0, 0, 26]
+                        margin: [0, 0, 0, 36]
                     },
                     regular: {
                         fontSize: 11,
@@ -182,6 +209,18 @@
                     input: {
                         fontSize: 13,
                         margin: [0, 0, 0, 8]
+                    },
+                    topMargin10: {
+                        margin: [0, 20, 0, 0]
+                    },
+                    topMargin80: {
+                        margin: [0, 80, 0, 0]
+                    },
+                    left: {
+                        alignment: 'left'
+                    },
+                    right: {
+                        alignment: 'right'
                     }
                 }
             }
@@ -189,6 +228,38 @@
 
         function getRequestZDocument() {
 
+        }
+
+        function getDuration(start, end) {
+            var totalMs = new Date(end) - new Date(start);
+            var totalHours = totalMs / 1000 / 60 / 60;
+            var days = Math.round(totalHours / 24);
+            var hours = Math.round(totalHours % 24);
+
+            var daysString = days.toString();
+            var daysSuffix = "", hoursSuffix = "" ;
+
+            switch (daysString[daysString.length - 1]) {
+                case "1":
+                    if (days > 10 && daysString.substr(daysString - 2) == 11) daysSuffix += "a";
+                    break;
+                default:
+                    daysSuffix += "a";
+                    break;
+            }
+
+            switch (hours) {
+                case 1: case 21:
+                break;
+                case 2: case 3: case 4: case 22: case 23: case 24:
+                    hoursSuffix += "a";
+                    break;
+                default:
+                    hoursSuffix += "i";
+                    break;
+            }
+
+            return days + " dan" + daysSuffix + " i " + hours + " sat" + hoursSuffix;
         }
     }
 })();
@@ -418,7 +489,14 @@
 
         function save($value) {
             $scope[data.ctrl][data.property + 'Raw'] = $value;
-            $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+
+            if (data.property == 'endTimestamp') {
+                if ($scope[data.ctrl]['startTimestamp'] != undefined && new Date($value) > new Date($scope[data.ctrl]['startTimestampRaw'])) {
+                    $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                }
+            } else {
+                $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+            }
 
             $mdDialog.hide();
         }
@@ -475,11 +553,11 @@
             var maxdate;
 
             if (property == 'startTimestamp') {
-                if (vm.endTime) {
+                if (vm.endTimestamp) {
                     maxdate = formatDate(vm.endTimestampRaw);
                 }
             } else if (property == 'endTimestamp') {
-                if (vm.startTime) {
+                if (vm.startTimestamp) {
                     mindate = formatDate(vm.startTimestampRaw);
                 }
             }
@@ -524,6 +602,8 @@
                 forSubject: vm.forSubject,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
+                startTimestampRaw: vm.startTimestampRaw,
+                endTimestampRaw: vm.endTimestampRaw,
                 purpose: vm.purpose,
                 transportation: vm.transportation,
                 expensesResponsible: vm.expensesResponsible,
@@ -538,6 +618,4 @@
             return $filter('date')(!value ? new Date() : new Date(value), "yyyy/MM/dd");
         }
     }
-
-    // explanation to text; test pdf and use ng-maxlength for each
 })();

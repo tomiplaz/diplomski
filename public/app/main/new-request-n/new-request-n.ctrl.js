@@ -16,11 +16,11 @@
             var maxdate;
 
             if (property == 'startTimestamp') {
-                if (vm.endTime) {
+                if (vm.endTimestamp) {
                     maxdate = formatDate(vm.endTimestampRaw);
                 }
             } else if (property == 'endTimestamp') {
-                if (vm.startTime) {
+                if (vm.startTimestamp) {
                     mindate = formatDate(vm.startTimestampRaw);
                 }
             }
@@ -65,6 +65,8 @@
                 forSubject: vm.forSubject,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
+                startTimestampRaw: vm.startTimestampRaw,
+                endTimestampRaw: vm.endTimestampRaw,
                 purpose: vm.purpose,
                 transportation: vm.transportation,
                 expensesResponsible: vm.expensesResponsible,
@@ -79,6 +81,4 @@
             return $filter('date')(!value ? new Date() : new Date(value), "yyyy/MM/dd");
         }
     }
-
-    // explanation to text; test pdf and use ng-maxlength for each
 })();

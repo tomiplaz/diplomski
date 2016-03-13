@@ -8,6 +8,9 @@ body {
     background-color: #448aff !important; }
   body .main-content {
     width: 80%; }
+  body .wide {
+    max-width: 608px;
+    width: 100%; }
   body .time-date .control .full-title {
     background-color: #4caf50;
     color: #000; }
