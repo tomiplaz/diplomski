@@ -1,8 +1,10 @@
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif; }
+  body .main-view {
+    padding-bottom: 3%; }
   body header {
     padding: 1% 5%; }
-  body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover {
+  body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover {
     background-color: #ffab00 !important; }
   body button.md-mini:not([disabled]):hover {
     background-color: #448aff !important; }
@@ -30,6 +32,10 @@ body {
     background-color: #4caf50; }
     body .time-date.full-mode .buttons button {
       color: #000 !important; }
+  body .signature-input {
+    width: 250px; }
+  body .full-width {
+    width: 100%; }
   body .document-dialog {
     width: 100%;
     height: 100%; }

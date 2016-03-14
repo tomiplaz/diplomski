@@ -16,7 +16,7 @@
                 $mdToast
                     .simple()
                     .textContent(text)
-                    .position('top right')
+                    .position('bottom right')
                     .capsule(true)
                     .hideDelay(duration == undefined ? 1500 : duration)
             );

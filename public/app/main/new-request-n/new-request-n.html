@@ -89,7 +89,7 @@
                 </md-input-container>
             </div>
 
-            <md-input-container layout-fill>
+            <md-input-container class="full-width">
                 <label>Svrha</label>
                 <textarea name="purpose" ng-model="newRequestN.purpose" required md-maxlength="300"></textarea>
                 <div ng-messages="newRequestNForm.purpose.$error">
@@ -126,8 +126,15 @@
                 </md-input-container>
             </div>
 
-            <div layout="row" layout-align="start center">
-                <img ng-src="{{ newRequestN.applicant_signature }}">
+            <div layout="row" layout-align="start top">
+                <img ng-src="{{ newRequestN.applicantSignature }}" ng-if="newRequestN.applicantSignature">
+
+                <div class="signature-input" ng-if="!newRequestN.applicantSignature">
+                    <md-input-container class="full-width">
+                        <label>Podnositelj zahtjeva</label>
+                        <input type="text" readonly>
+                    </md-input-container>
+                </div>
 
                 <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.sign($event)" aria-label="Potpiši">
                     <md-tooltip md-direction="right">Potpiši</md-tooltip>
@@ -139,14 +146,13 @@
 
         <div layout="column" layout-align="center center">
 
-            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.saveDocument()"
-                       ng-disabled="!newRequestNForm.$valid" aria-label="Spremi">
-                <md-tooltip md-direction="left">Spremi</md-tooltip>
-                <md-icon md-svg-src="app/icons/ic_save_black_24px.svg"></md-icon>
+            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.clear()" aria-label="Obriši sve">
+                <md-tooltip md-direction="left">Obriši sve</md-tooltip>
+                <md-icon md-svg-src="app/icons/ic_delete_black_24px.svg"></md-icon>
             </md-button>
 
-            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.showDocument($event)"
-                       ng-disabled="!newRequestNForm.$valid" aria-label="Prikaži dokument">
+            <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.showDocumentDialog($event)"
+                       ng-disabled="!newRequestNForm.$valid || !newRequestN.applicantSignature" aria-label="Prikaži dokument">
                 <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
                 <md-icon md-svg-src="app/icons/ic_picture_as_pdf_black_24px.svg"></md-icon>
             </md-button>

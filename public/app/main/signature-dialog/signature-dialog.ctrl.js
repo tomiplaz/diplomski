@@ -18,8 +18,8 @@
         $document.ready(function() {
             var canvas = document.querySelector('canvas');
             signaturePad = new SignaturePad(canvas, {
-                minWidth: 0.5,
-                maxWidth: 1.1,
+                minWidth: 0.4,
+                maxWidth: 1.0,
                 onEnd: onEnd
             });
 
@@ -37,8 +37,8 @@
         }
 
         function confirm() {
-            $scope[data.ctrl]['applicant_signature'] = signaturePad.toDataURL();
-            $mdDialog.hide();
+            $scope[data.ctrl]['applicantSignature'] = signaturePad.toDataURL();
+            hide();
         }
 
         function onEnd() {

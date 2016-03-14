@@ -12,7 +12,7 @@
     </head>
 
     <body ng-app="app">
-        <div ui-view ng-cloak></div>
+        <div ui-view ng-cloak class="main-view"></div>
 
         <script src="node_modules/angular/angular.js"></script>
         <script src="node_modules/angular/i18n/angular-locale_hr-hr.js"></script>

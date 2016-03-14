@@ -13,14 +13,17 @@
         vm.mindate = data.mindate;
         vm.maxdate = data.maxdate;
 
+        vm.hide = hide;
         vm.cancel = cancel;
         vm.save = save;
-        vm.hide = hide;
+
+        function hide() {
+            $mdDialog.hide();
+        }
 
         function cancel() {
             $scope[data.ctrl][data.property] = null;
-
-            $mdDialog.hide();
+            hide();
         }
 
         function save($value) {
@@ -34,11 +37,7 @@
                 $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
             }
 
-            $mdDialog.hide();
-        }
-
-        function hide() {
-            $mdDialog.hide();
+            hide();
         }
     }
 })();

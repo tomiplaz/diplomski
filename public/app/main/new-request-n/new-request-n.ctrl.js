@@ -3,14 +3,14 @@
         .module('main')
         .controller('NewRequestNCtrl', NewRequestNCtrl);
 
-    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter', 'Restangular', 'toastService'];
-    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter, Restangular, toastService) {
+    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter'];
+    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter) {
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
-        vm.showDocument = showDocument;
-        vm.saveDocument = saveDocument;
+        vm.showDocumentDialog = showDocumentDialog;
         vm.sign = sign;
+        vm.clear = clear;
 
         function showDateTimeDialog($event, label, property) {
             var mindate = formatDate();
@@ -38,31 +38,7 @@
             $mdDialog.show(dateTimeDialogObject);
         }
 
-        function saveDocument() {
-            var newRequestN = {
-                document_date: $filter('date')(new Date(), 'yyyy-MM-dd'),
-                name: vm.name,
-                surname: vm.surname,
-                workplace: vm.workplace,
-                for_place: vm.forPlace,
-                for_faculty: vm.forFaculty,
-                for_subject: vm.forSubject,
-                start_timestamp: $filter('date')(new Date(vm.startTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
-                end_timestamp: $filter('date')(new Date(vm.endTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
-                purpose: vm.purpose,
-                transportation: vm.transportation,
-                expenses_responsible: vm.expensesResponsible,
-                expenses_explanation: vm.expensesExplanation
-            };
-
-            Restangular.all('request-ns').post(newRequestN).then(function() {
-                toastService.show("Dokument spremljen!");
-            }, function() {
-                toastService.show("Greška tijekom spremanja dokumenta!", 3000);
-            });
-        }
-
-        function showDocument($event) {
+        function showDocumentDialog($event) {
             var data = {
                 type: 'n',
                 documentDate: $filter('date')(new Date(), 'dd.MM.yyyy.'),
@@ -79,7 +55,8 @@
                 purpose: vm.purpose,
                 transportation: vm.transportation,
                 expensesResponsible: vm.expensesResponsible,
-                expensesExplanation: vm.expensesExplanation
+                expensesExplanation: vm.expensesExplanation,
+                applicantSignature: vm.applicantSignature
             };
 
             var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
@@ -93,6 +70,24 @@
 
             var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, data);
             $mdDialog.show(signatureDialogObject);
+        }
+
+        function clear() {
+            vm.name = null;
+            vm.surname = null;
+            vm.workplace = null;
+            vm.forPlace = null;
+            vm.forFaculty = null;
+            vm.forSubject = null;
+            vm.startTimestamp = null;
+            vm.endTimestamp = null;
+            vm.startTimestampRaw = null;
+            vm.endTimestampRaw = null;
+            vm.purpose = null;
+            vm.transportation = null;
+            vm.expensesResponsible = null;
+            vm.expensesExplanation = null;
+            vm.applicantSignature = null;
         }
 
         function formatDate(value) {

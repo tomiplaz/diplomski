@@ -6,12 +6,16 @@ $md-warn: rgb(255, 171, 0);
 body {
   font-family: $font-default;
 
+  .main-view {
+    padding-bottom: 3%;
+  }
+
   header {
     padding: 1% 5%;
   }
 
   button.md-mini:not([disabled]){
-    &[ng-click="main.logout()"]:hover {
+    &[ng-click="main.logout()"]:hover, &[ng-click="newRequestN.clear()"]:hover {
       background-color: $md-warn !important;
     }
 
@@ -68,6 +72,14 @@ body {
         color: #000 !important;
       }
     }
+  }
+
+  .signature-input {
+    width: 250px;
+  }
+
+  .full-width {
+    width: 100%;
   }
 
   .document-dialog {

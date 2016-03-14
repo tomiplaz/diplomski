@@ -136,7 +136,7 @@
         function getRequestNDocument(data) {
             return {
                 pageSize: 'A4',
-                pageMargins: [60, 60],
+                pageMargins: 60,
                 content: [
                     { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
                     { text: "Elektrotehnički fakultet", style: 'header' },
@@ -172,14 +172,14 @@
                     { text: data.expensesExplanation, style: 'input' },
                     {
                         columns: [
-                            { text: "Podnositelj zahtjeva:", style: ['regular', 'topMargin80', 'left'] },
-                            { text: "Odobrava:", style: ['regular', 'topMargin80', 'right'] }
+                            { text: "Podnositelj zahtjeva:", style: ['regular', 'topMargin70', 'left'] },
+                            { text: "Odobrava:", style: ['regular', 'topMargin70', 'right'] }
                         ]
                     },
                     {
                         columns: [
-                            { text: "___________________", style: ['input', 'left'] },
-                            { text: "___________________", style: ['input', 'right'] }
+                            { image: data.applicantSignature, width: 125, height: 35 },
+                            { text: "", style: ['input', 'right'], width: 125, height: 35 }
                         ]
                     },
                     {
@@ -223,8 +223,8 @@
                     topMargin10: {
                         margin: [0, 20, 0, 0]
                     },
-                    topMargin80: {
-                        margin: [0, 80, 0, 0]
+                    topMargin70: {
+                        margin: [0, 70, 0, 0]
                     },
                     left: {
                         alignment: 'left'
@@ -291,7 +291,7 @@
                 $mdToast
                     .simple()
                     .textContent(text)
-                    .position('top right')
+                    .position('bottom right')
                     .capsule(true)
                     .hideDelay(duration == undefined ? 1500 : duration)
             );
@@ -487,14 +487,17 @@
         vm.mindate = data.mindate;
         vm.maxdate = data.maxdate;
 
+        vm.hide = hide;
         vm.cancel = cancel;
         vm.save = save;
-        vm.hide = hide;
+
+        function hide() {
+            $mdDialog.hide();
+        }
 
         function cancel() {
             $scope[data.ctrl][data.property] = null;
-
-            $mdDialog.hide();
+            hide();
         }
 
         function save($value) {
@@ -508,11 +511,7 @@
                 $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
             }
 
-            $mdDialog.hide();
-        }
-
-        function hide() {
-            $mdDialog.hide();
+            hide();
         }
     }
 })();
@@ -523,17 +522,14 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', 'data'];
-    function DocumentDialogCtrl($mdDialog, documentService, data) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', '$filter', 'Restangular', 'toastService'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, $filter, Restangular, toastService) {
         var vm = this;
 
         vm.hide = hide;
+        vm.send = send;
 
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        (function() {
+        $document.ready(function() {
             var doc = documentService.getDocument(data);
 
             pdfMake
@@ -542,7 +538,38 @@
                     var iframe = angular.element(document.querySelector('.document-dialog iframe'));
                     iframe.attr('src', url);
                 });
-        })();
+        });
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function send() {
+            var newRequestN = {
+                document_date: $filter('date')(new Date(), 'yyyy-MM-dd'),
+                name: data.name,
+                surname: data.surname,
+                workplace: data.workplace,
+                for_place: data.forPlace,
+                for_faculty: data.forFaculty,
+                for_subject: data.forSubject,
+                start_timestamp: $filter('date')(new Date(data.startTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
+                end_timestamp: $filter('date')(new Date(data.endTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
+                purpose: data.purpose,
+                transportation: data.transportation,
+                expenses_responsible: data.expensesResponsible,
+                expenses_explanation: data.expensesExplanation,
+                applicant_signature: data.applicantSignature
+            };
+
+            Restangular.all('request-ns').post(newRequestN).then(function() {
+                hide();
+                toastService.show("Dokument spremljen!");
+            }, function() {
+                hide();
+                toastService.show("Greška tijekom spremanja dokumenta!", 3000);
+            });
+        }
     }
 })();
 (function() {
@@ -550,14 +577,14 @@
         .module('main')
         .controller('NewRequestNCtrl', NewRequestNCtrl);
 
-    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter', 'Restangular', 'toastService'];
-    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter, Restangular, toastService) {
+    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter'];
+    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter) {
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
-        vm.showDocument = showDocument;
-        vm.saveDocument = saveDocument;
+        vm.showDocumentDialog = showDocumentDialog;
         vm.sign = sign;
+        vm.clear = clear;
 
         function showDateTimeDialog($event, label, property) {
             var mindate = formatDate();
@@ -585,31 +612,7 @@
             $mdDialog.show(dateTimeDialogObject);
         }
 
-        function saveDocument() {
-            var newRequestN = {
-                document_date: $filter('date')(new Date(), 'yyyy-MM-dd'),
-                name: vm.name,
-                surname: vm.surname,
-                workplace: vm.workplace,
-                for_place: vm.forPlace,
-                for_faculty: vm.forFaculty,
-                for_subject: vm.forSubject,
-                start_timestamp: $filter('date')(new Date(vm.startTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
-                end_timestamp: $filter('date')(new Date(vm.endTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
-                purpose: vm.purpose,
-                transportation: vm.transportation,
-                expenses_responsible: vm.expensesResponsible,
-                expenses_explanation: vm.expensesExplanation
-            };
-
-            Restangular.all('request-ns').post(newRequestN).then(function() {
-                toastService.show("Dokument spremljen!");
-            }, function() {
-                toastService.show("Greška tijekom spremanja dokumenta!", 3000);
-            });
-        }
-
-        function showDocument($event) {
+        function showDocumentDialog($event) {
             var data = {
                 type: 'n',
                 documentDate: $filter('date')(new Date(), 'dd.MM.yyyy.'),
@@ -626,7 +629,8 @@
                 purpose: vm.purpose,
                 transportation: vm.transportation,
                 expensesResponsible: vm.expensesResponsible,
-                expensesExplanation: vm.expensesExplanation
+                expensesExplanation: vm.expensesExplanation,
+                applicantSignature: vm.applicantSignature
             };
 
             var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
@@ -640,6 +644,24 @@
 
             var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, data);
             $mdDialog.show(signatureDialogObject);
+        }
+
+        function clear() {
+            vm.name = null;
+            vm.surname = null;
+            vm.workplace = null;
+            vm.forPlace = null;
+            vm.forFaculty = null;
+            vm.forSubject = null;
+            vm.startTimestamp = null;
+            vm.endTimestamp = null;
+            vm.startTimestampRaw = null;
+            vm.endTimestampRaw = null;
+            vm.purpose = null;
+            vm.transportation = null;
+            vm.expensesResponsible = null;
+            vm.expensesExplanation = null;
+            vm.applicantSignature = null;
         }
 
         function formatDate(value) {
@@ -667,8 +689,8 @@
         $document.ready(function() {
             var canvas = document.querySelector('canvas');
             signaturePad = new SignaturePad(canvas, {
-                minWidth: 0.5,
-                maxWidth: 1.1,
+                minWidth: 0.4,
+                maxWidth: 1.0,
                 onEnd: onEnd
             });
 
@@ -686,8 +708,8 @@
         }
 
         function confirm() {
-            $scope[data.ctrl]['applicant_signature'] = signaturePad.toDataURL();
-            $mdDialog.hide();
+            $scope[data.ctrl]['applicantSignature'] = signaturePad.toDataURL();
+            hide();
         }
 
         function onEnd() {

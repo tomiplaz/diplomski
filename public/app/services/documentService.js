@@ -17,7 +17,7 @@
         function getRequestNDocument(data) {
             return {
                 pageSize: 'A4',
-                pageMargins: [60, 60],
+                pageMargins: 60,
                 content: [
                     { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
                     { text: "Elektrotehnički fakultet", style: 'header' },
@@ -53,14 +53,14 @@
                     { text: data.expensesExplanation, style: 'input' },
                     {
                         columns: [
-                            { text: "Podnositelj zahtjeva:", style: ['regular', 'topMargin80', 'left'] },
-                            { text: "Odobrava:", style: ['regular', 'topMargin80', 'right'] }
+                            { text: "Podnositelj zahtjeva:", style: ['regular', 'topMargin70', 'left'] },
+                            { text: "Odobrava:", style: ['regular', 'topMargin70', 'right'] }
                         ]
                     },
                     {
                         columns: [
-                            { text: "___________________", style: ['input', 'left'] },
-                            { text: "___________________", style: ['input', 'right'] }
+                            { image: data.applicantSignature, width: 125, height: 35 },
+                            { text: "", style: ['input', 'right'], width: 125, height: 35 }
                         ]
                     },
                     {
@@ -104,8 +104,8 @@
                     topMargin10: {
                         margin: [0, 20, 0, 0]
                     },
-                    topMargin80: {
-                        margin: [0, 80, 0, 0]
+                    topMargin70: {
+                        margin: [0, 70, 0, 0]
                     },
                     left: {
                         alignment: 'left'
