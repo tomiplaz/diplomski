@@ -73,7 +73,7 @@
                 <md-input-container>
                     <label>Vrijeme polaska</label>
                     <input type="text" name="startTimestamp" ng-model="newRequestN.startTimestamp" required readonly
-                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme polaska', 'newRequestN', 'startTimestamp')">
+                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme polaska', 'startTimestamp')">
                     <div ng-messages="newRequestNForm.startTimestamp.$error">
                         <div ng-message="required">Potrebno!</div>
                     </div>
@@ -82,7 +82,7 @@
                 <md-input-container>
                     <label>Vrijeme povratka</label>
                     <input type="text" name="endTimestamp" ng-model="newRequestN.endTimestamp" required readonly
-                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme povratka', 'newRequestN', 'endTimestamp')">
+                           ng-click="newRequestN.showDateTimeDialog($event, 'Vrijeme povratka', 'endTimestamp')">
                     <div ng-messages="newRequestNForm.endTimestamp.$error">
                         <div ng-message="required">Potrebno!</div>
                     </div>
@@ -126,10 +126,11 @@
                 </md-input-container>
             </div>
 
-            <div>
-                <label>Podnositelj zahtjeva</label>
-                <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.sign($event)" aria-label="Potpiši se">
-                    <md-tooltip md-direction="right">Potpiši se</md-tooltip>
+            <div layout="row" layout-align="start center">
+                <img ng-src="{{ newRequestN.applicant_signature }}">
+
+                <md-button class="md-fab md-mini md-raised" ng-click="newRequestN.sign($event)" aria-label="Potpiši">
+                    <md-tooltip md-direction="right">Potpiši</md-tooltip>
                     <md-icon md-svg-src="app/icons/ic_edit_black_24px.svg"></md-icon>
                 </md-button>
             </div>

@@ -79,4 +79,17 @@ body {
       height: 100%;
     }
   }
+
+  .signature-dialog {
+    md-dialog-content {
+      padding: 10px;
+    }
+    canvas {
+      border: 1px solid $md-primary;
+
+      &:active {
+        cursor: default;
+      }
+    }
+  }
 }

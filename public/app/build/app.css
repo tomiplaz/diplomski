@@ -36,5 +36,11 @@ body {
     body .document-dialog md-dialog-content {
       width: 100%;
       height: 100%; }
+  body .signature-dialog md-dialog-content {
+    padding: 10px; }
+  body .signature-dialog canvas {
+    border: 1px solid #4caf50; }
+    body .signature-dialog canvas:active {
+      cursor: default; }
 
 /*# sourceMappingURL=app.css.map */

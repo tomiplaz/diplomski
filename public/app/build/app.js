@@ -73,7 +73,7 @@
             getSignatureDialogObject: getSignatureDialogObject
         };
 
-        function getDateTimeDialogObject(scope, event, label, ctrl, property, mindate, maxdate) {
+        function getDateTimeDialogObject(scope, event, data) {
             return {
                 controller: 'DateTimeDialogCtrl as dateTimeDialog',
                 templateUrl: 'app/main/date-time-dialog/date-time-dialog.html',
@@ -83,13 +83,7 @@
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    data: {
-                        label: label,
-                        ctrl: ctrl,
-                        property: property,
-                        mindate: mindate,
-                        maxdate: maxdate
-                    }
+                    data: data
                 }
             }
         }
@@ -107,13 +101,18 @@
             }
         }
 
-        function getSignatureDialogObject(event) {
+        function getSignatureDialogObject(scope, event, data) {
             return {
                 controller: 'SignatureDialogCtrl as signatureDialog',
                 templateUrl: 'app/main/signature-dialog/signature-dialog.html',
                 parent: angular.element(document.body),
+                scope: scope,
+                preserveScope: true,
                 targetEvent: event,
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
+                locals: {
+                    data: data
+                }
             }
         }
     }
@@ -560,7 +559,7 @@
         vm.saveDocument = saveDocument;
         vm.sign = sign;
 
-        function showDateTimeDialog($event, label, ctrl, property) {
+        function showDateTimeDialog($event, label, property) {
             var mindate = formatDate();
             var maxdate;
 
@@ -574,7 +573,15 @@
                 }
             }
 
-            var dateTimeDialogObject = dialogService.getDateTimeDialogObject($scope, $event, label, ctrl, property, mindate, maxdate);
+            var data = {
+                label: label,
+                ctrl: 'newRequestN',
+                property: property,
+                mindate: mindate,
+                maxdate: maxdate
+            };
+
+            var dateTimeDialogObject = dialogService.getDateTimeDialogObject($scope, $event, data);
             $mdDialog.show(dateTimeDialogObject);
         }
 
@@ -627,7 +634,11 @@
         }
 
         function sign($event) {
-            var signatureDialogObject = dialogService.getSignatureDialogObject($event);
+            var data = {
+                ctrl: 'newRequestN'
+            };
+
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, data);
             $mdDialog.show(signatureDialogObject);
         }
 
@@ -643,19 +654,46 @@
         .module('main')
         .controller('SignatureDialogCtrl', SignatureDialogCtrl);
 
-    SignatureDialogCtrl.$inject = ['$mdDialog', '$document'];
-    function SignatureDialogCtrl($mdDialog, $document) {
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'data'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document, data) {
         var vm = this;
+        var signaturePad = null;
+        var confirmButton = null;
 
         vm.hide = hide;
+        vm.clear = clear;
+        vm.confirm = confirm;
+
+        $document.ready(function() {
+            var canvas = document.querySelector('canvas');
+            signaturePad = new SignaturePad(canvas, {
+                minWidth: 0.5,
+                maxWidth: 1.1,
+                onEnd: onEnd
+            });
+
+            confirmButton = angular.element(document.querySelector('button[ng-click="signatureDialog.confirm()"]'));
+            confirmButton.attr('disabled', 'true');
+        });
 
         function hide() {
             $mdDialog.hide();
         }
 
-        $document.ready(function() {
-            var canvas = document.querySelector('canvas');
-            var signaturePad = new SignaturePad(canvas);
-        });
+        function clear() {
+            signaturePad.clear();
+            confirmButton.attr('disabled', 'true');
+        }
+
+        function confirm() {
+            $scope[data.ctrl]['applicant_signature'] = signaturePad.toDataURL();
+            $mdDialog.hide();
+        }
+
+        function onEnd() {
+            if (!signaturePad.isEmpty()) {
+                confirmButton.removeAttr('disabled');
+            }
+        }
     }
 })();

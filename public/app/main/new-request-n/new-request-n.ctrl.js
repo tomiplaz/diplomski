@@ -12,7 +12,7 @@
         vm.saveDocument = saveDocument;
         vm.sign = sign;
 
-        function showDateTimeDialog($event, label, ctrl, property) {
+        function showDateTimeDialog($event, label, property) {
             var mindate = formatDate();
             var maxdate;
 
@@ -26,7 +26,15 @@
                 }
             }
 
-            var dateTimeDialogObject = dialogService.getDateTimeDialogObject($scope, $event, label, ctrl, property, mindate, maxdate);
+            var data = {
+                label: label,
+                ctrl: 'newRequestN',
+                property: property,
+                mindate: mindate,
+                maxdate: maxdate
+            };
+
+            var dateTimeDialogObject = dialogService.getDateTimeDialogObject($scope, $event, data);
             $mdDialog.show(dateTimeDialogObject);
         }
 
@@ -79,7 +87,11 @@
         }
 
         function sign($event) {
-            var signatureDialogObject = dialogService.getSignatureDialogObject($event);
+            var data = {
+                ctrl: 'newRequestN'
+            };
+
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, data);
             $mdDialog.show(signatureDialogObject);
         }
 

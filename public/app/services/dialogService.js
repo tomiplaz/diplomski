@@ -12,7 +12,7 @@
             getSignatureDialogObject: getSignatureDialogObject
         };
 
-        function getDateTimeDialogObject(scope, event, label, ctrl, property, mindate, maxdate) {
+        function getDateTimeDialogObject(scope, event, data) {
             return {
                 controller: 'DateTimeDialogCtrl as dateTimeDialog',
                 templateUrl: 'app/main/date-time-dialog/date-time-dialog.html',
@@ -22,13 +22,7 @@
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    data: {
-                        label: label,
-                        ctrl: ctrl,
-                        property: property,
-                        mindate: mindate,
-                        maxdate: maxdate
-                    }
+                    data: data
                 }
             }
         }
@@ -46,13 +40,18 @@
             }
         }
 
-        function getSignatureDialogObject(event) {
+        function getSignatureDialogObject(scope, event, data) {
             return {
                 controller: 'SignatureDialogCtrl as signatureDialog',
                 templateUrl: 'app/main/signature-dialog/signature-dialog.html',
                 parent: angular.element(document.body),
+                scope: scope,
+                preserveScope: true,
                 targetEvent: event,
-                clickOutsideToClose: true
+                clickOutsideToClose: true,
+                locals: {
+                    data: data
+                }
             }
         }
     }
