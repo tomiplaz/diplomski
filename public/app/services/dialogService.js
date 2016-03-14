@@ -8,7 +8,8 @@
     function dialogService() {
         return {
             getDateTimeDialogObject: getDateTimeDialogObject,
-            getDocumentDialogObject: getDocumentDialogObject
+            getDocumentDialogObject: getDocumentDialogObject,
+            getSignatureDialogObject: getSignatureDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, label, ctrl, property, mindate, maxdate) {
@@ -42,6 +43,16 @@
                 locals: {
                     data: data
                 }
+            }
+        }
+
+        function getSignatureDialogObject(event) {
+            return {
+                controller: 'SignatureDialogCtrl as signatureDialog',
+                templateUrl: 'app/main/signature-dialog/signature-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true
             }
         }
     }

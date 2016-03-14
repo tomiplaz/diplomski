@@ -10,6 +10,7 @@
         vm.showDateTimeDialog = showDateTimeDialog;
         vm.showDocument = showDocument;
         vm.saveDocument = saveDocument;
+        vm.sign = sign;
 
         function showDateTimeDialog($event, label, ctrl, property) {
             var mindate = formatDate();
@@ -75,6 +76,11 @@
 
             var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
             $mdDialog.show(documentDialogObject);
+        }
+
+        function sign($event) {
+            var signatureDialogObject = dialogService.getSignatureDialogObject($event);
+            $mdDialog.show(signatureDialogObject);
         }
 
         function formatDate(value) {

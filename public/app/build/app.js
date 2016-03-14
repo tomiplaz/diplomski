@@ -69,7 +69,8 @@
     function dialogService() {
         return {
             getDateTimeDialogObject: getDateTimeDialogObject,
-            getDocumentDialogObject: getDocumentDialogObject
+            getDocumentDialogObject: getDocumentDialogObject,
+            getSignatureDialogObject: getSignatureDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, label, ctrl, property, mindate, maxdate) {
@@ -103,6 +104,16 @@
                 locals: {
                     data: data
                 }
+            }
+        }
+
+        function getSignatureDialogObject(event) {
+            return {
+                controller: 'SignatureDialogCtrl as signatureDialog',
+                templateUrl: 'app/main/signature-dialog/signature-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true
             }
         }
     }
@@ -547,6 +558,7 @@
         vm.showDateTimeDialog = showDateTimeDialog;
         vm.showDocument = showDocument;
         vm.saveDocument = saveDocument;
+        vm.sign = sign;
 
         function showDateTimeDialog($event, label, ctrl, property) {
             var mindate = formatDate();
@@ -614,8 +626,36 @@
             $mdDialog.show(documentDialogObject);
         }
 
+        function sign($event) {
+            var signatureDialogObject = dialogService.getSignatureDialogObject($event);
+            $mdDialog.show(signatureDialogObject);
+        }
+
         function formatDate(value) {
             return $filter('date')(!value ? new Date() : new Date(value), "yyyy/MM/dd");
         }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('SignatureDialogCtrl', SignatureDialogCtrl);
+
+    SignatureDialogCtrl.$inject = ['$mdDialog', '$document'];
+    function SignatureDialogCtrl($mdDialog, $document) {
+        var vm = this;
+
+        vm.hide = hide;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        $document.ready(function() {
+            var canvas = document.querySelector('canvas');
+            var signaturePad = new SignaturePad(canvas);
+        });
     }
 })();
