@@ -45,7 +45,7 @@
       <file leaf-file-name="new-request-n.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-26.807692">
+            <state vertical-scroll-proportion="0.0">
               <caret line="122" column="66" selection-start-line="122" selection-start-column="66" selection-end-line="122" selection-end-column="66" />
               <folding />
             </state>
@@ -55,7 +55,7 @@
       <file leaf-file-name="2016_03_06_173923_create_request_ns_table.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_06_173923_create_request_ns_table.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-18.307692">
+            <state vertical-scroll-proportion="0.0">
               <caret line="29" column="54" selection-start-line="29" selection-start-column="54" selection-end-line="29" selection-end-column="54" />
               <folding />
             </state>
@@ -65,7 +65,7 @@
       <file leaf-file-name="app.scss" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/app/app.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.7647057">
+            <state vertical-scroll-proportion="0.0">
               <caret line="27" column="18" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="18" />
               <folding />
             </state>
@@ -92,11 +92,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="documentService.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="documentService.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/app/services/documentService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.29469123">
+            <state vertical-scroll-proportion="0.0">
               <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.18930958">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -154,7 +164,6 @@
         <option value="$PROJECT_DIR$/app/Http/routes.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/MainController.php" />
         <option value="$PROJECT_DIR$/public/app/services/toastService.js" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/public/gulpfile.js" />
         <option value="$PROJECT_DIR$/public/package.json" />
         <option value="$PROJECT_DIR$/resources/views/index.php" />
@@ -168,6 +177,7 @@
         <option value="$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.html" />
         <option value="$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/services/documentService.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -216,7 +226,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -623,7 +633,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -730,13 +740,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/config/app.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.979933">
-          <caret line="210" column="21" selection-start-line="210" selection-start-column="21" selection-end-line="210" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/compile.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -954,13 +957,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17037863">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/app/services/toastService.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.23943663">
@@ -1030,7 +1026,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.56856185">
           <caret line="31" column="1" selection-start-line="31" selection-start-column="1" selection-end-line="31" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1038,13 +1033,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.43589744">
           <caret line="23" column="60" selection-start-line="23" selection-start-column="60" selection-end-line="23" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/app/app.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.7647057">
+        <state vertical-scroll-proportion="0.0">
           <caret line="27" column="18" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="18" />
           <folding />
         </state>
@@ -1052,7 +1046,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_06_173923_create_request_ns_table.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.307692">
+        <state vertical-scroll-proportion="0.0">
           <caret line="29" column="54" selection-start-line="29" selection-start-column="54" selection-end-line="29" selection-end-column="54" />
           <folding />
         </state>
@@ -1060,7 +1054,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-26.807692">
+        <state vertical-scroll-proportion="0.0">
           <caret line="122" column="66" selection-start-line="122" selection-start-column="66" selection-end-line="122" selection-end-column="66" />
           <folding />
         </state>
@@ -1090,10 +1084,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/app/services/documentService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29469123">
+        <state vertical-scroll-proportion="0.0">
           <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18930958">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding />
         </state>
       </provider>
