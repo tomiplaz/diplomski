@@ -5,8 +5,8 @@
         .module('main')
         .controller('SignatureDialogCtrl', SignatureDialogCtrl);
 
-    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'data'];
-    function SignatureDialogCtrl($scope, $mdDialog, $document, data) {
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document) {
         var vm = this;
         var signaturePad = null;
         var confirmButton = null;
@@ -37,7 +37,7 @@
         }
 
         function confirm() {
-            $scope[data.ctrl]['applicantSignature'] = signaturePad.toDataURL();
+            $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
             hide();
         }
 

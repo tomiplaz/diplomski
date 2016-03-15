@@ -40,7 +40,7 @@
             }
         }
 
-        function getSignatureDialogObject(scope, event, data) {
+        function getSignatureDialogObject(scope, event) {
             return {
                 controller: 'SignatureDialogCtrl as signatureDialog',
                 templateUrl: 'app/main/signature-dialog/signature-dialog.html',
@@ -48,10 +48,7 @@
                 scope: scope,
                 preserveScope: true,
                 targetEvent: event,
-                clickOutsideToClose: true,
-                locals: {
-                    data: data
-                }
+                clickOutsideToClose: true
             }
         }
     }

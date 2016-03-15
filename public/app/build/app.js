@@ -30,8 +30,7 @@
     var scDateTimeConfig = {
         defaultTheme: 'material',
         autosave: false,
-        defaultMode: 'time',
-        defaultDate: undefined,
+        defaultDate: new Date(Date.now() + 7 * 86400000),
         displayMode: 'full',
         defaultOrientation: false,
         displayTwentyfour: true,
@@ -101,7 +100,7 @@
             }
         }
 
-        function getSignatureDialogObject(scope, event, data) {
+        function getSignatureDialogObject(scope, event) {
             return {
                 controller: 'SignatureDialogCtrl as signatureDialog',
                 templateUrl: 'app/main/signature-dialog/signature-dialog.html',
@@ -109,10 +108,7 @@
                 scope: scope,
                 preserveScope: true,
                 targetEvent: event,
-                clickOutsideToClose: true,
-                locals: {
-                    data: data
-                }
+                clickOutsideToClose: true
             }
         }
     }
@@ -130,65 +126,10 @@
         };
 
         function getDocument(data) {
-            return data.type == 'n' ? getRequestNDocument(data) : getRequestZDocument(data);
-        }
-
-        function getRequestNDocument(data) {
             return {
                 pageSize: 'A4',
                 pageMargins: 60,
-                content: [
-                    { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
-                    { text: "Elektrotehnički fakultet", style: 'header' },
-                    { text: "U Osijeku, " + data.documentDate, style: 'documentDate' },
-                    { text: "Dekanu Elektrotehničkog fakulteta Osijek".toUpperCase(), style: ['center', 'titleTop'] },
-                    { text: "Zahtjev za izdavanje putnog naloga".toUpperCase(), style: ['center', 'titleMiddle'] },
-                    { text: "Najkasnije 7 dana prije putovanja", style: ['center', 'titleBottom'] },
-                    { text: "Ime, prezime i radno mjesto:", style: 'regular' },
-                    { text: data.name + " " + data.surname + ", " + data.workplace, style: 'input' },
-                    { text: "Molim odobrenje službenog puta za (mjesto, fakultet, kolegij):", style: ['regular', 'topMargin10'] },
-                    { text: data.forPlace + ", " + data.forFaculty + ", " + data.forSubject, style: 'input' },
-                    {
-                        columns: [
-                            { text: "Vrijeme polaska:", style: ['regular', 'topMargin10'], width: '*' },
-                            { text: "Vrijeme povratka:", style: ['regular', 'topMargin10'], width: '*' },
-                            { text: "Trajanje putovanja:", style: ['regular', 'topMargin10'], width: '*' }
-                        ]
-                    },
-                    {
-                        columns: [
-                            { text: data.startTimestamp, style: 'input', width: '*' },
-                            { text: data.endTimestamp, style: 'input', width: '*' },
-                            { text: getDuration(data.startTimestampRaw, data.endTimestampRaw), style: 'input', width: '*' }
-                        ]
-                    },
-                    { text: "Svrha:", style: ['regular', 'topMargin10'] },
-                    { text: data.purpose, style: 'input' },
-                    { text: "Vrsta prijevoza:", style: ['regular', 'topMargin10'] },
-                    { text: data.transportation, style: 'input' },
-                    { text: "Troškovi terete:", style: ['regular', 'topMargin10'] },
-                    { text: data.expensesResponsible, style: 'input' },
-                    { text: "Obrazloženje:", style: 'regular' },
-                    { text: data.expensesExplanation, style: 'input' },
-                    {
-                        columns: [
-                            { text: "Podnositelj zahtjeva:", style: ['regular', 'topMargin70', 'left'] },
-                            { text: "Odobrava:", style: ['regular', 'topMargin70', 'right'] }
-                        ]
-                    },
-                    {
-                        columns: [
-                            { image: data.applicantSignature, width: 125, height: 35 },
-                            { text: "", style: ['input', 'right'], width: 125, height: 35 }
-                        ]
-                    },
-                    {
-                        columns: [
-                            { text: "", style: ['regular', 'left'] },
-                            { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regular', 'right'] }
-                        ]
-                    }
-                ],
+                content: getContent(data),
                 styles: {
                     header: {
                         fontSize: 16,
@@ -220,11 +161,11 @@
                         fontSize: 13,
                         margin: [0, 0, 0, 8]
                     },
-                    topMargin10: {
+                    topMargin20: {
                         margin: [0, 20, 0, 0]
                     },
-                    topMargin70: {
-                        margin: [0, 70, 0, 0]
+                    topMargin40: {
+                        margin: [0, 40, 0, 0]
                     },
                     left: {
                         alignment: 'left'
@@ -236,8 +177,69 @@
             }
         }
 
-        function getRequestZDocument() {
+        function getContent(data) {
+            var topContent = [
+                { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
+                { text: "Elektrotehnički fakultet", style: 'header' },
+                { text: "U Osijeku, " + data.documentDate, style: 'documentDate' },
+                { text: "Dekanu Elektrotehničkog fakulteta Osijek".toUpperCase(), style: ['center', 'titleTop'] },
+                { text: "Zahtjev za izdavanje putnog naloga".toUpperCase(), style: ['center', 'titleMiddle'] },
+                { text: "Najkasnije 7 dana prije putovanja", style: ['center', 'titleBottom'] },
+                { text: "Ime, prezime i radno mjesto:", style: 'regular' },
+                { text: data.name + " " + data.surname + ", " + data.workplace, style: 'input' }
+            ];
+            var centerContentN = [
+                { text: "Molim odobrenje službenog puta za (mjesto, fakultet, kolegij):", style: ['regular', 'topMargin20'] },
+                { text: data.forPlace + ", " + data.forFaculty + ", " + data.forSubject, style: 'input' }
+            ];
+            var centerContentZorS = [
+                { text: "Molim odobrenje službenog puta za (mjesto, akontacija):", style: ['regular', 'topMargin20'] },
+                { text: data.forPlace + ", " + data.advancePayment, style: 'input' }
+            ];
+            var bottomContent = [
+                {
+                    columns: [
+                        { text: "Vrijeme polaska:", style: ['regular', 'topMargin20'], width: '*' },
+                        { text: "Vrijeme povratka:", style: ['regular', 'topMargin20'], width: '*' },
+                        { text: "Trajanje putovanja:", style: ['regular', 'topMargin20'], width: '*' }
+                    ]
+                },
+                {
+                    columns: [
+                        { text: data.startTimestamp, style: 'input', width: '*' },
+                        { text: data.endTimestamp, style: 'input', width: '*' },
+                        { text: getDuration(data.startTimestampRaw, data.endTimestampRaw), style: 'input', width: '*' }
+                    ]
+                },
+                { text: "Svrha:", style: ['regular', 'topMargin20'] },
+                { text: data.description, style: 'input' },
+                { text: "Vrsta prijevoza:", style: ['regular', 'topMargin20'] },
+                { text: data.transportation, style: 'input' },
+                { text: "Troškovi terete:", style: ['regular', 'topMargin20'] },
+                { text: data.expensesResponsible, style: 'input' },
+                { text: "Obrazloženje:", style: 'regular' },
+                { text: data.expensesExplanation, style: 'input' },
+                {
+                    columns: [
+                        { text: "Podnositelj zahtjeva:", style: ['regular', 'topMargin40', 'left'] },
+                        { text: "Odobrava:", style: ['regular', 'topMargin40', 'right'] }
+                    ]
+                },
+                {
+                    columns: [
+                        { image: data.applicantSignature, width: 125, height: 35 },
+                        { text: "", style: ['input', 'right'], width: 125, height: 35 }
+                    ]
+                },
+                {
+                    columns: [
+                        { text: "", style: ['regular', 'left'] },
+                        { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regular', 'right'] }
+                    ]
+                }
+            ];
 
+            return topContent.concat(data.type == 'n' ? centerContentN : centerContentZorS, bottomContent);
         }
 
         function getDuration(start, end) {
@@ -293,7 +295,7 @@
                     .textContent(text)
                     .position('bottom right')
                     .capsule(true)
-                    .hideDelay(duration == undefined ? 1500 : duration)
+                    .hideDelay(duration == undefined ? 2000 : duration)
             );
         }
     }
@@ -305,18 +307,17 @@
         .module('app')
         .factory('userService', userService);
 
-    userService.$inject = ['Restangular', '$state'];
-    function userService(Restangular, $state) {
+    userService.$inject = ['Restangular', '$state', 'toastService'];
+    function userService(Restangular, $state, toastService) {
         return {
             getUser: getUser
         };
 
         function getUser() {
-            // change request structure?
             return Restangular.all('auth').customGET('user').then(function(res) {
                 return res.user;
-            }, function(error) {
-                // show error message?
+            }, function() {
+                toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
                 $state.go('login');
             });
         }
@@ -351,8 +352,8 @@
         .module('login')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$auth', '$state'];
-    function LoginCtrl($auth, $state) {
+    LoginCtrl.$inject = ['$auth', '$state', 'toastService'];
+    function LoginCtrl($auth, $state, toastService) {
         var vm = this;
         vm.login = login;
         vm.user = null;
@@ -360,8 +361,8 @@
         function login() {
             $auth.login({ email: vm.email, password: vm.password }).then(function() {
                 $state.go('main.home');
-            }, function(error) {
-                // show error message
+            }, function() {
+                toastService.show("Greška tijekom autentikacije!", 3000);
             });
         }
     }
@@ -397,14 +398,10 @@
                 url: '/home',
                 templateUrl: 'app/main/main.home.html'
             })
-            .state('main.new-request-n', {
-                url: '/new-request-n',
-                templateUrl: 'app/main/new-request-n/new-request-n.html',
-                controller: 'NewRequestNCtrl as newRequestN'
-            })
-            .state('main.new-request-z', {
-                url: '/new-request-z',
-                templateUrl: 'app/main/new-request-z/new-request-z.html'
+            .state('main.new-request', {
+                url: '/new-request',
+                templateUrl: 'app/main/new-request/new-request.html',
+                controller: 'NewRequestCtrl as newRequest'
             })
             .state('main.sent-requests', {
                 url: '/sent-requests',
@@ -437,14 +434,8 @@
                 type: [0, 1, 2, 3]
             },
             {
-                name: 'main.new-request-n',
-                label: 'Novi zahtjev (nastavna aktivnost)',
-                icon: 'app/icons/ic_library_add_black_24px.svg',
-                type: [0]
-            },
-            {
-                name: 'main.new-request-z',
-                label: 'Novi zahtjev (znanstvena aktivnost)',
+                name: 'main.new-request',
+                label: 'Novi zahtjev',
                 icon: 'app/icons/ic_library_add_black_24px.svg',
                 type: [0]
             },
@@ -496,19 +487,19 @@
         }
 
         function cancel() {
-            $scope[data.ctrl][data.property] = null;
+            $scope['newRequest'][data.property] = null;
             hide();
         }
 
         function save($value) {
-            $scope[data.ctrl][data.property + 'Raw'] = $value;
+            $scope['newRequest'][data.property + 'Raw'] = $value;
 
             if (data.property == 'endTimestamp') {
-                if ($scope[data.ctrl]['startTimestamp'] != undefined && new Date($value) > new Date($scope[data.ctrl]['startTimestampRaw'])) {
-                    $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
+                    $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
                 }
             } else {
-                $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
             }
 
             hide();
@@ -522,8 +513,8 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', '$filter', 'Restangular', 'toastService'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, $filter, Restangular, toastService) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', '$filter', 'Restangular', 'toastService', '$state'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, $filter, Restangular, toastService, $state) {
         var vm = this;
 
         vm.hide = hide;
@@ -545,26 +536,29 @@
         }
 
         function send() {
-            var newRequestN = {
+            var newRequest = {
+                type: data.type,
                 document_date: $filter('date')(new Date(), 'yyyy-MM-dd'),
                 name: data.name,
                 surname: data.surname,
                 workplace: data.workplace,
                 for_place: data.forPlace,
-                for_faculty: data.forFaculty,
-                for_subject: data.forSubject,
+                for_faculty: data.type != 'n' ? null : data.forFaculty,
+                for_subject: data.type != 'n' ? null : data.forSubject,
+                advance_payment: data.type == 'n' ? null : data.advancePayment,
                 start_timestamp: $filter('date')(new Date(data.startTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
                 end_timestamp: $filter('date')(new Date(data.endTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
-                purpose: data.purpose,
+                description: data.description,
                 transportation: data.transportation,
                 expenses_responsible: data.expensesResponsible,
                 expenses_explanation: data.expensesExplanation,
                 applicant_signature: data.applicantSignature
             };
 
-            Restangular.all('request-ns').post(newRequestN).then(function() {
+            Restangular.all('requests').post(newRequest).then(function() {
                 hide();
                 toastService.show("Dokument spremljen!");
+                $state.go('main.sent-requests');
             }, function() {
                 hide();
                 toastService.show("Greška tijekom spremanja dokumenta!", 3000);
@@ -575,10 +569,10 @@
 (function() {
     angular
         .module('main')
-        .controller('NewRequestNCtrl', NewRequestNCtrl);
+        .controller('NewRequestCtrl', NewRequestCtrl);
 
-    NewRequestNCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter'];
-    function NewRequestNCtrl($scope, dialogService, $mdDialog, $filter) {
+    NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter'];
+    function NewRequestCtrl($scope, dialogService, $mdDialog, $filter) {
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
@@ -587,22 +581,21 @@
         vm.clear = clear;
 
         function showDateTimeDialog($event, label, property) {
-            var mindate = formatDate();
+            var mindate = $filter('date')(new Date(Date.now() + 7 * 86400000), 'yyyy/MM/dd');
             var maxdate;
 
             if (property == 'startTimestamp') {
                 if (vm.endTimestamp) {
-                    maxdate = formatDate(vm.endTimestampRaw);
+                    maxdate = $filter('date')(new Date(vm.endTimestampRaw), 'yyyy/MM/dd');
                 }
             } else if (property == 'endTimestamp') {
                 if (vm.startTimestamp) {
-                    mindate = formatDate(vm.startTimestampRaw);
+                    mindate = $filter('date')(new Date(vm.startTimestampRaw), 'yyyy/MM/dd');
                 }
             }
 
             var data = {
                 label: label,
-                ctrl: 'newRequestN',
                 property: property,
                 mindate: mindate,
                 maxdate: maxdate
@@ -614,7 +607,7 @@
 
         function showDocumentDialog($event) {
             var data = {
-                type: 'n',
+                type: vm.type,
                 documentDate: $filter('date')(new Date(), 'dd.MM.yyyy.'),
                 name: vm.name,
                 surname: vm.surname,
@@ -622,11 +615,12 @@
                 forPlace: vm.forPlace,
                 forFaculty: vm.forFaculty,
                 forSubject: vm.forSubject,
+                advancePayment: vm.advancePayment,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
                 startTimestampRaw: vm.startTimestampRaw,
                 endTimestampRaw: vm.endTimestampRaw,
-                purpose: vm.purpose,
+                description: vm.description,
                 transportation: vm.transportation,
                 expensesResponsible: vm.expensesResponsible,
                 expensesExplanation: vm.expensesExplanation,
@@ -638,34 +632,28 @@
         }
 
         function sign($event) {
-            var data = {
-                ctrl: 'newRequestN'
-            };
-
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, data);
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event);
             $mdDialog.show(signatureDialogObject);
         }
 
         function clear() {
+            vm.type = null;
             vm.name = null;
             vm.surname = null;
             vm.workplace = null;
             vm.forPlace = null;
             vm.forFaculty = null;
             vm.forSubject = null;
+            vm.advancePayment = null;
             vm.startTimestamp = null;
             vm.endTimestamp = null;
             vm.startTimestampRaw = null;
             vm.endTimestampRaw = null;
-            vm.purpose = null;
+            vm.description = null;
             vm.transportation = null;
             vm.expensesResponsible = null;
             vm.expensesExplanation = null;
             vm.applicantSignature = null;
-        }
-
-        function formatDate(value) {
-            return $filter('date')(!value ? new Date() : new Date(value), "yyyy/MM/dd");
         }
     }
 })();
@@ -676,8 +664,8 @@
         .module('main')
         .controller('SignatureDialogCtrl', SignatureDialogCtrl);
 
-    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'data'];
-    function SignatureDialogCtrl($scope, $mdDialog, $document, data) {
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document) {
         var vm = this;
         var signaturePad = null;
         var confirmButton = null;
@@ -708,7 +696,7 @@
         }
 
         function confirm() {
-            $scope[data.ctrl]['applicantSignature'] = signaturePad.toDataURL();
+            $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
             hide();
         }
 

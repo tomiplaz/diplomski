@@ -18,7 +18,7 @@
                     .textContent(text)
                     .position('bottom right')
                     .capsule(true)
-                    .hideDelay(duration == undefined ? 1500 : duration)
+                    .hideDelay(duration == undefined ? 2000 : duration)
             );
         }
     }

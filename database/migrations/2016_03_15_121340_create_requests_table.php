@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRequestNsTable extends Migration
+class CreateRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,23 +12,27 @@ class CreateRequestNsTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_ns', function (Blueprint $table) {
+        Schema::create('requests', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
 
+            $table->char('type', 1);
             $table->date('document_date');
 
-            $table->string('name', 20);
-            $table->string('surname', 20);
+            $table->string('name', 30);
+            $table->string('surname', 30);
             $table->string('workplace', 50);
 
             $table->string('for_place', 50);
-            $table->string('for_faculty', 50);
-            $table->string('for_subject', 50);
+            $table->string('for_faculty', 50)->nullable();
+            $table->string('for_subject', 50)->nullable();
 
             $table->timestamp('start_timestamp');
             $table->timestamp('end_timestamp');
-            $table->text('purpose');
+
+            $table->string('advance_payment', 10)->nullable();
+
+            $table->text('description');
 
             $table->string('transportation', 50);
             $table->string('expenses_responsible', 50);
@@ -51,6 +55,6 @@ class CreateRequestNsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('request_ns');
+        Schema::drop('requests');
     }
 }

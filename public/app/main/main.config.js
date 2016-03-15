@@ -22,14 +22,10 @@
                 url: '/home',
                 templateUrl: 'app/main/main.home.html'
             })
-            .state('main.new-request-n', {
-                url: '/new-request-n',
-                templateUrl: 'app/main/new-request-n/new-request-n.html',
-                controller: 'NewRequestNCtrl as newRequestN'
-            })
-            .state('main.new-request-z', {
-                url: '/new-request-z',
-                templateUrl: 'app/main/new-request-z/new-request-z.html'
+            .state('main.new-request', {
+                url: '/new-request',
+                templateUrl: 'app/main/new-request/new-request.html',
+                controller: 'NewRequestCtrl as newRequest'
             })
             .state('main.sent-requests', {
                 url: '/sent-requests',

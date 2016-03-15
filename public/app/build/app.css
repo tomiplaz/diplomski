@@ -34,6 +34,8 @@ body {
       color: #000 !important; }
   body .signature-input {
     width: 250px; }
+  body .md-input-container-height {
+    height: 94px; }
   body .full-width {
     width: 100%; }
   body .document-dialog {

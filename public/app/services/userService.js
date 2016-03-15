@@ -5,18 +5,17 @@
         .module('app')
         .factory('userService', userService);
 
-    userService.$inject = ['Restangular', '$state'];
-    function userService(Restangular, $state) {
+    userService.$inject = ['Restangular', '$state', 'toastService'];
+    function userService(Restangular, $state, toastService) {
         return {
             getUser: getUser
         };
 
         function getUser() {
-            // change request structure?
             return Restangular.all('auth').customGET('user').then(function(res) {
                 return res.user;
-            }, function(error) {
-                // show error message?
+            }, function() {
+                toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
                 $state.go('login');
             });
         }

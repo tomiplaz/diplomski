@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 
 use App\Http\Requests;
 
-use App\RequestN;
+use App\Request as Request;
 
 class MainController extends Controller
 {
     /**
-     * Get all N-type requests.
+     * Get all requests.
      */
-    public function getRequestNs() {
+    public function getRequests() {
 
     }
 
     /**
-     * Create a new N-type request.
+     * Create a new request.
      *
-     * @param Request $request
+     * @param HttpRequest $request
      */
-    public function newRequestN(Request $request) {
-        RequestN::create($request->all());
+    public function newRequest(HttpRequest $request) {
+        Request::create($request->all());
     }
 }

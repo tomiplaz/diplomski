@@ -21,8 +21,7 @@
     var scDateTimeConfig = {
         defaultTheme: 'material',
         autosave: false,
-        defaultMode: 'time',
-        defaultDate: undefined,
+        defaultDate: new Date(Date.now() + 7 * 86400000),
         displayMode: 'full',
         defaultOrientation: false,
         displayTwentyfour: true,

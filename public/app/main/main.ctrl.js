@@ -22,14 +22,8 @@
                 type: [0, 1, 2, 3]
             },
             {
-                name: 'main.new-request-n',
-                label: 'Novi zahtjev (nastavna aktivnost)',
-                icon: 'app/icons/ic_library_add_black_24px.svg',
-                type: [0]
-            },
-            {
-                name: 'main.new-request-z',
-                label: 'Novi zahtjev (znanstvena aktivnost)',
+                name: 'main.new-request',
+                label: 'Novi zahtjev',
                 icon: 'app/icons/ic_library_add_black_24px.svg',
                 type: [0]
             },

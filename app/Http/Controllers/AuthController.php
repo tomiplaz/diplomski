@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 
 use App\Http\Requests;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -12,7 +12,13 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function authenticate(Request $request) {
+    /**
+     * Authenticate user by checking credentials and returning a token.
+     *
+     * @param HttpRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function authenticate(HttpRequest $request) {
         $credentials = $request->only('email', 'password');
 
         try {
@@ -26,6 +32,11 @@ class AuthController extends Controller
         return response()->json(compact('token'));
     }
 
+    /**
+     * Get user's data based on a provided token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAuthenticatedUser() {
         try {
             if (!$user = JWTAuth::parseToken()->authenticate()) {

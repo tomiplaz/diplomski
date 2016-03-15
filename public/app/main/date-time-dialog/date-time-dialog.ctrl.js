@@ -22,19 +22,19 @@
         }
 
         function cancel() {
-            $scope[data.ctrl][data.property] = null;
+            $scope['newRequest'][data.property] = null;
             hide();
         }
 
         function save($value) {
-            $scope[data.ctrl][data.property + 'Raw'] = $value;
+            $scope['newRequest'][data.property + 'Raw'] = $value;
 
             if (data.property == 'endTimestamp') {
-                if ($scope[data.ctrl]['startTimestamp'] != undefined && new Date($value) > new Date($scope[data.ctrl]['startTimestampRaw'])) {
-                    $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
+                    $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
                 }
             } else {
-                $scope[data.ctrl][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
             }
 
             hide();
