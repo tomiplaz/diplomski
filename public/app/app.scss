@@ -6,12 +6,8 @@ $md-warn: rgb(255, 171, 0);
 body {
   font-family: $font-default;
 
-  .main-view {
-    padding-bottom: 3%;
-  }
-
   header {
-    padding: 1% 5%;
+    padding: 1% 2%;
   }
 
   button.md-mini:not([disabled]){
@@ -25,12 +21,7 @@ body {
   }
 
   .main-content {
-    width: 80%;
-  }
-
-  .wide {
-    max-width: 608px;
-    width: 100%;
+    width: 90%;
   }
 
   .time-date {
@@ -107,5 +98,9 @@ body {
         cursor: default;
       }
     }
+  }
+
+  .requests-frame {
+    height: 700px;
   }
 }

@@ -43,7 +43,7 @@
         .value('scDateTimeI18n', scDateTimeI18n)
         .value('scDateTimeConfig', scDateTimeConfig);
 
-    function configure($urlRouterProvider, RestangularProvider, $mdThemingProvider, $authProvider) {
+    function configure($urlRouterProvider, RestangularProvider, $mdThemingProvider, $authProvider, $mdIconProvider) {
         $mdThemingProvider
             .theme('default')
             .primaryPalette('green')
@@ -51,11 +51,71 @@
             .warnPalette('amber')
             .backgroundPalette('grey');
 
+        $mdIconProvider
+            .icon('check', 'app/icons/ic_check_black_24px.svg')
+            .icon('close', 'app/icons/ic_close_black_24px.svg')
+            .icon('delete', 'app/icons/ic_delete_black_24px.svg')
+            .icon('edit', 'app/icons/ic_edit_black_24px.svg')
+            .icon('home', 'app/icons/ic_home_black_24px.svg')
+            .icon('library_add', 'app/icons/ic_library_add_black_24px.svg')
+            .icon('library_books', 'app/icons/ic_library_books_black_24px.svg')
+            .icon('menu', 'app/icons/ic_menu_black_24px.svg')
+            .icon('picture_as_pdf', 'app/icons/ic_picture_as_pdf_black_24px.svg')
+            .icon('save', 'app/icons/ic_save_black_24px.svg')
+            .icon('send', 'app/icons/ic_send_black_24px.svg')
+            .icon('navigate_before', 'app/icons/ic_navigate_before_black_24px.svg')
+            .icon('navigate_next', 'app/icons/ic_navigate_next_black_24px.svg')
+            .icon('arrow_back', 'app/icons/ic_arrow_back_black_24px.svg')
+            .icon('arrow_forward', 'app/icons/ic_arrow_forward_black_24px.svg');
+
+
         $authProvider.loginUrl = 'api/v1/auth';
 
         RestangularProvider.setBaseUrl('api/v1');
 
         $urlRouterProvider.otherwise('/login');
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .factory('apiService', apiService);
+
+    apiService.$inject = ['Restangular', '$state', 'toastService'];
+    function apiService(Restangular, $state, toastService) {
+        return {
+            getUser: getUser,
+            getRequests: getRequests,
+            postRequest: postRequest
+        };
+
+        function getUser() {
+            return Restangular.all('auth').customGET('user').then(function(res) {
+                return res.user;
+            }, function() {
+                toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
+                $state.go('login');
+            });
+        }
+
+        function getRequests() {
+            return Restangular.all('requests').getList().then(function(res) {
+                return res;
+            }, function() {
+                toastService.show("Greška tijekom dohvaćanja zahtjeva!", 3000);
+            });
+        }
+
+        function postRequest(newRequest) {
+            Restangular.all('requests').post(newRequest).then(function() {
+                toastService.show("Dokument spremljen!");
+                $state.go('main.sent-requests');
+            }, function() {
+                toastService.show("Greška tijekom spremanja dokumenta!", 3000);
+            });
+        }
     }
 })();
 (function() {
@@ -208,7 +268,7 @@
                     columns: [
                         { text: data.startTimestamp, style: 'input', width: '*' },
                         { text: data.endTimestamp, style: 'input', width: '*' },
-                        { text: getDuration(data.startTimestampRaw, data.endTimestampRaw), style: 'input', width: '*' }
+                        { text: data.duration, style: 'input', width: '*' }
                     ]
                 },
                 { text: "Svrha:", style: ['regular', 'topMargin20'] },
@@ -241,6 +301,25 @@
 
             return topContent.concat(data.type == 'n' ? centerContentN : centerContentZorS, bottomContent);
         }
+    }
+})();
+(function() {
+    'use strict'
+
+    angular
+        .module('app')
+        .factory('helperService', helperService);
+
+    helperService.$inject = ['$filter'];
+    function helperService($filter) {
+        return {
+            formatDate: formatDate,
+            getDuration: getDuration
+        };
+
+        function formatDate(timestamp, format) {
+            return $filter('date')(!timestamp ? new Date() : new Date(timestamp), format);
+        }
 
         function getDuration(start, end) {
             var totalMs = new Date(end) - new Date(start);
@@ -264,8 +343,8 @@
                 case 1: case 21:
                 break;
                 case 2: case 3: case 4: case 22: case 23: case 24:
-                    hoursSuffix += "a";
-                    break;
+                hoursSuffix += "a";
+                break;
                 default:
                     hoursSuffix += "i";
                     break;
@@ -297,29 +376,6 @@
                     .capsule(true)
                     .hideDelay(duration == undefined ? 2000 : duration)
             );
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app')
-        .factory('userService', userService);
-
-    userService.$inject = ['Restangular', '$state', 'toastService'];
-    function userService(Restangular, $state, toastService) {
-        return {
-            getUser: getUser
-        };
-
-        function getUser() {
-            return Restangular.all('auth').customGET('user').then(function(res) {
-                return res.user;
-            }, function() {
-                toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
-                $state.go('login');
-            });
         }
     }
 })();
@@ -389,8 +445,8 @@
                 templateUrl: 'app/main/main.html',
                 controller: 'MainCtrl as main',
                 resolve: {
-                    user: function(userService) {
-                        return userService.getUser();
+                    user: function(apiService) {
+                        return apiService.getUser();
                     }
                 }
             })
@@ -403,9 +459,15 @@
                 templateUrl: 'app/main/new-request/new-request.html',
                 controller: 'NewRequestCtrl as newRequest'
             })
-            .state('main.sent-requests', {
-                url: '/sent-requests',
-                templateUrl: 'app/main/sent-requests/sent-requests.html'
+            .state('main.requests', {
+                url: '/requests',
+                templateUrl: 'app/main/requests/requests.html',
+                controller: 'RequestsCtrl as requests',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests();
+                    }
+                }
             });
     }
 })();
@@ -430,20 +492,20 @@
             {
                 name: 'main.home',
                 label: 'Početna',
-                icon: 'app/icons/ic_home_black_24px.svg',
+                icon: 'home',
                 type: [0, 1, 2, 3]
             },
             {
                 name: 'main.new-request',
                 label: 'Novi zahtjev',
-                icon: 'app/icons/ic_library_add_black_24px.svg',
+                icon: 'library_add',
                 type: [0]
             },
             {
-                name: 'main.sent-requests',
-                label: 'Poslani zahtjevi',
-                icon: 'app/icons/ic_library_books_black_24px.svg',
-                type: [0]
+                name: 'main.requests',
+                label: 'Zahtjevi',
+                icon: 'library_books',
+                type: [1]
             }
         ];
 
@@ -470,8 +532,8 @@
         .module('main')
         .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
 
-    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', '$filter'];
-    function DateTimeDialogCtrl($scope, $mdDialog, data, $filter) {
+    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
+    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
         var vm = this;
 
         vm.label = data.label;
@@ -496,10 +558,10 @@
 
             if (data.property == 'endTimestamp') {
                 if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
-                    $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
                 }
             } else {
-                $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
             }
 
             hide();
@@ -513,8 +575,8 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', '$filter', 'Restangular', 'toastService', '$state'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, $filter, Restangular, toastService, $state) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
         var vm = this;
 
         vm.hide = hide;
@@ -538,7 +600,7 @@
         function send() {
             var newRequest = {
                 type: data.type,
-                document_date: $filter('date')(new Date(), 'yyyy-MM-dd'),
+                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
                 name: data.name,
                 surname: data.surname,
                 workplace: data.workplace,
@@ -546,8 +608,9 @@
                 for_faculty: data.type != 'n' ? null : data.forFaculty,
                 for_subject: data.type != 'n' ? null : data.forSubject,
                 advance_payment: data.type == 'n' ? null : data.advancePayment,
-                start_timestamp: $filter('date')(new Date(data.startTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
-                end_timestamp: $filter('date')(new Date(data.endTimestampRaw), 'yyyy-MM-dd HH:mm:ss'),
+                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                duration: helperService.getDuration(data.startTimestampRaw, data.endTimestampRaw),
                 description: data.description,
                 transportation: data.transportation,
                 expenses_responsible: data.expensesResponsible,
@@ -555,14 +618,82 @@
                 applicant_signature: data.applicantSignature
             };
 
-            Restangular.all('requests').post(newRequest).then(function() {
-                hide();
-                toastService.show("Dokument spremljen!");
-                $state.go('main.sent-requests');
-            }, function() {
-                hide();
-                toastService.show("Greška tijekom spremanja dokumenta!", 3000);
-            });
+            apiService.postRequest(newRequest);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('RequestsCtrl', RequestsCtrl);
+
+    RequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService'];
+    function RequestsCtrl(requests, $document, documentService, helperService) {
+        var vm = this;
+
+        vm.requests = requests;
+        vm.current = 0;
+
+        vm.previous = previous;
+        vm.next = next;
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        $document.ready(function() {
+            if (vm.requests.length > 0) setRequest(0);
+        });
+
+        function previous() {
+            setRequest(--vm.current);
+        }
+
+        function next() {
+            setRequest(++vm.current);
+        }
+
+        function invalid() {
+            console.log("Invalid!");
+        }
+
+        function valid() {
+            console.log("Valid!");
+        }
+
+        function setRequest(i) {
+            var data = getRequestDataObject(requests[i]);
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('iframe'));
+                    iframe.attr('src', url);
+                });
+        }
+
+        function getRequestDataObject(request) {
+            return {
+                type: request.type,
+                documentDate: request.document_date,
+                name: request.name,
+                surname: request.surname,
+                workplace: request.workplace,
+                forPlace: request.for_place,
+                forFaculty: request.for_faculty,
+                forSubject: request.for_subject,
+                advancePayment: request.advance_payment,
+                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
+                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
+                duration: request.duration,
+                description: request.description,
+                transportation: request.transportation,
+                expensesResponsible: request.expenses_responsible,
+                expensesExplanation: request.expenses_explanation,
+                applicantSignature: request.applicant_signature
+            }
         }
     }
 })();
@@ -571,8 +702,8 @@
         .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
 
-    NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter'];
-    function NewRequestCtrl($scope, dialogService, $mdDialog, $filter) {
+    NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', 'helperService'];
+    function NewRequestCtrl($scope, dialogService, $mdDialog, helperService) {
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
@@ -581,16 +712,16 @@
         vm.clear = clear;
 
         function showDateTimeDialog($event, label, property) {
-            var mindate = $filter('date')(new Date(Date.now() + 7 * 86400000), 'yyyy/MM/dd');
+            var mindate = helperService.formatDate(Date.now() + 7 * 86400000, 'yyyy/MM/dd');
             var maxdate;
 
             if (property == 'startTimestamp') {
                 if (vm.endTimestamp) {
-                    maxdate = $filter('date')(new Date(vm.endTimestampRaw), 'yyyy/MM/dd');
+                    maxdate = helperService.formatDate(vm.endTimestampRaw, 'yyyy/MM/dd');
                 }
             } else if (property == 'endTimestamp') {
                 if (vm.startTimestamp) {
-                    mindate = $filter('date')(new Date(vm.startTimestampRaw), 'yyyy/MM/dd');
+                    mindate = helperService.formatDate(vm.startTimestampRaw, 'yyyy/MM/dd');
                 }
             }
 
@@ -608,7 +739,7 @@
         function showDocumentDialog($event) {
             var data = {
                 type: vm.type,
-                documentDate: $filter('date')(new Date(), 'dd.MM.yyyy.'),
+                documentDate: helperService.formatDate(null, 'dd.MM.yyyy.'),
                 name: vm.name,
                 surname: vm.surname,
                 workplace: vm.workplace,
@@ -618,8 +749,7 @@
                 advancePayment: vm.advancePayment,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
-                startTimestampRaw: vm.startTimestampRaw,
-                endTimestampRaw: vm.endTimestampRaw,
+                duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
                 description: vm.description,
                 transportation: vm.transportation,
                 expensesResponsible: vm.expensesResponsible,

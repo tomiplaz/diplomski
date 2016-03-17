@@ -5,8 +5,8 @@
         .module('main')
         .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
 
-    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', '$filter'];
-    function DateTimeDialogCtrl($scope, $mdDialog, data, $filter) {
+    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
+    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
         var vm = this;
 
         vm.label = data.label;
@@ -31,10 +31,10 @@
 
             if (data.property == 'endTimestamp') {
                 if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
-                    $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
                 }
             } else {
-                $scope['newRequest'][data.property] = $filter('date')(new Date($value), 'dd.MM.yyyy., HH:mm');
+                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
             }
 
             hide();

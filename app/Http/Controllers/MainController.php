@@ -14,7 +14,8 @@ class MainController extends Controller
      * Get all requests.
      */
     public function getRequests() {
-
+        $requests = Request::all()->toArray();
+        return response()->json($requests);
     }
 
     /**

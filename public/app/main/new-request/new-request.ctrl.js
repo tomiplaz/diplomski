@@ -3,8 +3,8 @@
         .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
 
-    NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', '$filter'];
-    function NewRequestCtrl($scope, dialogService, $mdDialog, $filter) {
+    NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', 'helperService'];
+    function NewRequestCtrl($scope, dialogService, $mdDialog, helperService) {
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
@@ -13,16 +13,16 @@
         vm.clear = clear;
 
         function showDateTimeDialog($event, label, property) {
-            var mindate = $filter('date')(new Date(Date.now() + 7 * 86400000), 'yyyy/MM/dd');
+            var mindate = helperService.formatDate(Date.now() + 7 * 86400000, 'yyyy/MM/dd');
             var maxdate;
 
             if (property == 'startTimestamp') {
                 if (vm.endTimestamp) {
-                    maxdate = $filter('date')(new Date(vm.endTimestampRaw), 'yyyy/MM/dd');
+                    maxdate = helperService.formatDate(vm.endTimestampRaw, 'yyyy/MM/dd');
                 }
             } else if (property == 'endTimestamp') {
                 if (vm.startTimestamp) {
-                    mindate = $filter('date')(new Date(vm.startTimestampRaw), 'yyyy/MM/dd');
+                    mindate = helperService.formatDate(vm.startTimestampRaw, 'yyyy/MM/dd');
                 }
             }
 
@@ -40,7 +40,7 @@
         function showDocumentDialog($event) {
             var data = {
                 type: vm.type,
-                documentDate: $filter('date')(new Date(), 'dd.MM.yyyy.'),
+                documentDate: helperService.formatDate(null, 'dd.MM.yyyy.'),
                 name: vm.name,
                 surname: vm.surname,
                 workplace: vm.workplace,
@@ -50,8 +50,7 @@
                 advancePayment: vm.advancePayment,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
-                startTimestampRaw: vm.startTimestampRaw,
-                endTimestampRaw: vm.endTimestampRaw,
+                duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
                 description: vm.description,
                 transportation: vm.transportation,
                 expensesResponsible: vm.expensesResponsible,

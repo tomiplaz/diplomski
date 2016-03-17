@@ -93,7 +93,7 @@
                     columns: [
                         { text: data.startTimestamp, style: 'input', width: '*' },
                         { text: data.endTimestamp, style: 'input', width: '*' },
-                        { text: getDuration(data.startTimestampRaw, data.endTimestampRaw), style: 'input', width: '*' }
+                        { text: data.duration, style: 'input', width: '*' }
                     ]
                 },
                 { text: "Svrha:", style: ['regular', 'topMargin20'] },
@@ -125,38 +125,6 @@
             ];
 
             return topContent.concat(data.type == 'n' ? centerContentN : centerContentZorS, bottomContent);
-        }
-
-        function getDuration(start, end) {
-            var totalMs = new Date(end) - new Date(start);
-            var totalHours = totalMs / 1000 / 60 / 60;
-            var days = Math.round(totalHours / 24);
-            var hours = Math.round(totalHours % 24);
-
-            var daysString = days.toString();
-            var daysSuffix = "", hoursSuffix = "" ;
-
-            switch (daysString[daysString.length - 1]) {
-                case "1":
-                    if (days > 10 && daysString.substr(daysString - 2) == 11) daysSuffix += "a";
-                    break;
-                default:
-                    daysSuffix += "a";
-                    break;
-            }
-
-            switch (hours) {
-                case 1: case 21:
-                break;
-                case 2: case 3: case 4: case 22: case 23: case 24:
-                    hoursSuffix += "a";
-                    break;
-                default:
-                    hoursSuffix += "i";
-                    break;
-            }
-
-            return days + " dan" + daysSuffix + " i " + hours + " sat" + hoursSuffix;
         }
     }
 })();

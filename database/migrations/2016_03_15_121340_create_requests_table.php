@@ -29,6 +29,7 @@ class CreateRequestsTable extends Migration
 
             $table->timestamp('start_timestamp');
             $table->timestamp('end_timestamp');
+            $table->string('duration', 20);
 
             $table->string('advance_payment', 10)->nullable();
 

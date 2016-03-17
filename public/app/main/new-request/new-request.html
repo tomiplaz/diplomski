@@ -1,191 +1,185 @@
-<div ng-if="main.user.type == 0">
+<div ng-if="main.user.type == 0" layout="row" layout-align="space-between end">
 
-    <h6 class="md-title">Novi zahtjev za putni nalog</h6>
+    <form name="newRequestForm" layout="column" layout-align="center start">
 
-    <div layout="row" layout-align="space-between end">
-
-        <form name="newRequestForm" layout="column" layout-align="center start">
-
-            <div class="md-input-container-height">
-                <md-input-container>
-                    <label>Svrha putovanja</label>
-                    <md-select name="type" ng-model="newRequest.type" required>
-                        <md-option value="n">Nastavna aktivnost</md-option>
-                        <md-option value="z">Znanstvena aktivnost</md-option>
-                        <md-option value="s">Stručna aktivnost</md-option>
-                    </md-select>
-                    <div ng-messages="newRequestForm.type.$error">
-                        <div ng-message="required">Potrebno!</div>
-                    </div>
-                </md-input-container>
-            </div>
-
-            <div layout="row" layout-align="start center">
-                <md-input-container>
-                    <label>Ime</label>
-                    <input type="text" name="name" ng-model="newRequest.name" required ng-minlength="2" ng-maxlength="30">
-                    <div ng-messages="newRequestForm.name.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="minlength">Prekratko!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-                <md-input-container>
-                    <label>Prezime</label>
-                    <input type="text" name="surname" ng-model="newRequest.surname" required ng-minlength="2" ng-maxlength="30">
-                    <div ng-messages="newRequestForm.surname.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="minlength">Prekratko!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-
-                <md-input-container>
-                    <label>Radno mjesto</label>
-                    <input type="text" name="workplace" ng-model="newRequest.workplace" required ng-minlength="3" ng-maxlength="50">
-                    <div ng-messages="newRequestForm.workplace.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="minlength">Prekratko!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-            </div>
-
-            <div layout="row" layout-align="start center">
-                <md-input-container>
-                    <label>Mjesto putovanja</label>
-                    <input type="text" name="forPlace" ng-model="newRequest.forPlace" required ng-minlength="3" ng-maxlength="50">
-                    <div ng-messages="newRequestForm.forPlace.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="minlength">Prekratko!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-
-                <md-input-container ng-if="newRequest.type == 'z' || newRequest.type == 's'">
-                    <label>Akontacija</label>
-                    <input type="text" name="advancePayment" ng-model="newRequest.advancePayment" required ng-maxlength="10">
-                    <div ng-messages="newRequestForm.advancePayment.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-
-                <md-input-container ng-if="newRequest.type == 'n'">
-                    <label>Fakultet</label>
-                    <input type="text" name="forFaculty" ng-model="newRequest.forFaculty" required ng-minlength="3" ng-maxlength="50">
-                    <div ng-messages="newRequestForm.forFaculty.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="minlength">Prekratko!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-
-                <md-input-container ng-if="newRequest.type == 'n'">
-                    <label>Kolegij</label>
-                    <input type="text" name="forSubject" ng-model="newRequest.forSubject" required ng-minlength="3" ng-maxlength="50">
-                    <div ng-messages="newRequestForm.forSubject.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="minlength">Prekratko!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-            </div>
-
-            <div layout="row" layout-align="start center">
-                <md-input-container>
-                    <label>Vrijeme polaska</label>
-                    <input type="text" name="startTimestamp" ng-model="newRequest.startTimestamp" required readonly
-                           ng-click="newRequest.showDateTimeDialog($event, 'Vrijeme polaska', 'startTimestamp')">
-                    <div ng-messages="newRequestForm.startTimestamp.$error">
-                        <div ng-message="required">Potrebno!</div>
-                    </div>
-                </md-input-container>
-
-                <md-input-container>
-                    <label>Vrijeme povratka</label>
-                    <input type="text" name="endTimestamp" ng-model="newRequest.endTimestamp" required readonly
-                           ng-click="newRequest.showDateTimeDialog($event, 'Vrijeme povratka', 'endTimestamp')">
-                    <div ng-messages="newRequestForm.endTimestamp.$error">
-                        <div ng-message="required">Potrebno!</div>
-                    </div>
-                </md-input-container>
-            </div>
-
-            <md-input-container class="full-width">
-                <label>Opis aktivnosti</label>
-                <textarea name="description" ng-model="newRequest.description" required md-maxlength="300"></textarea>
-                <div ng-messages="newRequestForm.description.$error">
+        <div class="md-input-container-height">
+            <md-input-container>
+                <label>Svrha putovanja</label>
+                <md-select name="type" ng-model="newRequest.type" required>
+                    <md-option value="n">Nastavna aktivnost</md-option>
+                    <md-option value="z">Znanstvena aktivnost</md-option>
+                    <md-option value="s">Stručna aktivnost</md-option>
+                </md-select>
+                <div ng-messages="newRequestForm.type.$error">
                     <div ng-message="required">Potrebno!</div>
+                </div>
+            </md-input-container>
+        </div>
+
+        <div layout="row" layout-align="start center">
+            <md-input-container>
+                <label>Ime</label>
+                <input type="text" name="name" ng-model="newRequest.name" required ng-minlength="2" ng-maxlength="30">
+                <div ng-messages="newRequestForm.name.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+            <md-input-container>
+                <label>Prezime</label>
+                <input type="text" name="surname" ng-model="newRequest.surname" required ng-minlength="2" ng-maxlength="30">
+                <div ng-messages="newRequestForm.surname.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
                 </div>
             </md-input-container>
 
             <md-input-container>
-                <label>Vrsta prijevoza</label>
-                <input type="text" name="transportation" ng-model="newRequest.transportation" required ng-maxlength="50">
-                <div ng-messages="newRequestForm.transportation.$error">
+                <label>Radno mjesto</label>
+                <input type="text" name="workplace" ng-model="newRequest.workplace" required ng-minlength="3" ng-maxlength="50">
+                <div ng-messages="newRequestForm.workplace.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+        </div>
+
+        <div layout="row" layout-align="start center">
+            <md-input-container>
+                <label>Mjesto putovanja</label>
+                <input type="text" name="forPlace" ng-model="newRequest.forPlace" required ng-minlength="3" ng-maxlength="50">
+                <div ng-messages="newRequestForm.forPlace.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container ng-if="newRequest.type == 'z' || newRequest.type == 's'">
+                <label>Akontacija</label>
+                <input type="text" name="advancePayment" ng-model="newRequest.advancePayment" required ng-maxlength="10">
+                <div ng-messages="newRequestForm.advancePayment.$error">
                     <div ng-message="required">Potrebno!</div>
                     <div ng-message="maxlength">Predugačko!</div>
                 </div>
             </md-input-container>
 
-            <div layout="row" layout-align="start center" layout-fill>
-                <md-input-container>
-                    <label>Troškovi terete</label>
-                    <input type="text" name="expensesResponsible" ng-model="newRequest.expensesResponsible" required ng-maxlength="50">
-                    <div ng-messages="newRequestForm.expensesResponsible.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-
-                <md-input-container flex>
-                    <label>Obrazloženje</label>
-                    <textarea name="expensesExplanation" ng-model="newRequest.expensesExplanation" required md-maxlength="150"></textarea>
-                    <div ng-messages="newRequestForm.expensesExplanation.$error">
-                        <div ng-message="required">Potrebno!</div>
-                        <div ng-message="maxlength">Predugačko!</div>
-                    </div>
-                </md-input-container>
-            </div>
-
-            <div layout="row" layout-align="start top">
-                <img ng-src="{{ newRequest.applicantSignature }}" ng-if="newRequest.applicantSignature">
-
-                <div class="signature-input" ng-if="!newRequest.applicantSignature">
-                    <md-input-container class="full-width">
-                        <label>Podnositelj zahtjeva</label>
-                        <input type="text" readonly>
-                    </md-input-container>
+            <md-input-container ng-if="newRequest.type == 'n'">
+                <label>Fakultet</label>
+                <input type="text" name="forFaculty" ng-model="newRequest.forFaculty" required ng-minlength="3" ng-maxlength="50">
+                <div ng-messages="newRequestForm.forFaculty.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
                 </div>
+            </md-input-container>
 
-                <md-button class="md-fab md-mini md-raised" ng-click="newRequest.sign($event)" aria-label="Potpiši">
-                    <md-tooltip md-direction="right">Potpiši</md-tooltip>
-                    <md-icon md-svg-src="app/icons/ic_edit_black_24px.svg"></md-icon>
-                </md-button>
+            <md-input-container ng-if="newRequest.type == 'n'">
+                <label>Kolegij</label>
+                <input type="text" name="forSubject" ng-model="newRequest.forSubject" required ng-minlength="3" ng-maxlength="50">
+                <div ng-messages="newRequestForm.forSubject.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+        </div>
+
+        <div layout="row" layout-align="start center">
+            <md-input-container>
+                <label>Vrijeme polaska</label>
+                <input type="text" name="startTimestamp" ng-model="newRequest.startTimestamp" required readonly
+                       ng-click="newRequest.showDateTimeDialog($event, 'Vrijeme polaska', 'startTimestamp')">
+                <div ng-messages="newRequestForm.startTimestamp.$error">
+                    <div ng-message="required">Potrebno!</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container>
+                <label>Vrijeme povratka</label>
+                <input type="text" name="endTimestamp" ng-model="newRequest.endTimestamp" required readonly
+                       ng-click="newRequest.showDateTimeDialog($event, 'Vrijeme povratka', 'endTimestamp')">
+                <div ng-messages="newRequestForm.endTimestamp.$error">
+                    <div ng-message="required">Potrebno!</div>
+                </div>
+            </md-input-container>
+        </div>
+
+        <md-input-container class="full-width">
+            <label>Opis aktivnosti</label>
+            <textarea name="description" ng-model="newRequest.description" required md-maxlength="300"></textarea>
+            <div ng-messages="newRequestForm.description.$error">
+                <div ng-message="required">Potrebno!</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container>
+            <label>Vrsta prijevoza</label>
+            <input type="text" name="transportation" ng-model="newRequest.transportation" required ng-maxlength="50">
+            <div ng-messages="newRequestForm.transportation.$error">
+                <div ng-message="required">Potrebno!</div>
+                <div ng-message="maxlength">Predugačko!</div>
+            </div>
+        </md-input-container>
+
+        <div layout="row" layout-align="start center" class="full-width">
+            <md-input-container>
+                <label>Troškovi terete</label>
+                <input type="text" name="expensesResponsible" ng-model="newRequest.expensesResponsible" required ng-maxlength="50">
+                <div ng-messages="newRequestForm.expensesResponsible.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container flex>
+                <label>Obrazloženje</label>
+                <textarea name="expensesExplanation" ng-model="newRequest.expensesExplanation" required md-maxlength="150"></textarea>
+                <div ng-messages="newRequestForm.expensesExplanation.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+        </div>
+
+        <div layout="row" layout-align="start top">
+            <img ng-src="{{ newRequest.applicantSignature }}" ng-if="newRequest.applicantSignature">
+
+            <div class="signature-input" ng-if="!newRequest.applicantSignature">
+                <md-input-container class="full-width">
+                    <label>Podnositelj zahtjeva</label>
+                    <input type="text" readonly>
+                </md-input-container>
             </div>
 
-        </form>
-
-        <div layout="column" layout-align="center center">
-
-            <md-button class="md-fab md-mini md-raised" ng-click="newRequest.clear()" aria-label="Obriši sve">
-                <md-tooltip md-direction="left">Obriši sve</md-tooltip>
-                <md-icon md-svg-src="app/icons/ic_delete_black_24px.svg"></md-icon>
+            <md-button class="md-fab md-mini md-raised" ng-click="newRequest.sign($event)" aria-label="Potpiši">
+                <md-tooltip md-direction="right">Potpiši</md-tooltip>
+                <md-icon md-svg-src="edit"></md-icon>
             </md-button>
-
-            <md-button class="md-fab md-mini md-raised" ng-click="newRequest.showDocumentDialog($event)"
-                       ng-disabled="!newRequestForm.$valid || !newRequest.applicantSignature" aria-label="Prikaži dokument">
-                <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
-                <md-icon md-svg-src="app/icons/ic_picture_as_pdf_black_24px.svg"></md-icon>
-            </md-button>
-
         </div>
+
+    </form>
+
+    <div layout="column" layout-align="center center">
+
+        <md-button class="md-fab md-mini md-raised" ng-click="newRequest.clear()" aria-label="Obriši sve">
+            <md-tooltip md-direction="left">Obriši sve</md-tooltip>
+            <md-icon md-svg-src="delete"></md-icon>
+        </md-button>
+
+        <md-button class="md-fab md-mini md-raised" ng-click="newRequest.showDocumentDialog($event)"
+                   ng-disabled="!newRequestForm.$valid || !newRequest.applicantSignature" aria-label="Prikaži dokument">
+            <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
+            <md-icon md-svg-src="picture_as_pdf"></md-icon>
+        </md-button>
 
     </div>
 
 </div>
 
 <div ng-if="main.user.type != 0">
-    not authorized
+    Nemaš to pravo!
 </div>

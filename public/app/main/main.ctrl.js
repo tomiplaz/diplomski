@@ -18,20 +18,20 @@
             {
                 name: 'main.home',
                 label: 'Početna',
-                icon: 'app/icons/ic_home_black_24px.svg',
+                icon: 'home',
                 type: [0, 1, 2, 3]
             },
             {
                 name: 'main.new-request',
                 label: 'Novi zahtjev',
-                icon: 'app/icons/ic_library_add_black_24px.svg',
+                icon: 'library_add',
                 type: [0]
             },
             {
-                name: 'main.sent-requests',
-                label: 'Poslani zahtjevi',
-                icon: 'app/icons/ic_library_books_black_24px.svg',
-                type: [0]
+                name: 'main.requests',
+                label: 'Zahtjevi',
+                icon: 'library_books',
+                type: [1]
             }
         ];
 

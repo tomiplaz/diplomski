@@ -1,18 +1,13 @@
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif; }
-  body .main-view {
-    padding-bottom: 3%; }
   body header {
-    padding: 1% 5%; }
+    padding: 1% 2%; }
   body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover {
     background-color: #ffab00 !important; }
   body button.md-mini:not([disabled]):hover {
     background-color: #448aff !important; }
   body .main-content {
-    width: 80%; }
-  body .wide {
-    max-width: 608px;
-    width: 100%; }
+    width: 90%; }
   body .time-date .control .full-title {
     background-color: #4caf50;
     color: #000; }
@@ -50,5 +45,7 @@ body {
     border: 1px solid #4caf50; }
     body .signature-dialog canvas:active {
       cursor: default; }
+  body .requests-frame {
+    height: 700px; }
 
 /*# sourceMappingURL=app.css.map */

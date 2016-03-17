@@ -13,8 +13,8 @@
                 templateUrl: 'app/main/main.html',
                 controller: 'MainCtrl as main',
                 resolve: {
-                    user: function(userService) {
-                        return userService.getUser();
+                    user: function(apiService) {
+                        return apiService.getUser();
                     }
                 }
             })
@@ -27,9 +27,15 @@
                 templateUrl: 'app/main/new-request/new-request.html',
                 controller: 'NewRequestCtrl as newRequest'
             })
-            .state('main.sent-requests', {
-                url: '/sent-requests',
-                templateUrl: 'app/main/sent-requests/sent-requests.html'
+            .state('main.requests', {
+                url: '/requests',
+                templateUrl: 'app/main/requests/requests.html',
+                controller: 'RequestsCtrl as requests',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests();
+                    }
+                }
             });
     }
 })();
