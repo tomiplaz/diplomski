@@ -113,6 +113,7 @@
             <textarea name="description" ng-model="newRequest.description" required md-maxlength="300"></textarea>
             <div ng-messages="newRequestForm.description.$error">
                 <div ng-message="required">Potrebno!</div>
+                <div ng-message="maxlength">Predugačko!</div>
             </div>
         </md-input-container>
 

@@ -65,8 +65,8 @@
             .icon('send', 'app/icons/ic_send_black_24px.svg')
             .icon('navigate_before', 'app/icons/ic_navigate_before_black_24px.svg')
             .icon('navigate_next', 'app/icons/ic_navigate_next_black_24px.svg')
-            .icon('arrow_back', 'app/icons/ic_arrow_back_black_24px.svg')
-            .icon('arrow_forward', 'app/icons/ic_arrow_forward_black_24px.svg');
+            .icon('check_circle', 'app/icons/ic_check_circle_black_24px.svg')
+            .icon('cancel', 'app/icons/ic_cancel_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';
@@ -129,7 +129,8 @@
         return {
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
-            getSignatureDialogObject: getSignatureDialogObject
+            getSignatureDialogObject: getSignatureDialogObject,
+            getInvalidRequestDialogObject: getInvalidRequestDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -169,6 +170,19 @@
                 preserveScope: true,
                 targetEvent: event,
                 clickOutsideToClose: true
+            }
+        }
+
+        function getInvalidRequestDialogObject(event, requestId) {
+            return {
+                controller: 'InvalidRequestDialogCtrl as invalidRequestDialog',
+                templateUrl: 'app/main/invalid-request-dialog/invalid-request-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                locals: {
+                    requestId: requestId
+                }
             }
         }
     }
@@ -628,72 +642,22 @@
 
     angular
         .module('main')
-        .controller('RequestsCtrl', RequestsCtrl);
+        .controller('InvalidRequestDialogCtrl', InvalidRequestDialogCtrl);
 
-    RequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService'];
-    function RequestsCtrl(requests, $document, documentService, helperService) {
+    InvalidRequestDialogCtrl.$inject = ['$mdDialog', 'requestId'];
+    function InvalidRequestDialogCtrl($mdDialog, requestId) {
         var vm = this;
 
-        vm.requests = requests;
-        vm.current = 0;
+        vm.hide = hide;
+        vm.confirm = confirm;
 
-        vm.previous = previous;
-        vm.next = next;
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        $document.ready(function() {
-            if (vm.requests.length > 0) setRequest(0);
-        });
-
-        function previous() {
-            setRequest(--vm.current);
+        function hide() {
+            $mdDialog.hide();
         }
 
-        function next() {
-            setRequest(++vm.current);
-        }
-
-        function invalid() {
-            console.log("Invalid!");
-        }
-
-        function valid() {
-            console.log("Valid!");
-        }
-
-        function setRequest(i) {
-            var data = getRequestDataObject(requests[i]);
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('iframe'));
-                    iframe.attr('src', url);
-                });
-        }
-
-        function getRequestDataObject(request) {
-            return {
-                type: request.type,
-                documentDate: request.document_date,
-                name: request.name,
-                surname: request.surname,
-                workplace: request.workplace,
-                forPlace: request.for_place,
-                forFaculty: request.for_faculty,
-                forSubject: request.for_subject,
-                advancePayment: request.advance_payment,
-                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
-                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
-                duration: request.duration,
-                description: request.description,
-                transportation: request.transportation,
-                expensesResponsible: request.expenses_responsible,
-                expensesExplanation: request.expenses_explanation,
-                applicantSignature: request.applicant_signature
-            }
+        function confirm() {
+            //
+            hide();
         }
     }
 })();
@@ -784,6 +748,82 @@
             vm.expensesResponsible = null;
             vm.expensesExplanation = null;
             vm.applicantSignature = null;
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('RequestsCtrl', RequestsCtrl);
+
+    RequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
+    function RequestsCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
+        var vm = this;
+
+        vm.requests = requests;
+        vm.current = 0;
+
+        vm.previous = previous;
+        vm.next = next;
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        $document.ready(function() {
+            if (vm.requests.length > 0) setRequest(0);
+        });
+
+        function previous() {
+            setRequest(--vm.current);
+        }
+
+        function next() {
+            setRequest(++vm.current);
+        }
+
+        function invalid($event) {
+            var requestId = vm.requests[vm.current].id;
+            var invalidRequestDialogObject = dialogService.getInvalidRequestDialogObject($event, requestId);
+            $mdDialog.show(invalidRequestDialogObject);
+        }
+
+        function valid() {
+            console.log("Valid!");
+        }
+
+        function setRequest(i) {
+            var data = getRequestDataObject(requests[i]);
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('iframe'));
+                    iframe.attr('src', url);
+                });
+        }
+
+        function getRequestDataObject(request) {
+            return {
+                type: request.type,
+                documentDate: request.document_date,
+                name: request.name,
+                surname: request.surname,
+                workplace: request.workplace,
+                forPlace: request.for_place,
+                forFaculty: request.for_faculty,
+                forSubject: request.for_subject,
+                advancePayment: request.advance_payment,
+                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
+                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
+                duration: request.duration,
+                description: request.description,
+                transportation: request.transportation,
+                expensesResponsible: request.expenses_responsible,
+                expensesExplanation: request.expenses_explanation,
+                applicantSignature: request.applicant_signature
+            }
         }
     }
 })();

@@ -56,8 +56,8 @@
             .icon('send', 'app/icons/ic_send_black_24px.svg')
             .icon('navigate_before', 'app/icons/ic_navigate_before_black_24px.svg')
             .icon('navigate_next', 'app/icons/ic_navigate_next_black_24px.svg')
-            .icon('arrow_back', 'app/icons/ic_arrow_back_black_24px.svg')
-            .icon('arrow_forward', 'app/icons/ic_arrow_forward_black_24px.svg');
+            .icon('check_circle', 'app/icons/ic_check_circle_black_24px.svg')
+            .icon('cancel', 'app/icons/ic_cancel_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';

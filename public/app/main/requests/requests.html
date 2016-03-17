@@ -19,16 +19,16 @@
 
     <div layout="row" layout-align="space-around center">
 
-        <md-button class="md-fab md-mini md-raised" ng-click="requests.invalid()" aria-label="Vrati zahtjev">
-            <md-tooltip md-direction="bottom">Vrati zahtjev</md-tooltip>
-            <md-icon md-svg-src="arrow_back"></md-icon>
+        <md-button class="md-fab md-mini md-raised" ng-click="requests.invalid($event)" aria-label="Neispravan zahtjev">
+            <md-tooltip md-direction="bottom">Neispravan zahtjev</md-tooltip>
+            <md-icon md-svg-src="cancel"></md-icon>
         </md-button>
 
         <p>{{ requests.current + 1 }}/{{ requests.requests.length }}</p>
 
-        <md-button class="md-fab md-mini md-raised" ng-click="requests.valid()" aria-label="Proslijedi zahtjev">
-            <md-tooltip md-direction="bottom">Proslijedi zahtjev</md-tooltip>
-            <md-icon md-svg-src="arrow_forward"></md-icon>
+        <md-button class="md-fab md-mini md-raised" ng-click="requests.valid()" aria-label="Ispravan zahtjev">
+            <md-tooltip md-direction="bottom">Ispravan zahtjev</md-tooltip>
+            <md-icon md-svg-src="check_circle"></md-icon>
         </md-button>
 
     </div>

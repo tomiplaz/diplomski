@@ -9,7 +9,8 @@
         return {
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
-            getSignatureDialogObject: getSignatureDialogObject
+            getSignatureDialogObject: getSignatureDialogObject,
+            getInvalidRequestDialogObject: getInvalidRequestDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -49,6 +50,19 @@
                 preserveScope: true,
                 targetEvent: event,
                 clickOutsideToClose: true
+            }
+        }
+
+        function getInvalidRequestDialogObject(event, requestId) {
+            return {
+                controller: 'InvalidRequestDialogCtrl as invalidRequestDialog',
+                templateUrl: 'app/main/invalid-request-dialog/invalid-request-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                locals: {
+                    requestId: requestId
+                }
             }
         }
     }

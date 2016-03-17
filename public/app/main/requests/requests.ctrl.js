@@ -5,8 +5,8 @@
         .module('main')
         .controller('RequestsCtrl', RequestsCtrl);
 
-    RequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService'];
-    function RequestsCtrl(requests, $document, documentService, helperService) {
+    RequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
+    function RequestsCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
         var vm = this;
 
         vm.requests = requests;
@@ -29,8 +29,10 @@
             setRequest(++vm.current);
         }
 
-        function invalid() {
-            console.log("Invalid!");
+        function invalid($event) {
+            var requestId = vm.requests[vm.current].id;
+            var invalidRequestDialogObject = dialogService.getInvalidRequestDialogObject($event, requestId);
+            $mdDialog.show(invalidRequestDialogObject);
         }
 
         function valid() {

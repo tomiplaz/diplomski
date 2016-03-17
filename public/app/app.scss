@@ -11,8 +11,14 @@ body {
   }
 
   button.md-mini:not([disabled]){
-    &[ng-click="main.logout()"]:hover, &[ng-click="newRequestN.clear()"]:hover {
-      background-color: $md-warn !important;
+    &[ng-click="main.logout()"], &[ng-click="newRequestN.clear()"], &[ng-click="requests.invalid($event)"] {
+      &:hover {
+        background-color: $md-warn !important;
+      }
+    }
+
+    &[ng-click="requests.valid()"]:hover {
+      background-color: $md-primary !important;
     }
 
     &:hover {
@@ -102,5 +108,14 @@ body {
 
   .requests-frame {
     height: 700px;
+  }
+
+  .invalid-request-dialog {
+    width: 40%;
+
+    md-dialog-content {
+      padding: 20px 10px 10px 10px;
+      width: 100%;
+    }
   }
 }

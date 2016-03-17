@@ -44,6 +44,7 @@ class CreateRequestsTable extends Migration
 
             $table->boolean('quality_check')->nullable();
             $table->timestamp('quality_check_timestamp')->nullable();
+            $table->text('invalidity_reason')->nullable();
             $table->boolean('approved')->nullable();
             $table->timestamp('approved_timestamp')->nullable();
         });

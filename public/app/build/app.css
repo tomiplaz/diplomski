@@ -2,8 +2,10 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif; }
   body header {
     padding: 1% 2%; }
-  body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover {
+  body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover, body button.md-mini:not([disabled])[ng-click="requests.invalid($event)"]:hover {
     background-color: #ffab00 !important; }
+  body button.md-mini:not([disabled])[ng-click="requests.valid()"]:hover {
+    background-color: #4caf50 !important; }
   body button.md-mini:not([disabled]):hover {
     background-color: #448aff !important; }
   body .main-content {
@@ -47,5 +49,10 @@ body {
       cursor: default; }
   body .requests-frame {
     height: 700px; }
+  body .invalid-request-dialog {
+    width: 40%; }
+    body .invalid-request-dialog md-dialog-content {
+      padding: 20px 10px 10px 10px;
+      width: 100%; }
 
 /*# sourceMappingURL=app.css.map */
