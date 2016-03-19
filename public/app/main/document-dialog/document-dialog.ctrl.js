@@ -48,7 +48,7 @@
                 applicant_signature: data.applicantSignature
             };
 
-            apiService.postRequest(newRequest);
+            apiService.createRequest(newRequest);
             hide();
         }
     }

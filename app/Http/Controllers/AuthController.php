@@ -15,11 +15,11 @@ class AuthController extends Controller
     /**
      * Authenticate user by checking credentials and returning a token.
      *
-     * @param HttpRequest $request
+     * @param HttpRequest $httpRequest
      * @return \Illuminate\Http\JsonResponse
      */
-    public function authenticate(HttpRequest $request) {
-        $credentials = $request->only('email', 'password');
+    public function authenticate(HttpRequest $httpRequest) {
+        $credentials = $httpRequest->only('email', 'password');
 
         try {
             if (!$token = JWTAuth::attempt($credentials)) {

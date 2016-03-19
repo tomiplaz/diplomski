@@ -88,7 +88,8 @@
         return {
             getUser: getUser,
             getRequests: getRequests,
-            postRequest: postRequest
+            createRequest: createRequest,
+            updateRequest: updateRequest
         };
 
         function getUser() {
@@ -100,21 +101,32 @@
             });
         }
 
-        function getRequests() {
-            return Restangular.all('requests').getList().then(function(res) {
+        function getRequests(type) {
+            var path = !type ? 'requests' : 'requests/' + type;
+            return Restangular.all(path).getList().then(function(res) {
                 return res;
             }, function() {
                 toastService.show("Greška tijekom dohvaćanja zahtjeva!", 3000);
+                return [];
             });
         }
 
-        function postRequest(newRequest) {
+        function createRequest(newRequest) {
             Restangular.all('requests').post(newRequest).then(function() {
                 toastService.show("Dokument spremljen!");
                 $state.go('main.sent-requests');
             }, function() {
                 toastService.show("Greška tijekom spremanja dokumenta!", 3000);
             });
+        }
+
+        function updateRequest(requestId, data, refresh) {
+            Restangular.one('requests', requestId).doPUT(data).then(function() {
+                toastService.show("Zahtjev je uz objašnjenje vraćen korisniku.");
+                if (refresh) $state.go($state.current, {}, { reload: true });
+            }, function() {
+                toastService.show("Greška tijekom ažuriranja zahtjeva!", 3000);
+            })
         }
     }
 })();
@@ -473,13 +485,13 @@
                 templateUrl: 'app/main/new-request/new-request.html',
                 controller: 'NewRequestCtrl as newRequest'
             })
-            .state('main.requests', {
-                url: '/requests',
-                templateUrl: 'app/main/requests/requests.html',
-                controller: 'RequestsCtrl as requests',
+            .state('main.validate', {
+                url: '/validate',
+                templateUrl: 'app/main/validate/validate.html',
+                controller: 'ValidateCtrl as validate',
                 resolve: {
                     requests: function(apiService) {
-                        return apiService.getRequests();
+                        return apiService.getRequests('nonvalidated');
                     }
                 }
             });
@@ -516,8 +528,8 @@
                 type: [0]
             },
             {
-                name: 'main.requests',
-                label: 'Zahtjevi',
+                name: 'main.validate',
+                label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
             }
@@ -632,7 +644,7 @@
                 applicant_signature: data.applicantSignature
             };
 
-            apiService.postRequest(newRequest);
+            apiService.createRequest(newRequest);
             hide();
         }
     }
@@ -644,8 +656,8 @@
         .module('main')
         .controller('InvalidRequestDialogCtrl', InvalidRequestDialogCtrl);
 
-    InvalidRequestDialogCtrl.$inject = ['$mdDialog', 'requestId'];
-    function InvalidRequestDialogCtrl($mdDialog, requestId) {
+    InvalidRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function InvalidRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
         var vm = this;
 
         vm.hide = hide;
@@ -656,7 +668,12 @@
         }
 
         function confirm() {
-            //
+            var data = {
+                quality_check: false,
+                quality_check_timestamp: helperService.formatDate('yyyy-MM-dd HH:mm:ss'),
+                invalidity_reason: vm.invalidityReason
+            };
+            apiService.updateRequest(requestId, data, true);
             hide();
         }
     }
@@ -758,12 +775,12 @@
         .module('main')
         .controller('RequestsCtrl', RequestsCtrl);
 
-    RequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
-    function RequestsCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
+    RequestsCtrl.$inject = ['$scope', 'requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
+    function RequestsCtrl($scope, requests, $document, documentService, helperService, dialogService, $mdDialog) {
         var vm = this;
 
         vm.requests = requests;
-        vm.current = 0;
+        vm.current = null;
 
         vm.previous = previous;
         vm.next = next;
@@ -792,8 +809,19 @@
             console.log("Valid!");
         }
 
+        function requestsFilterFunction() {
+            return function(request) {
+                switch ($scope['main'].user.type) {
+                    case 1:
+                        return request.quality_check == null;
+                }
+            }
+
+        }
+
         function setRequest(i) {
-            var data = getRequestDataObject(requests[i]);
+            vm.current = i;
+            var data = getRequestDataObject(vm.requests[i]);
             var doc = documentService.getDocument(data);
 
             pdfMake
@@ -873,6 +901,83 @@
         function onEnd() {
             if (!signaturePad.isEmpty()) {
                 confirmButton.removeAttr('disabled');
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('ValidateCtrl', ValidateCtrl);
+
+    ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
+    function ValidateCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
+        var vm = this;
+
+        vm.requests = requests;
+        vm.current = null;
+
+        vm.previous = previous;
+        vm.next = next;
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        $document.ready(function() {
+            if (vm.requests.length > 0) setRequest(0);
+        });
+
+        function previous() {
+            setRequest(--vm.current);
+        }
+
+        function next() {
+            setRequest(++vm.current);
+        }
+
+        function invalid($event) {
+            var requestId = vm.requests[vm.current].id;
+            var invalidRequestDialogObject = dialogService.getInvalidRequestDialogObject($event, requestId);
+            $mdDialog.show(invalidRequestDialogObject);
+        }
+
+        function valid() {
+            console.log("Valid!");
+        }
+
+        function setRequest(i) {
+            vm.current = i;
+            var data = getRequestDataObject(vm.requests[i]);
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('iframe'));
+                    iframe.attr('src', url);
+                });
+        }
+
+        function getRequestDataObject(request) {
+            return {
+                type: request.type,
+                documentDate: request.document_date,
+                name: request.name,
+                surname: request.surname,
+                workplace: request.workplace,
+                forPlace: request.for_place,
+                forFaculty: request.for_faculty,
+                forSubject: request.for_subject,
+                advancePayment: request.advance_payment,
+                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
+                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
+                duration: request.duration,
+                description: request.description,
+                transportation: request.transportation,
+                expensesResponsible: request.expenses_responsible,
+                expensesExplanation: request.expenses_explanation,
+                applicantSignature: request.applicant_signature
             }
         }
     }

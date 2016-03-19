@@ -28,8 +28,8 @@
                 type: [0]
             },
             {
-                name: 'main.requests',
-                label: 'Zahtjevi',
+                name: 'main.validate',
+                label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
             }

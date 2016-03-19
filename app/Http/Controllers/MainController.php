@@ -19,11 +19,42 @@ class MainController extends Controller
     }
 
     /**
+     * Get requests that need to be validated.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRequestsNonvalidated() {
+        $requests = Request::where('quality_check', null)->get()->toArray();
+        return response()->json($requests);
+    }
+
+    /**
+     * Get requests that need to be approved.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRequestsApprovable() {
+        $requests = Request::where('quality_check', true)->get()->toArray();
+        return response()->json($requests);
+    }
+
+    /**
      * Create a new request.
      *
-     * @param HttpRequest $request
+     * @param HttpRequest $httpRequest
      */
-    public function newRequest(HttpRequest $request) {
-        Request::create($request->all());
+    public function createRequest(HttpRequest $httpRequest) {
+        Request::create($httpRequest->all());
+    }
+
+    /**
+     * Update request.
+     *
+     * @param $requestId
+     * @param HttpRequest $httpRequest
+     */
+    public function updateRequest($requestId, HttpRequest $httpRequest) {
+        $request = Request::findOrFail($requestId);
+        $request->update($httpRequest->all());
     }
 }

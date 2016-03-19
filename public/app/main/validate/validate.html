@@ -1,0 +1,47 @@
+<div ng-if="main.user.type == 1">
+
+    <div ng-if="validate.requests.length > 0">
+
+        <div layout="row" layout-align="space-between center">
+            <md-button class="md-fab md-mini md-raised" ng-click="validate.previous()" aria-label="Prethodni zahtjev"
+                       ng-disabled="validate.current == 0">
+                <md-tooltip md-direction="bottom">Prethodni zahtjev</md-tooltip>
+                <md-icon md-svg-src="navigate_before"></md-icon>
+            </md-button>
+
+            <iframe class="requests-frame" flex></iframe>
+
+            <md-button class="md-fab md-mini md-raised" ng-click="validate.next()" aria-label="Sljedeći zahtjev"
+                       ng-disabled="validate.current == validate.requests.length - 1">
+                <md-tooltip md-direction="bottom">Sljedeći zahtjev</md-tooltip>
+                <md-icon md-svg-src="navigate_next"></md-icon>
+            </md-button>
+        </div>
+
+        <div layout="row" layout-align="space-around center">
+            <md-button class="md-fab md-mini md-raised" ng-click="validate.invalid($event)" aria-label="Neispravan zahtjev">
+                <md-tooltip md-direction="bottom">Neispravan zahtjev</md-tooltip>
+                <md-icon md-svg-src="cancel"></md-icon>
+            </md-button>
+
+            <p>{{ validate.current + 1 }}/{{ validate.requests.length }}</p>
+
+            <md-button class="md-fab md-mini md-raised" ng-click="validate.valid()" aria-label="Ispravan zahtjev">
+                <md-tooltip md-direction="bottom">Ispravan zahtjev</md-tooltip>
+                <md-icon md-svg-src="check_circle"></md-icon>
+            </md-button>
+        </div>
+
+    </div>
+
+    <div ng-if="validate.requests.length == 0">
+
+        <p>Nema zahtjeva za validaciju</p>
+
+    </div>
+
+</div>
+
+<div ng-if="main.user.type != 1">
+    Nemaš to pravo!
+</div>

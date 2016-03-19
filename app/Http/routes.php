@@ -16,9 +16,17 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'api/v1'], function() {
+
     Route::group(['middleware' => 'jwt.auth'], function() {
-        Route::get('requests', 'MainController@getRequests');
-        Route::post('requests', 'MainController@newRequest');
+
+        Route::group(['prefix' => 'requests'], function() {
+            Route::get('/', 'MainController@getRequests');
+            Route::post('/', 'MainController@createRequest');
+            Route::get('nonvalidated', 'MainController@getRequestsNonvalidated');
+            Route::get('approvable', 'MainController@getRequestsApprovable');
+            Route::put('{requestId}', 'MainController@updateRequest');
+        });
+
     });
 
     Route::post('auth', 'AuthController@authenticate');

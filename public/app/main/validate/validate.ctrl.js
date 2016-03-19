@@ -3,14 +3,14 @@
 
     angular
         .module('main')
-        .controller('RequestsCtrl', RequestsCtrl);
+        .controller('ValidateCtrl', ValidateCtrl);
 
-    RequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
-    function RequestsCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
+    ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
+    function ValidateCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
         var vm = this;
 
         vm.requests = requests;
-        vm.current = 0;
+        vm.current = null;
 
         vm.previous = previous;
         vm.next = next;
@@ -40,7 +40,8 @@
         }
 
         function setRequest(i) {
-            var data = getRequestDataObject(requests[i]);
+            vm.current = i;
+            var data = getRequestDataObject(vm.requests[i]);
             var doc = documentService.getDocument(data);
 
             pdfMake

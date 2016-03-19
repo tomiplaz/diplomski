@@ -27,13 +27,13 @@
                 templateUrl: 'app/main/new-request/new-request.html',
                 controller: 'NewRequestCtrl as newRequest'
             })
-            .state('main.requests', {
-                url: '/requests',
-                templateUrl: 'app/main/requests/requests.html',
-                controller: 'RequestsCtrl as requests',
+            .state('main.validate', {
+                url: '/validate',
+                templateUrl: 'app/main/validate/validate.html',
+                controller: 'ValidateCtrl as validate',
                 resolve: {
                     requests: function(apiService) {
-                        return apiService.getRequests();
+                        return apiService.getRequests('nonvalidated');
                     }
                 }
             });
