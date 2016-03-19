@@ -36,6 +36,16 @@
                         return apiService.getRequests('nonvalidated');
                     }
                 }
+            })
+            .state('main.approve', {
+                url: '/approve',
+                templateUrl: 'app/main/approve/approve.html',
+                controller: 'ApproveCtrl as approve',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('approvable');
+                    }
+                }
             });
     }
 })();

@@ -22,21 +22,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.config.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/app/main/main.config.js">
+      <file leaf-file-name="main.ctrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/main/main.ctrl.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
+              <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="validate.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.config.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/main/main.config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="45" column="68" selection-start-line="45" selection-start-column="68" selection-end-line="45" selection-end-column="68" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="validate.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7580825">
-              <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+            <state vertical-scroll-proportion="-2.6153846">
+              <caret line="4" column="59" selection-start-line="4" selection-start-column="59" selection-end-line="4" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -46,27 +56,27 @@
         <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.ctrl.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="34" column="55" selection-start-line="34" selection-start-column="55" selection-end-line="34" selection-end-column="55" />
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="invalid-request-dialog.ctrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/app/main/invalid-request-dialog/invalid-request-dialog.ctrl.js">
+      <file leaf-file-name="approve.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="24" column="60" selection-start-line="24" selection-start-column="60" selection-end-line="24" selection-end-column="60" />
+            <state vertical-scroll-proportion="-18.307692">
+              <caret line="28" column="114" selection-start-line="28" selection-start-column="114" selection-end-line="28" selection-end-column="114" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.ctrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/app/main/main.ctrl.js">
+      <file leaf-file-name="approve.ctrl.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.ctrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="25" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.65005416">
+              <caret line="41" column="89" selection-start-line="41" selection-start-column="89" selection-end-line="41" selection-end-column="89" />
               <folding />
             </state>
           </provider>
@@ -76,7 +86,7 @@
         <entry file="file://$PROJECT_DIR$/public/app/services/apiService.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="47" column="77" selection-start-line="47" selection-start-column="77" selection-end-line="47" selection-end-column="77" />
+              <caret line="46" column="43" selection-start-line="46" selection-start-column="43" selection-end-line="46" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -85,28 +95,18 @@
       <file leaf-file-name="MainController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/MainController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.692307">
-              <caret line="37" column="43" selection-start-line="37" selection-start-column="43" selection-end-line="37" selection-end-column="43" />
+            <state vertical-scroll-proportion="-15.884615">
+              <caret line="36" column="79" selection-start-line="36" selection-start-column="79" selection-end-line="36" selection-end-column="79" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AuthController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/AuthController.php">
+      <file leaf-file-name="2016_03_15_121340_create_requests_table.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.7692308">
-              <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.115385">
-              <caret line="26" column="70" selection-start-line="26" selection-start-column="70" selection-end-line="26" selection-end-column="70" />
+            <state vertical-scroll-proportion="-21.26923">
+              <caret line="47" column="52" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -117,11 +117,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/resources/views/main.php" />
-        <option value="$PROJECT_DIR$/public/app/stylesheets/main.scss" />
-        <option value="$PROJECT_DIR$/public/app/main/main.date-time-dialog.ctrl.js" />
-        <option value="$PROJECT_DIR$/public/app/main/main.document-dialog.ctrl.js" />
-        <option value="$PROJECT_DIR$/public/app/main/main.document-dialog.html" />
         <option value="$PROJECT_DIR$/public/app/main/main.date-time-dialog.html" />
         <option value="$PROJECT_DIR$/public/app/main/main.new-request-n.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/main.new-request-n.html" />
@@ -150,24 +145,29 @@
         <option value="$PROJECT_DIR$/public/app/main/new-request/new-request.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/date-time-dialog/date-time-dialog.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/app.config.js" />
-        <option value="$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php" />
         <option value="$PROJECT_DIR$/public/app/main/requests/requests.html" />
         <option value="$PROJECT_DIR$/public/app/app.scss" />
         <option value="$PROJECT_DIR$/public/app/main/new-request/new-request.html" />
         <option value="$PROJECT_DIR$/public/app/main/invalid-request-dialog/invalid-request-dialog.html" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AuthController.php" />
         <option value="$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.ctrl.js" />
-        <option value="$PROJECT_DIR$/public/app/services/dialogService.js" />
         <option value="$PROJECT_DIR$/app/Request.php" />
         <option value="$PROJECT_DIR$/public/app/main/requests/requests.ctrl.js" />
         <option value="$PROJECT_DIR$/app/Http/routes.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/MainController.php" />
+        <option value="$PROJECT_DIR$/public/app/main/validate/validate.html" />
         <option value="$PROJECT_DIR$/public/app/main/main.config.js" />
         <option value="$PROJECT_DIR$/public/app/main/main.ctrl.js" />
-        <option value="$PROJECT_DIR$/public/app/main/validate/validate.ctrl.js" />
-        <option value="$PROJECT_DIR$/public/app/services/apiService.js" />
         <option value="$PROJECT_DIR$/public/app/main/invalid-request-dialog/invalid-request-dialog.ctrl.js" />
-        <option value="$PROJECT_DIR$/public/app/main/validate/validate.html" />
+        <option value="$PROJECT_DIR$/public/app/main/invalid-request-dialog/reject-request-dialog.html" />
+        <option value="$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php" />
+        <option value="$PROJECT_DIR$/public/app/main/invalid-request-dialog/reject-request-dialog.ctrl.js" />
+        <option value="$PROJECT_DIR$/public/app/services/apiService.js" />
+        <option value="$PROJECT_DIR$/public/app/services/dialogService.js" />
+        <option value="$PROJECT_DIR$/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js" />
+        <option value="$PROJECT_DIR$/public/app/main/validate/validate.ctrl.js" />
+        <option value="$PROJECT_DIR$/public/app/main/approve/approve.html" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/MainController.php" />
+        <option value="$PROJECT_DIR$/public/app/main/approve/approve.ctrl.js" />
       </list>
     </option>
   </component>
@@ -416,7 +416,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="new-request" />
+              <option name="myItemId" value="reject-request-dialog" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -442,7 +442,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="invalid-request-dialog" />
+              <option name="myItemId" value="new-request" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -495,6 +495,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="date-time-dialog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="diplomski" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="diplomski" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="approve" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -680,7 +706,7 @@
     <property name="FullScreen" value="false" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="SearchEverywhereHistoryKey" value="help&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/helperService.js&#10;docu&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;docume&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;api&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/apiService.js&#10;invalid&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/invalid-request-dialog/invalid-request-dialog.ctrl.js&#10;dialog&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;sign&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.html&#10;sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.co&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;app.&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;new&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/new-request/new-request.ctrl.js&#10;docum&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;documen&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;scss&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;logi&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/login/login.ctrl.js&#10;toas&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;dat&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.html&#10;date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;si&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.ctrl.js&#10;doc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;date-t&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;toast&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;dialogS&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;document&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;main&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.html&#10;main.php&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;sc-d&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;angular.js&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular/angular.js&#10;-local&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;angular-lo&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;main.p&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;angular&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;sc-da&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc-date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;font-awe&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/font-awesome/css/font-awesome.css&#10;app.mod&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.module.js&#10;main.ph&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;main.ct&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;an&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.js&#10;angular-&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;mai&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;resta&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/restangular/src/restangular.js" />
+    <property name="SearchEverywhereHistoryKey" value="reje&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js&#10;main.&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.config.js&#10;dialogS&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;help&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/helperService.js&#10;docu&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;docume&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;api&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/apiService.js&#10;invalid&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/invalid-request-dialog/invalid-request-dialog.ctrl.js&#10;dialog&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;sign&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.html&#10;sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.co&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;app.&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;new&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/new-request/new-request.ctrl.js&#10;docum&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;documen&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;scss&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;logi&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/login/login.ctrl.js&#10;toas&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;dat&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.html&#10;date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;si&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.ctrl.js&#10;doc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;date-t&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;toast&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;document&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;main&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.html&#10;main.php&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;sc-d&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;angular.js&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular/angular.js&#10;-local&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;angular-lo&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;main.p&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;angular&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;sc-da&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc-date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;font-awe&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/font-awesome/css/font-awesome.css&#10;app.mod&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.module.js&#10;main.ph&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;main.ct&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;an&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.js&#10;angular-&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;mai&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;resta&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/restangular/src/restangular.js" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -741,14 +767,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1928" height="1044" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982087" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982087" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -759,10 +786,30 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982087" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982087" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982087" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -945,6 +992,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7508197">
           <caret line="575" column="43" selection-start-line="575" selection-start-column="43" selection-end-line="575" selection-end-column="43" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -990,13 +1038,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6688963">
-          <caret line="48" column="64" selection-start-line="48" selection-start-column="64" selection-end-line="48" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.32218507">
@@ -1008,6 +1049,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="66" column="50" selection-start-line="66" selection-start-column="50" selection-end-line="66" selection-end-column="50" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1022,20 +1064,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="153" column="55" selection-start-line="153" selection-start-column="55" selection-end-line="153" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/invalid-request-dialog/invalid-request-dialog.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.307692">
-          <caret line="28" column="12" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/services/dialogService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1050,6 +1079,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="40" column="104" selection-start-line="40" selection-start-column="33" selection-end-line="40" selection-end-column="104" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1069,22 +1099,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/main.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="25" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/MainController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.692307">
-          <caret line="37" column="43" selection-start-line="37" selection-start-column="43" selection-end-line="37" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.115385">
@@ -1093,10 +1107,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.ctrl.js">
+    <entry file="file://$PROJECT_DIR$/public/app/main/reject-request-dialog/reject-request-dialog.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="55" selection-start-line="34" selection-start-column="55" selection-end-line="34" selection-end-column="55" />
+        <state vertical-scroll-proportion="0.11371238">
+          <caret line="6" column="24" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
           <folding />
         </state>
       </provider>
@@ -1104,15 +1118,15 @@
     <entry file="file://$PROJECT_DIR$/public/app/services/apiService.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="47" column="77" selection-start-line="47" selection-start-column="77" selection-end-line="47" selection-end-column="77" />
+          <caret line="46" column="43" selection-start-line="46" selection-start-column="43" selection-end-line="46" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/invalid-request-dialog/invalid-request-dialog.ctrl.js">
+    <entry file="file://$PROJECT_DIR$/public/app/services/dialogService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="60" selection-start-line="24" selection-start-column="60" selection-end-line="24" selection-end-column="60" />
+        <state vertical-scroll-proportion="0.09209101">
+          <caret line="5" column="49" selection-start-line="5" selection-start-column="49" selection-end-line="5" selection-end-column="49" />
           <folding />
         </state>
       </provider>
@@ -1120,15 +1134,71 @@
     <entry file="file://$PROJECT_DIR$/public/app/main/main.config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
+          <caret line="45" column="68" selection-start-line="45" selection-start-column="68" selection-end-line="45" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/main.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.307692">
+          <caret line="28" column="114" selection-start-line="28" selection-start-column="114" selection-end-line="28" selection-end-column="114" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/MainController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.884615">
+          <caret line="36" column="79" selection-start-line="36" selection-start-column="79" selection-end-line="36" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-21.26923">
+          <caret line="47" column="52" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7605634">
+          <caret line="51" column="53" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7580825">
-          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="4" column="59" selection-start-line="4" selection-start-column="59" selection-end-line="4" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.65005416">
+          <caret line="41" column="89" selection-start-line="41" selection-start-column="89" selection-end-line="41" selection-end-column="89" />
           <folding />
         </state>
       </provider>

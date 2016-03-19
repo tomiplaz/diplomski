@@ -1,0 +1,29 @@
+<md-dialog class="invalid-request-dialog" aria-label="{{ rejectRequestDialog.title }}" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 flex>{{ rejectRequestDialog.title }}</h2>
+            <md-button class="md-icon-button" ng-click="rejectRequestDialog.hide()" aria-label="Zatvori">
+                <md-icon md-svg-src="close"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content layout layout-align="center center">
+        <form name="rejectRequestDialogForm" class="full-width">
+            <md-input-container class="full-width">
+                <label>{{ rejectRequestDialog.label }}</label>
+                <textarea name="reason" ng-model="rejectRequestDialog.reason" required md-maxlength="300"></textarea>
+                <div ng-messages="rejectRequestDialogForm.reason.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="maxlength">Prekratko!</div>
+                </div>
+            </md-input-container>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-fab md-mini md-raised" ng-click="rejectRequestDialog.confirm()" aria-label="Potvrdi"
+                ng-disabled="!rejectRequestDialogForm.reason.$valid">
+            <md-tooltip md-direction="left">Potvrdi</md-tooltip>
+            <md-icon md-svg-src="check"></md-icon>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -120,9 +120,9 @@
             });
         }
 
-        function updateRequest(requestId, data, refresh) {
+        function updateRequest(requestId, data, message, refresh) {
             Restangular.one('requests', requestId).doPUT(data).then(function() {
-                toastService.show("Zahtjev je uz objašnjenje vraćen korisniku.");
+                toastService.show(message);
                 if (refresh) $state.go($state.current, {}, { reload: true });
             }, function() {
                 toastService.show("Greška tijekom ažuriranja zahtjeva!", 3000);
@@ -142,7 +142,7 @@
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
-            getInvalidRequestDialogObject: getInvalidRequestDialogObject
+            getRejectRequestDialogObject: getRejectRequestDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -185,15 +185,16 @@
             }
         }
 
-        function getInvalidRequestDialogObject(event, requestId) {
+        function getRejectRequestDialogObject(event, requestId, type) {
             return {
-                controller: 'InvalidRequestDialogCtrl as invalidRequestDialog',
-                templateUrl: 'app/main/invalid-request-dialog/invalid-request-dialog.html',
+                controller: 'RejectRequestDialogCtrl as rejectRequestDialog',
+                templateUrl: 'app/main/reject-request-dialog/reject-request-dialog.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    requestId: requestId
+                    requestId: requestId,
+                    type: type
                 }
             }
         }
@@ -494,6 +495,16 @@
                         return apiService.getRequests('nonvalidated');
                     }
                 }
+            })
+            .state('main.approve', {
+                url: '/approve',
+                templateUrl: 'app/main/approve/approve.html',
+                controller: 'ApproveCtrl as approve',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('approvable');
+                    }
+                }
             });
     }
 })();
@@ -532,6 +543,12 @@
                 label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
+            },
+            {
+                name: 'main.approve',
+                label: 'Odobravanje zahtjeva',
+                icon: 'library_books',
+                type: [2]
             }
         ];
 
@@ -551,6 +568,88 @@
     }
 })();
 
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('ApproveCtrl', ApproveCtrl);
+
+    ApproveCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
+    function ApproveCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog, apiService) {
+        var vm = this;
+
+        vm.requests = requests;
+        vm.current = null;
+
+        vm.previous = previous;
+        vm.next = next;
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        $document.ready(function() {
+            if (vm.requests.length > 0) setRequest(0);
+        });
+
+        function previous() {
+            setRequest(--vm.current);
+        }
+
+        function next() {
+            setRequest(++vm.current);
+        }
+
+        function disapprove($event) {
+            var requestId = vm.requests[vm.current].id;
+            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 2);
+            $mdDialog.show(rejectRequestDialogObject);
+        }
+
+        function approve() {
+            var requestId = vm.requests[vm.current].id;
+            var data = {
+                approved: true,
+                approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
+        }
+
+        function setRequest(i) {
+            vm.current = i;
+            var data = getRequestDataObject(vm.requests[i]);
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('iframe'));
+                    iframe.attr('src', url);
+                });
+        }
+
+        function getRequestDataObject(request) {
+            return {
+                type: request.type,
+                documentDate: request.document_date,
+                name: request.name,
+                surname: request.surname,
+                workplace: request.workplace,
+                forPlace: request.for_place,
+                forFaculty: request.for_faculty,
+                forSubject: request.for_subject,
+                advancePayment: request.advance_payment,
+                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
+                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
+                duration: request.duration,
+                description: request.description,
+                transportation: request.transportation,
+                expensesResponsible: request.expenses_responsible,
+                expensesExplanation: request.expenses_explanation,
+                applicantSignature: request.applicant_signature
+            }
+        }
+    }
+})();
 (function() {
     'use strict';
 
@@ -654,27 +753,189 @@
 
     angular
         .module('main')
-        .controller('InvalidRequestDialogCtrl', InvalidRequestDialogCtrl);
+        .controller('RejectRequestDialogCtrl', RejectRequestDialogCtrl);
 
-    InvalidRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
-    function InvalidRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+    RejectRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'type', 'apiService', 'helperService'];
+    function RejectRequestDialogCtrl($mdDialog, requestId, type, apiService, helperService) {
         var vm = this;
 
         vm.hide = hide;
         vm.confirm = confirm;
+
+        switch (type) {
+            case 1:
+                vm.title = "Neispravnost zahtjeva";
+                vm.label = "Razlog neispravnosti";
+                break;
+            case 2:
+                vm.title = "Odbijanje zahtjeva";
+                vm.label = "Razlog odbijanja";
+                break;
+            default:
+                vm.title = "Naslov";
+                vm.label = "Labela";
+                break;
+        }
 
         function hide() {
             $mdDialog.hide();
         }
 
         function confirm() {
-            var data = {
-                quality_check: false,
-                quality_check_timestamp: helperService.formatDate('yyyy-MM-dd HH:mm:ss'),
-                invalidity_reason: vm.invalidityReason
-            };
-            apiService.updateRequest(requestId, data, true);
+            var data = getDataObject();
+            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev uspješno odbijen!", true);
             hide();
+        }
+
+        function getDataObject() {
+            switch (type) {
+                case 1:
+                    return {
+                        quality_check: false,
+                        quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        invalidity_reason: vm.reason
+                    };
+                case 2:
+                    return {
+                        approved: false,
+                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        disapproval_reason: vm.reason
+                    };
+                default:
+                    return null;
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('SignatureDialogCtrl', SignatureDialogCtrl);
+
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document) {
+        var vm = this;
+        var signaturePad = null;
+        var confirmButton = null;
+
+        vm.hide = hide;
+        vm.clear = clear;
+        vm.confirm = confirm;
+
+        $document.ready(function() {
+            var canvas = document.querySelector('canvas');
+            signaturePad = new SignaturePad(canvas, {
+                minWidth: 0.4,
+                maxWidth: 1.0,
+                onEnd: onEnd
+            });
+
+            confirmButton = angular.element(document.querySelector('button[ng-click="signatureDialog.confirm()"]'));
+            confirmButton.attr('disabled', 'true');
+        });
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function clear() {
+            signaturePad.clear();
+            confirmButton.attr('disabled', 'true');
+        }
+
+        function confirm() {
+            $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
+            hide();
+        }
+
+        function onEnd() {
+            if (!signaturePad.isEmpty()) {
+                confirmButton.removeAttr('disabled');
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('ValidateCtrl', ValidateCtrl);
+
+    ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
+    function ValidateCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog, apiService) {
+        var vm = this;
+
+        vm.requests = requests;
+        vm.current = null;
+
+        vm.previous = previous;
+        vm.next = next;
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        $document.ready(function() {
+            if (vm.requests.length > 0) setRequest(0);
+        });
+
+        function previous() {
+            setRequest(--vm.current);
+        }
+
+        function next() {
+            setRequest(++vm.current);
+        }
+
+        function invalid($event) {
+            var requestId = vm.requests[vm.current].id;
+            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
+            $mdDialog.show(rejectRequestDialogObject);
+        }
+
+        function valid() {
+            var requestId = vm.requests[vm.current].id;
+            var data = {
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+        }
+
+        function setRequest(i) {
+            vm.current = i;
+            var data = getRequestDataObject(vm.requests[i]);
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('iframe'));
+                    iframe.attr('src', url);
+                });
+        }
+
+        function getRequestDataObject(request) {
+            return {
+                type: request.type,
+                documentDate: request.document_date,
+                name: request.name,
+                surname: request.surname,
+                workplace: request.workplace,
+                forPlace: request.for_place,
+                forFaculty: request.for_faculty,
+                forSubject: request.for_subject,
+                advancePayment: request.advance_payment,
+                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
+                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
+                duration: request.duration,
+                description: request.description,
+                transportation: request.transportation,
+                expensesResponsible: request.expenses_responsible,
+                expensesExplanation: request.expenses_explanation,
+                applicantSignature: request.applicant_signature
+            }
         }
     }
 })();
@@ -765,220 +1026,6 @@
             vm.expensesResponsible = null;
             vm.expensesExplanation = null;
             vm.applicantSignature = null;
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('RequestsCtrl', RequestsCtrl);
-
-    RequestsCtrl.$inject = ['$scope', 'requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
-    function RequestsCtrl($scope, requests, $document, documentService, helperService, dialogService, $mdDialog) {
-        var vm = this;
-
-        vm.requests = requests;
-        vm.current = null;
-
-        vm.previous = previous;
-        vm.next = next;
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        $document.ready(function() {
-            if (vm.requests.length > 0) setRequest(0);
-        });
-
-        function previous() {
-            setRequest(--vm.current);
-        }
-
-        function next() {
-            setRequest(++vm.current);
-        }
-
-        function invalid($event) {
-            var requestId = vm.requests[vm.current].id;
-            var invalidRequestDialogObject = dialogService.getInvalidRequestDialogObject($event, requestId);
-            $mdDialog.show(invalidRequestDialogObject);
-        }
-
-        function valid() {
-            console.log("Valid!");
-        }
-
-        function requestsFilterFunction() {
-            return function(request) {
-                switch ($scope['main'].user.type) {
-                    case 1:
-                        return request.quality_check == null;
-                }
-            }
-
-        }
-
-        function setRequest(i) {
-            vm.current = i;
-            var data = getRequestDataObject(vm.requests[i]);
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('iframe'));
-                    iframe.attr('src', url);
-                });
-        }
-
-        function getRequestDataObject(request) {
-            return {
-                type: request.type,
-                documentDate: request.document_date,
-                name: request.name,
-                surname: request.surname,
-                workplace: request.workplace,
-                forPlace: request.for_place,
-                forFaculty: request.for_faculty,
-                forSubject: request.for_subject,
-                advancePayment: request.advance_payment,
-                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
-                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
-                duration: request.duration,
-                description: request.description,
-                transportation: request.transportation,
-                expensesResponsible: request.expenses_responsible,
-                expensesExplanation: request.expenses_explanation,
-                applicantSignature: request.applicant_signature
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('SignatureDialogCtrl', SignatureDialogCtrl);
-
-    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document'];
-    function SignatureDialogCtrl($scope, $mdDialog, $document) {
-        var vm = this;
-        var signaturePad = null;
-        var confirmButton = null;
-
-        vm.hide = hide;
-        vm.clear = clear;
-        vm.confirm = confirm;
-
-        $document.ready(function() {
-            var canvas = document.querySelector('canvas');
-            signaturePad = new SignaturePad(canvas, {
-                minWidth: 0.4,
-                maxWidth: 1.0,
-                onEnd: onEnd
-            });
-
-            confirmButton = angular.element(document.querySelector('button[ng-click="signatureDialog.confirm()"]'));
-            confirmButton.attr('disabled', 'true');
-        });
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function clear() {
-            signaturePad.clear();
-            confirmButton.attr('disabled', 'true');
-        }
-
-        function confirm() {
-            $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
-            hide();
-        }
-
-        function onEnd() {
-            if (!signaturePad.isEmpty()) {
-                confirmButton.removeAttr('disabled');
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('ValidateCtrl', ValidateCtrl);
-
-    ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
-    function ValidateCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
-        var vm = this;
-
-        vm.requests = requests;
-        vm.current = null;
-
-        vm.previous = previous;
-        vm.next = next;
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        $document.ready(function() {
-            if (vm.requests.length > 0) setRequest(0);
-        });
-
-        function previous() {
-            setRequest(--vm.current);
-        }
-
-        function next() {
-            setRequest(++vm.current);
-        }
-
-        function invalid($event) {
-            var requestId = vm.requests[vm.current].id;
-            var invalidRequestDialogObject = dialogService.getInvalidRequestDialogObject($event, requestId);
-            $mdDialog.show(invalidRequestDialogObject);
-        }
-
-        function valid() {
-            console.log("Valid!");
-        }
-
-        function setRequest(i) {
-            vm.current = i;
-            var data = getRequestDataObject(vm.requests[i]);
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('iframe'));
-                    iframe.attr('src', url);
-                });
-        }
-
-        function getRequestDataObject(request) {
-            return {
-                type: request.type,
-                documentDate: request.document_date,
-                name: request.name,
-                surname: request.surname,
-                workplace: request.workplace,
-                forPlace: request.for_place,
-                forFaculty: request.for_faculty,
-                forSubject: request.for_subject,
-                advancePayment: request.advance_payment,
-                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
-                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
-                duration: request.duration,
-                description: request.description,
-                transportation: request.transportation,
-                expensesResponsible: request.expenses_responsible,
-                expensesExplanation: request.expenses_explanation,
-                applicantSignature: request.applicant_signature
-            }
         }
     }
 })();

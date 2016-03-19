@@ -3,10 +3,10 @@
 
     angular
         .module('main')
-        .controller('ValidateCtrl', ValidateCtrl);
+        .controller('ApproveCtrl', ApproveCtrl);
 
-    ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
-    function ValidateCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog, apiService) {
+    ApproveCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
+    function ApproveCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog, apiService) {
         var vm = this;
 
         vm.requests = requests;
@@ -14,8 +14,8 @@
 
         vm.previous = previous;
         vm.next = next;
-        vm.invalid = invalid;
-        vm.valid = valid;
+        vm.disapprove = disapprove;
+        vm.approve = approve;
 
         $document.ready(function() {
             if (vm.requests.length > 0) setRequest(0);
@@ -29,19 +29,19 @@
             setRequest(++vm.current);
         }
 
-        function invalid($event) {
+        function disapprove($event) {
             var requestId = vm.requests[vm.current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
+            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 2);
             $mdDialog.show(rejectRequestDialogObject);
         }
 
-        function valid() {
+        function approve() {
             var requestId = vm.requests[vm.current].id;
             var data = {
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+                approved: true,
+                approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
             };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+            apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
         }
 
         function setRequest(i) {

@@ -10,7 +10,7 @@
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
-            getInvalidRequestDialogObject: getInvalidRequestDialogObject
+            getRejectRequestDialogObject: getRejectRequestDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -53,15 +53,16 @@
             }
         }
 
-        function getInvalidRequestDialogObject(event, requestId) {
+        function getRejectRequestDialogObject(event, requestId, type) {
             return {
-                controller: 'InvalidRequestDialogCtrl as invalidRequestDialog',
-                templateUrl: 'app/main/invalid-request-dialog/invalid-request-dialog.html',
+                controller: 'RejectRequestDialogCtrl as rejectRequestDialog',
+                templateUrl: 'app/main/reject-request-dialog/reject-request-dialog.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    requestId: requestId
+                    requestId: requestId,
+                    type: type
                 }
             }
         }

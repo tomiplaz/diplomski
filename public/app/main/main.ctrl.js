@@ -32,6 +32,12 @@
                 label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
+            },
+            {
+                name: 'main.approve',
+                label: 'Odobravanje zahtjeva',
+                icon: 'library_books',
+                type: [2]
             }
         ];
 

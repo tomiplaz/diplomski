@@ -42,9 +42,9 @@
             });
         }
 
-        function updateRequest(requestId, data, refresh) {
+        function updateRequest(requestId, data, message, refresh) {
             Restangular.one('requests', requestId).doPUT(data).then(function() {
-                toastService.show("Zahtjev je uz objašnjenje vraćen korisniku.");
+                toastService.show(message);
                 if (refresh) $state.go($state.current, {}, { reload: true });
             }, function() {
                 toastService.show("Greška tijekom ažuriranja zahtjeva!", 3000);

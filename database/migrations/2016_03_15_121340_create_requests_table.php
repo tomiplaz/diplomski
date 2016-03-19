@@ -47,6 +47,7 @@ class CreateRequestsTable extends Migration
             $table->text('invalidity_reason')->nullable();
             $table->boolean('approved')->nullable();
             $table->timestamp('approved_timestamp')->nullable();
+            $table->text('disapproval_reason')->nullable();
         });
     }
 
