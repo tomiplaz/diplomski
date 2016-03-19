@@ -113,7 +113,7 @@
                 {
                     columns: [
                         { image: data.applicantSignature, width: 125, height: 35 },
-                        { text: "", style: ['input', 'right'], width: 125, height: 35 }
+                        { text: !data.approverSignature ? "" : data.approverSignature, style: ['input', 'right'], width: 125, height: 35 }
                     ]
                 },
                 {

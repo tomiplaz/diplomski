@@ -22,26 +22,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.ctrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/app/main/main.ctrl.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.config.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/app/main/main.config.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="45" column="68" selection-start-line="45" selection-start-column="68" selection-end-line="45" selection-end-column="68" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="validate.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -65,48 +45,38 @@
       <file leaf-file-name="approve.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-18.307692">
-              <caret line="28" column="114" selection-start-line="28" selection-start-column="114" selection-end-line="28" selection-end-column="114" />
+            <state vertical-scroll-proportion="-20.923077">
+              <caret line="32" column="14" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="approve.ctrl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="approve.ctrl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.ctrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.65005416">
-              <caret line="41" column="89" selection-start-line="41" selection-start-column="89" selection-end-line="41" selection-end-column="89" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="apiService.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/app/services/apiService.js">
+      <file leaf-file-name="signature-dialog.ctrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.ctrl.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="46" column="43" selection-start-line="46" selection-start-column="43" selection-end-line="46" selection-end-column="43" />
+              <caret line="52" column="26" selection-start-line="52" selection-start-column="26" selection-end-line="52" selection-end-column="26" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/MainController.php">
+      <file leaf-file-name="documentService.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/app/services/documentService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.884615">
-              <caret line="36" column="79" selection-start-line="36" selection-start-column="79" selection-end-line="36" selection-end-column="79" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="2016_03_15_121340_create_requests_table.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-21.26923">
-              <caret line="47" column="52" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
+            <state vertical-scroll-proportion="0.26327193">
+              <caret line="95" column="75" selection-start-line="95" selection-start-column="75" selection-end-line="95" selection-end-column="75" />
               <folding />
             </state>
           </provider>
@@ -129,7 +99,6 @@
         <option value="$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/new-request-n/new-request-n.html" />
         <option value="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" />
-        <option value="$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/services/toastService.js" />
         <option value="$PROJECT_DIR$/public/app/login/login.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.html" />
@@ -140,9 +109,7 @@
         <option value="$PROJECT_DIR$/resources/views/index.php" />
         <option value="$PROJECT_DIR$/public/app/main/main.html" />
         <option value="$PROJECT_DIR$/database/seeds/RequestsTableSeeder.php" />
-        <option value="$PROJECT_DIR$/public/app/services/documentService.js" />
         <option value="$PROJECT_DIR$/public/app/services/helperService.js" />
-        <option value="$PROJECT_DIR$/public/app/main/new-request/new-request.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/date-time-dialog/date-time-dialog.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/app.config.js" />
         <option value="$PROJECT_DIR$/public/app/main/requests/requests.html" />
@@ -162,11 +129,14 @@
         <option value="$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php" />
         <option value="$PROJECT_DIR$/public/app/main/invalid-request-dialog/reject-request-dialog.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/services/apiService.js" />
-        <option value="$PROJECT_DIR$/public/app/services/dialogService.js" />
         <option value="$PROJECT_DIR$/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js" />
         <option value="$PROJECT_DIR$/public/app/main/validate/validate.ctrl.js" />
-        <option value="$PROJECT_DIR$/public/app/main/approve/approve.html" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/MainController.php" />
+        <option value="$PROJECT_DIR$/public/app/main/approve/approve.html" />
+        <option value="$PROJECT_DIR$/public/app/services/dialogService.js" />
+        <option value="$PROJECT_DIR$/public/app/main/new-request/new-request.ctrl.js" />
+        <option value="$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.ctrl.js" />
+        <option value="$PROJECT_DIR$/public/app/services/documentService.js" />
         <option value="$PROJECT_DIR$/public/app/main/approve/approve.ctrl.js" />
       </list>
     </option>
@@ -706,7 +676,7 @@
     <property name="FullScreen" value="false" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="SearchEverywhereHistoryKey" value="reje&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js&#10;main.&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.config.js&#10;dialogS&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;help&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/helperService.js&#10;docu&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;docume&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;api&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/apiService.js&#10;invalid&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/invalid-request-dialog/invalid-request-dialog.ctrl.js&#10;dialog&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;sign&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.html&#10;sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.co&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;app.&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;new&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/new-request/new-request.ctrl.js&#10;docum&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;documen&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;scss&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;logi&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/login/login.ctrl.js&#10;toas&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;dat&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.html&#10;date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;si&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.ctrl.js&#10;doc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;date-t&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;toast&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;document&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;main&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.html&#10;main.php&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;sc-d&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;angular.js&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular/angular.js&#10;-local&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;angular-lo&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;main.p&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;angular&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;sc-da&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc-date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;font-awe&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/font-awesome/css/font-awesome.css&#10;app.mod&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.module.js&#10;main.ph&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;main.ct&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;an&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.js&#10;angular-&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;mai&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;resta&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/restangular/src/restangular.js" />
+    <property name="SearchEverywhereHistoryKey" value="docum&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;si&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.ctrl.js&#10;docume&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;new&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/new-request/new-request.ctrl.js&#10;reje&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js&#10;sign&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/signature-dialog/signature-dialog.html&#10;dialo&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;main.&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.config.js&#10;dialogS&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;help&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/helperService.js&#10;docu&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.ctrl.js&#10;api&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/apiService.js&#10;invalid&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/invalid-request-dialog/invalid-request-dialog.ctrl.js&#10;dialog&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/dialogService.js&#10;sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.co&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;app.&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.config.js&#10;documen&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;scss&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;app.sc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.scss&#10;logi&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/login/login.ctrl.js&#10;toas&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;dat&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.html&#10;date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;doc&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/documentService.js&#10;date-t&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/date-time-dialog/date-time-dialog.ctrl.js&#10;toast&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/services/toastService.js&#10;document&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/document-dialog/document-dialog.html&#10;main&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.html&#10;main.php&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;sc-d&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;angular.js&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular/angular.js&#10;-local&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;angular-lo&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/i18n/angular-locale_hr-hr.js&#10;main.p&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;angular&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;sc-da&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.css&#10;sc-date&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/sc-date-time/sc-date-time.js&#10;font-awe&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/font-awesome/css/font-awesome.css&#10;app.mod&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/app.module.js&#10;main.ph&#9;FILE&#9;file://C:/Users/Tomo/diplomski/resources/views/main.php&#10;main.ct&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;an&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.js&#10;angular-&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/angular-material/angular-material.css&#10;mai&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/app/main/main.ctrl.js&#10;resta&#9;FILE&#9;file://C:/Users/Tomo/diplomski/public/node_modules/restangular/src/restangular.js" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -890,13 +860,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.64463705">
-          <caret line="35" column="51" selection-start-line="35" selection-start-column="51" selection-end-line="35" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.53065777">
@@ -1010,13 +973,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/services/documentService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39219934">
-          <caret line="102" column="77" selection-start-line="102" selection-start-column="77" selection-end-line="102" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/app/icons/ic_check_circle_black_24px.svg">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1035,21 +991,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.72575253">
           <caret line="43" column="46" selection-start-line="43" selection-start-column="46" selection-end-line="43" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32218507">
-          <caret line="17" column="50" selection-start-line="17" selection-start-column="50" selection-end-line="17" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/new-request/new-request.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="50" selection-start-line="66" selection-start-column="50" selection-end-line="66" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1072,14 +1013,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.276273">
           <caret line="15" column="90" selection-start-line="15" selection-start-column="90" selection-end-line="15" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="104" selection-start-line="40" selection-start-column="33" selection-end-line="40" selection-end-column="104" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1123,14 +1056,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/services/dialogService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09209101">
-          <caret line="5" column="49" selection-start-line="5" selection-start-column="49" selection-end-line="5" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/app/main/main.config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1147,42 +1072,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.html">
+    <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.307692">
-          <caret line="28" column="114" selection-start-line="28" selection-start-column="114" selection-end-line="28" selection-end-column="114" />
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="4" column="59" selection-start-line="4" selection-start-column="59" selection-end-line="4" selection-end-column="59" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/MainController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.884615">
+        <state vertical-scroll-proportion="0.46042365">
           <caret line="36" column="79" selection-start-line="36" selection-start-column="79" selection-end-line="36" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-21.26923">
-          <caret line="47" column="52" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7605634">
-          <caret line="51" column="53" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/app/main/validate/validate.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6153846">
-          <caret line="4" column="59" selection-start-line="4" selection-start-column="59" selection-end-line="4" selection-end-column="59" />
           <folding />
         </state>
       </provider>
@@ -1195,10 +1096,82 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/reject-request-dialog/reject-request-dialog.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8288191">
+          <caret line="51" column="53" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.923077">
+          <caret line="32" column="14" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13266444">
+          <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/services/dialogService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18959913">
+          <caret line="35" column="35" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/document-dialog/document-dialog.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.62621886">
+          <caret line="34" column="38" selection-start-line="34" selection-start-column="38" selection-end-line="34" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/new-request/new-request.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.75514627">
+          <caret line="65" column="104" selection-start-line="65" selection-start-column="104" selection-end-line="65" selection-end-column="104" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/migrations/2016_03_15_121340_create_requests_table.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2753623">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/app/main/approve/approve.ctrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.65005416">
-          <caret line="41" column="89" selection-start-line="41" selection-start-column="89" selection-end-line="41" selection-end-column="89" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/main/signature-dialog/signature-dialog.ctrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="52" column="26" selection-start-line="52" selection-start-column="26" selection-end-line="52" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/app/services/documentService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26327193">
+          <caret line="95" column="75" selection-start-line="95" selection-start-column="75" selection-end-line="95" selection-end-column="75" />
           <folding />
         </state>
       </provider>

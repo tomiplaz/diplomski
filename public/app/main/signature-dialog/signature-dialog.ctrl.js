@@ -5,8 +5,8 @@
         .module('main')
         .controller('SignatureDialogCtrl', SignatureDialogCtrl);
 
-    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document'];
-    function SignatureDialogCtrl($scope, $mdDialog, $document) {
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'requestId', 'type', 'helperService', 'apiService'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document, requestId, type, helperService, apiService) {
         var vm = this;
         var signaturePad = null;
         var confirmButton = null;
@@ -37,7 +37,21 @@
         }
 
         function confirm() {
-            $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
+            switch (type) {
+                case 0:
+                    $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
+                    break;
+                case 2:
+                    var data = {
+                        approved: true,
+                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        approver_signature: signaturePad.toDataURL()
+                    };
+                    apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
+                    break;
+                default:
+                    break;
+            }
             hide();
         }
 

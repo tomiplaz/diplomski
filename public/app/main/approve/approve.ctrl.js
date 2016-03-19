@@ -5,8 +5,8 @@
         .module('main')
         .controller('ApproveCtrl', ApproveCtrl);
 
-    ApproveCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
-    function ApproveCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog, apiService) {
+    ApproveCtrl.$inject = ['$scope', 'requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
+    function ApproveCtrl($scope, requests, $document, documentService, helperService, dialogService, $mdDialog) {
         var vm = this;
 
         vm.requests = requests;
@@ -35,13 +35,10 @@
             $mdDialog.show(rejectRequestDialogObject);
         }
 
-        function approve() {
+        function approve($event) {
             var requestId = vm.requests[vm.current].id;
-            var data = {
-                approved: true,
-                approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, requestId, 2);
+            $mdDialog.show(signatureDialogObject);
         }
 
         function setRequest(i) {
