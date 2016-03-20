@@ -39,6 +39,7 @@
 
         function showDocumentDialog($event) {
             var data = {
+                userId: $scope['main'].user.id,
                 type: vm.type,
                 documentDate: helperService.formatDate(null, 'dd.MM.yyyy.'),
                 name: vm.name,

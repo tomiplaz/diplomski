@@ -29,6 +29,7 @@
 
         function send() {
             var newRequest = {
+                user_id: data.userId,
                 type: data.type,
                 document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
                 name: data.name,

@@ -38,6 +38,12 @@
                 label: 'Odobravanje zahtjeva',
                 icon: 'library_books',
                 type: [2]
+            },
+            {
+                name: 'main.sent-requests',
+                label: 'Poslani zahtjevi',
+                icon: 'library_books',
+                type: [0]
             }
         ];
 

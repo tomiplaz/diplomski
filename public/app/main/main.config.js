@@ -46,6 +46,16 @@
                         return apiService.getRequests('approvable');
                     }
                 }
-            });
+            })
+            .state('main.sent-requests', {
+                url: '/sent-requests',
+                templateUrl: 'app/main/sent-requests/sent-requests.html',
+                controller: 'SentRequestsCtrl as sentRequests',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('user');
+                    }
+                }
+            })
     }
 })();

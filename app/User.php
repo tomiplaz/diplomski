@@ -14,4 +14,13 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'type'
     ];
+
+    /**
+     * User can create many requests.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function requests() {
+        return $this->hasMany('App\Request');
+    }
 }

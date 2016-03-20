@@ -14,6 +14,7 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
             $table->timestamps();
 
             $table->char('type', 1);
@@ -48,6 +49,8 @@ class CreateRequestsTable extends Migration
             $table->boolean('approved')->nullable();
             $table->timestamp('approved_timestamp')->nullable();
             $table->text('disapproval_reason')->nullable();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

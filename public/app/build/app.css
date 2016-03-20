@@ -54,5 +54,7 @@ body {
     body .invalid-request-dialog md-dialog-content {
       padding: 20px 10px 10px 10px;
       width: 100%; }
+  body .width-40 {
+    width: 40%; }
 
 /*# sourceMappingURL=app.css.map */

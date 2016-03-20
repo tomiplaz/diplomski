@@ -24,6 +24,7 @@ Route::group(['prefix' => 'api/v1'], function() {
             Route::post('/', 'MainController@createRequest');
             Route::get('nonvalidated', 'MainController@getRequestsNonvalidated');
             Route::get('approvable', 'MainController@getRequestsApprovable');
+            Route::get('user', 'MainController@getUserRequests');
             Route::put('{requestId}', 'MainController@updateRequest');
         });
 
