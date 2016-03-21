@@ -1,0 +1,15 @@
+<md-dialog class="details-dialog" aria-label="Detalji" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 flex>Detalji</h2>
+            <md-button class="md-icon-button" ng-click="detailsDialog.hide()" aria-label="Zatvori">
+                <md-icon md-svg-src="close"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content layout="column" layout-align="center center">
+        <p>{{ detailsDialog.getCreationInfo() }}</p>
+        <p>{{ detailsDialog.getMainInfo() }}</p>
+        <em>{{ detailsDialog.getReason() }}</em>
+    </md-dialog-content>
+</md-dialog>

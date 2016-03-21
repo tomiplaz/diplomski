@@ -110,7 +110,7 @@ body {
     height: 700px;
   }
 
-  .invalid-request-dialog {
+  .invalid-request-dialog, .details-dialog {
     width: 40%;
 
     md-dialog-content {
@@ -119,7 +119,19 @@ body {
     }
   }
 
-  .width-40 {
-    width: 40%;
+  md-icon {
+    &.negative svg {
+      fill: $md-warn;
+    }
+    &.positive svg {
+      fill: $md-primary;
+    }
+    &.pending svg {
+      fill: $md-accent;
+    }
+  }
+
+  button.badge {
+    pointer-events: none;
   }
 }

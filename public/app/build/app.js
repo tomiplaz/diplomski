@@ -66,7 +66,11 @@
             .icon('navigate_before', 'app/icons/ic_navigate_before_black_24px.svg')
             .icon('navigate_next', 'app/icons/ic_navigate_next_black_24px.svg')
             .icon('check_circle', 'app/icons/ic_check_circle_black_24px.svg')
-            .icon('cancel', 'app/icons/ic_cancel_black_24px.svg');
+            .icon('cancel', 'app/icons/ic_cancel_black_24px.svg')
+            .icon('thumb_down', 'app/icons/ic_thumb_down_black_24px.svg')
+            .icon('thumb_up', 'app/icons/ic_thumb_up_black_24px.svg')
+            .icon('thumbs_up_down', 'app/icons/ic_thumbs_up_down_black_24px.svg')
+            .icon('details', 'app/icons/ic_details_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';
@@ -131,7 +135,7 @@
     }
 })();
 (function() {
-    'use strict'
+    'use strict';
 
     angular
         .module('app')
@@ -142,7 +146,8 @@
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
-            getRejectRequestDialogObject: getRejectRequestDialogObject
+            getRejectRequestDialogObject: getRejectRequestDialogObject,
+            getDetailsDialogObject: getDetailsDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -199,6 +204,19 @@
                 locals: {
                     requestId: requestId,
                     type: type
+                }
+            }
+        }
+
+        function getDetailsDialogObject(event, request) {
+            return {
+                controller: 'DetailsDialogCtrl as detailsDialog',
+                templateUrl: 'app/main/details-dialog/details-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                locals: {
+                    request: request
                 }
             }
         }
@@ -336,7 +354,7 @@
     }
 })();
 (function() {
-    'use strict'
+    'use strict';
 
     angular
         .module('app')
@@ -354,6 +372,7 @@
         }
 
         function getDuration(start, end) {
+            console.log(start, end, new Date(start));
             var totalMs = new Date(end) - new Date(start);
             var totalHours = totalMs / 1000 / 60 / 60;
             var days = Math.round(totalHours / 24);
@@ -387,7 +406,7 @@
     }
 })();
 (function() {
-    'use strict'
+    'use strict';
 
     angular
         .module('app')
@@ -673,41 +692,48 @@
 
     angular
         .module('main')
-        .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
+        .controller('DetailsDialogCtrl', DetailsDialogCtrl);
 
-    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
-    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
+    DetailsDialogCtrl.$inject = ['request', '$mdDialog', 'helperService'];
+    function DetailsDialogCtrl(request, $mdDialog, helperService) {
         var vm = this;
 
-        vm.label = data.label;
-        vm.mindate = data.mindate;
-        vm.maxdate = data.maxdate;
-
         vm.hide = hide;
-        vm.cancel = cancel;
-        vm.save = save;
+
+        vm.getCreationInfo = getCreationInfo;
+        vm.getMainInfo = getMainInfo;
+        vm.getReason = getReason;
 
         function hide() {
             $mdDialog.hide();
         }
 
-        function cancel() {
-            $scope['newRequest'][data.property] = null;
-            hide();
+        function getCreationInfo() {
+            return "Zahtjev je poslan " + helperService.formatDate(request.created_at, "dd.MM.yyyy. 'u' HH:mm") + ".";
         }
 
-        function save($value) {
-            $scope['newRequest'][data.property + 'Raw'] = $value;
-
-            if (data.property == 'endTimestamp') {
-                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
-                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
-                }
+        function getMainInfo() {
+            if (request.quality_check == null) {
+                return "Provjera ispravnosti zahtjeva još nije izvršena."
+            } else if (request.quality_check == false) {
+                return "Zahtjev je ocijenjen neispravnim " + helperService.formatDate(request.quality_check_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (request.approved) {
+                return "Zahtjev je odobren " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (request.approved == false) {
+                return "Zahtjev je odbijen " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
             } else {
-                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
+                return "Zahtjev je ispravan i čeka odobrenje.";
             }
+        }
 
-            hide();
+        function getReason() {
+            if (request.invalidity_reason != null) {
+                return request.invalidity_reason;
+            } else if (request.disapproval_reason != null) {
+                return request.disapproval_reason;
+            } else {
+                return null;
+            }
         }
     }
 })();
@@ -754,7 +780,7 @@
                 advance_payment: data.type == 'n' ? null : data.advancePayment,
                 start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
                 end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                duration: helperService.getDuration(data.startTimestampRaw, data.endTimestampRaw),
+                duration: data.duration,
                 description: data.description,
                 transportation: data.transportation,
                 expenses_responsible: data.expensesResponsible,
@@ -768,6 +794,51 @@
     }
 })();
 (function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
+
+    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
+    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
+        var vm = this;
+
+        vm.label = data.label;
+        vm.mindate = data.mindate;
+        vm.maxdate = data.maxdate;
+
+        vm.hide = hide;
+        vm.cancel = cancel;
+        vm.save = save;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function cancel() {
+            $scope['newRequest'][data.property] = null;
+            hide();
+        }
+
+        function save($value) {
+            $scope['newRequest'][data.property + 'Raw'] = $value;
+
+            if (data.property == 'endTimestamp') {
+                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
+                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
+                }
+            } else {
+                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
+            }
+
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
     angular
         .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
@@ -820,6 +891,8 @@
                 advancePayment: vm.advancePayment,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
+                startTimestampRaw: vm.startTimestampRaw,
+                endTimestampRaw: vm.endTimestampRaw,
                 duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
                 description: vm.description,
                 transportation: vm.transportation,
@@ -863,80 +936,25 @@
 
     angular
         .module('main')
-        .controller('RejectRequestDialogCtrl', RejectRequestDialogCtrl);
-
-    RejectRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'type', 'apiService', 'helperService'];
-    function RejectRequestDialogCtrl($mdDialog, requestId, type, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        switch (type) {
-            case 1:
-                vm.title = "Neispravnost zahtjeva";
-                vm.label = "Razlog neispravnosti";
-                break;
-            case 2:
-                vm.title = "Odbijanje zahtjeva";
-                vm.label = "Razlog odbijanja";
-                break;
-            default:
-                vm.title = "Naslov";
-                vm.label = "Labela";
-                break;
-        }
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = getDataObject();
-            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev uspješno odbijen!", true);
-            hide();
-        }
-
-        function getDataObject() {
-            switch (type) {
-                case 1:
-                    return {
-                        quality_check: false,
-                        quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
-                        invalidity_reason: vm.reason
-                    };
-                case 2:
-                    return {
-                        approved: false,
-                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
-                        disapproval_reason: vm.reason
-                    };
-                default:
-                    return null;
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('SentRequestsCtrl', SentRequestsCtrl);
 
-    SentRequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService'];
-    function SentRequestsCtrl(requests, $document, documentService, helperService) {
+    SentRequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
+    function SentRequestsCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
         var vm = this;
 
         vm.requests = requests;
         vm.current = null;
-        vm.request = null;
 
         vm.previous = previous;
         vm.next = next;
 
+        vm.showDetails = showDetails;
+
         $document.ready(function() {
-            if (vm.requests.length > 0) setRequest(0);
+            if (vm.requests.length > 0) {
+                vm.current = 0;
+                setRequest(0);
+            }
         });
 
         function previous() {
@@ -949,7 +967,6 @@
 
         function setRequest(i) {
             vm.current = i;
-            vm.request = vm.requests[i];
             var data = getRequestDataObject(vm.requests[i]);
             var doc = documentService.getDocument(data);
 
@@ -959,12 +976,15 @@
                     var iframe = angular.element(document.querySelector('iframe'));
                     iframe.attr('src', url);
                 });
+
+            vm.icon = getIcon(i);
+            vm.class = getClass(i);
         }
 
         function getRequestDataObject(request) {
             return {
                 type: request.type,
-                documentDate: request.document_date,
+                documentDate: helperService.formatDate(request.document_date, 'dd.MM.yyyy.'),
                 name: request.name,
                 surname: request.surname,
                 workplace: request.workplace,
@@ -982,6 +1002,27 @@
                 applicantSignature: request.applicant_signature,
                 approverSignature: request.approver_signature
             }
+        }
+
+        function getIcon(i) {
+            if (vm.requests[i].invalidity_reason || vm.requests[i].disapproval_reason) {
+                return 'thumb_down';
+            } else if (vm.requests[i].approved) {
+                return 'thumb_up';
+            } else return 'thumbs_up_down';
+        }
+
+        function getClass(i) {
+            if (vm.requests[i].invalidity_reason || vm.requests[i].disapproval_reason) {
+                return 'negative';
+            } else if (vm.requests[i].approved) {
+                return 'positive';
+            } else return 'pending';
+        }
+
+        function showDetails($event) {
+            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[vm.current]);
+            $mdDialog.show(detailsDialogObject);
         }
     }
 })();
@@ -1127,6 +1168,65 @@
                 expensesResponsible: request.expenses_responsible,
                 expensesExplanation: request.expenses_explanation,
                 applicantSignature: request.applicant_signature
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('RejectRequestDialogCtrl', RejectRequestDialogCtrl);
+
+    RejectRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'type', 'apiService', 'helperService'];
+    function RejectRequestDialogCtrl($mdDialog, requestId, type, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        switch (type) {
+            case 1:
+                vm.title = "Neispravnost zahtjeva";
+                vm.label = "Razlog neispravnosti";
+                break;
+            case 2:
+                vm.title = "Odbijanje zahtjeva";
+                vm.label = "Razlog odbijanja";
+                break;
+            default:
+                vm.title = "Naslov";
+                vm.label = "Labela";
+                break;
+        }
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = getDataObject();
+            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev uspješno odbijen!", true);
+            hide();
+        }
+
+        function getDataObject() {
+            switch (type) {
+                case 1:
+                    return {
+                        quality_check: false,
+                        quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        invalidity_reason: vm.reason
+                    };
+                case 2:
+                    return {
+                        approved: false,
+                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        disapproval_reason: vm.reason
+                    };
+                default:
+                    return null;
             }
         }
     }

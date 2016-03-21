@@ -41,7 +41,7 @@
                 advance_payment: data.type == 'n' ? null : data.advancePayment,
                 start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
                 end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                duration: helperService.getDuration(data.startTimestampRaw, data.endTimestampRaw),
+                duration: data.duration,
                 description: data.description,
                 transportation: data.transportation,
                 expenses_responsible: data.expensesResponsible,

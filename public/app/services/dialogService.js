@@ -1,5 +1,5 @@
 (function() {
-    'use strict'
+    'use strict';
 
     angular
         .module('app')
@@ -10,7 +10,8 @@
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
-            getRejectRequestDialogObject: getRejectRequestDialogObject
+            getRejectRequestDialogObject: getRejectRequestDialogObject,
+            getDetailsDialogObject: getDetailsDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -67,6 +68,19 @@
                 locals: {
                     requestId: requestId,
                     type: type
+                }
+            }
+        }
+
+        function getDetailsDialogObject(event, request) {
+            return {
+                controller: 'DetailsDialogCtrl as detailsDialog',
+                templateUrl: 'app/main/details-dialog/details-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                locals: {
+                    request: request
                 }
             }
         }

@@ -1,4 +1,6 @@
 (function() {
+    'use strict';
+
     angular
         .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
@@ -51,6 +53,8 @@
                 advancePayment: vm.advancePayment,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
+                startTimestampRaw: vm.startTimestampRaw,
+                endTimestampRaw: vm.endTimestampRaw,
                 duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
                 description: vm.description,
                 transportation: vm.transportation,

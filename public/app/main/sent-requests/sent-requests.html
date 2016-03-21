@@ -18,43 +18,17 @@
             </md-button>
         </div>
 
-        <p layout="row" layout-align="center center">
-            {{ sentRequests.current + 1 }}/{{ sentRequests.requests.length }}
-        </p>
+        <div layout="row" layout-align="space-around center">
+            <md-button class="md-fab md-mini md-raised badge" aria-label="{{ sentRequests.class }}">
+                <md-icon md-svg-src="{{ sentRequests.icon }}" class="{{ sentRequests.class }}"></md-icon>
+            </md-button>
 
-        <div layout="row" layout-align="center center">
-            <div layout="column" layout-align="center space-between" class="width-40">
-                <div>
-                    Poslano: {{ sentRequests.request.created_at }}
-                </div>
-                <div>
-                    <span>Ispravnost: </span>
-                    <span ng-if="sentRequests.request.quality_check != null">
-                        {{ sentRequests.request.quality_check }} ({{ sentRequests.request.quality_check_timestamp }})
-                    </span>
-                    <span ng-if="sentRequests.request.quality_check == null">
-                        nije pregledano
-                    </span>
-                </div>
-                <div>
-                    <span>Odobrenje: </span>
-                    <span ng-if="sentRequests.request.approved != null">
-                        {{ sentRequests.request.approved }} ({{ sentRequests.request.approved_timestamp }})
-                    </span>
-                    <span ng-if="sentRequests.request.approved == null">
-                        nije pregledano
-                    </span>
-                </div>
-            </div>
+            <p>{{ sentRequests.current + 1 }}/{{ sentRequests.requests.length }}</p>
 
-            <div class="width-40">
-                <div ng-if="sentRequests.request.quality_check == false">
-                    Razlog neispravnosti: {{ sentRequests.request.invalidity_reason }}
-                </div>
-                <div ng-if="sentRequests.request.approved == false">
-                    Razlog odbijanja: {{ sentRequests.request.disapproval_reason }}
-                </div>
-            </div>
+            <md-button class="md-fab md-mini md-raised" ng-click="sentRequests.showDetails($event)" aria-label="Detalji">
+                <md-tooltip md-direction="bottom">Detalji</md-tooltip>
+                <md-icon md-svg-src="details"></md-icon>
+            </md-button>
         </div>
 
     </div>

@@ -49,12 +49,18 @@ body {
       cursor: default; }
   body .requests-frame {
     height: 700px; }
-  body .invalid-request-dialog {
+  body .invalid-request-dialog, body .details-dialog {
     width: 40%; }
-    body .invalid-request-dialog md-dialog-content {
+    body .invalid-request-dialog md-dialog-content, body .details-dialog md-dialog-content {
       padding: 20px 10px 10px 10px;
       width: 100%; }
-  body .width-40 {
-    width: 40%; }
+  body md-icon.negative svg {
+    fill: #ffab00; }
+  body md-icon.positive svg {
+    fill: #4caf50; }
+  body md-icon.pending svg {
+    fill: #448aff; }
+  body button.badge {
+    pointer-events: none; }
 
 /*# sourceMappingURL=app.css.map */
