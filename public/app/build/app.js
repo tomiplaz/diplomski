@@ -153,7 +153,7 @@
         function getDateTimeDialogObject(scope, event, data) {
             return {
                 controller: 'DateTimeDialogCtrl as dateTimeDialog',
-                templateUrl: 'app/main/date-time-dialog/date-time-dialog.html',
+                templateUrl: 'app/main/dialogs/date-time-dialog/date-time-dialog.html',
                 parent: angular.element(document.body),
                 scope: scope,
                 preserveScope: true,
@@ -168,7 +168,7 @@
         function getDocumentDialogObject(event, data) {
             return {
                 controller: 'DocumentDialogCtrl as documentDialog',
-                templateUrl: 'app/main/document-dialog/document-dialog.html',
+                templateUrl: 'app/main/dialogs/document-dialog/document-dialog.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
@@ -181,7 +181,7 @@
         function getSignatureDialogObject(scope, event, requestId, type) {
             return {
                 controller: 'SignatureDialogCtrl as signatureDialog',
-                templateUrl: 'app/main/signature-dialog/signature-dialog.html',
+                templateUrl: 'app/main/dialogs/signature-dialog/signature-dialog.html',
                 parent: angular.element(document.body),
                 scope: scope,
                 preserveScope: true,
@@ -197,7 +197,7 @@
         function getRejectRequestDialogObject(event, requestId, type) {
             return {
                 controller: 'RejectRequestDialogCtrl as rejectRequestDialog',
-                templateUrl: 'app/main/reject-request-dialog/reject-request-dialog.html',
+                templateUrl: 'app/main/dialogs/reject-request-dialog/reject-request-dialog.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
@@ -211,7 +211,7 @@
         function getDetailsDialogObject(event, request) {
             return {
                 controller: 'DetailsDialogCtrl as detailsDialog',
-                templateUrl: 'app/main/details-dialog/details-dialog.html',
+                templateUrl: 'app/main/dialogs/details-dialog/details-dialog.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
@@ -338,7 +338,7 @@
                     columns: [
                         { image: data.applicantSignature, width: 125, height: 35 },
                         { text: "", width: '*' },
-                        !data.approverSignature ? {} : { image: data.applicantSignature, width: 125, height: 35 }
+                        !data.approverSignature ? {} : { image: data.approverSignature, width: 125, height: 35 }
                     ]
                 },
                 {
@@ -372,7 +372,6 @@
         }
 
         function getDuration(start, end) {
-            console.log(start, end, new Date(start));
             var totalMs = new Date(end) - new Date(start);
             var totalHours = totalMs / 1000 / 60 / 60;
             var days = Math.round(totalHours / 24);
@@ -692,155 +691,6 @@
 
     angular
         .module('main')
-        .controller('DetailsDialogCtrl', DetailsDialogCtrl);
-
-    DetailsDialogCtrl.$inject = ['request', '$mdDialog', 'helperService'];
-    function DetailsDialogCtrl(request, $mdDialog, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-
-        vm.getCreationInfo = getCreationInfo;
-        vm.getMainInfo = getMainInfo;
-        vm.getReason = getReason;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function getCreationInfo() {
-            return "Zahtjev je poslan " + helperService.formatDate(request.created_at, "dd.MM.yyyy. 'u' HH:mm") + ".";
-        }
-
-        function getMainInfo() {
-            if (request.quality_check == null) {
-                return "Provjera ispravnosti zahtjeva još nije izvršena."
-            } else if (request.quality_check == false) {
-                return "Zahtjev je ocijenjen neispravnim " + helperService.formatDate(request.quality_check_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else if (request.approved) {
-                return "Zahtjev je odobren " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else if (request.approved == false) {
-                return "Zahtjev je odbijen " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else {
-                return "Zahtjev je ispravan i čeka odobrenje.";
-            }
-        }
-
-        function getReason() {
-            if (request.invalidity_reason != null) {
-                return request.invalidity_reason;
-            } else if (request.disapproval_reason != null) {
-                return request.disapproval_reason;
-            } else {
-                return null;
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('DocumentDialogCtrl', DocumentDialogCtrl);
-
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.send = send;
-
-        $document.ready(function() {
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
-                    iframe.attr('src', url);
-                });
-        });
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function send() {
-            var newRequest = {
-                user_id: data.userId,
-                type: data.type,
-                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
-                name: data.name,
-                surname: data.surname,
-                workplace: data.workplace,
-                for_place: data.forPlace,
-                for_faculty: data.type != 'n' ? null : data.forFaculty,
-                for_subject: data.type != 'n' ? null : data.forSubject,
-                advance_payment: data.type == 'n' ? null : data.advancePayment,
-                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                duration: data.duration,
-                description: data.description,
-                transportation: data.transportation,
-                expenses_responsible: data.expensesResponsible,
-                expenses_explanation: data.expensesExplanation,
-                applicant_signature: data.applicantSignature
-            };
-
-            apiService.createRequest(newRequest);
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
-
-    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
-    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
-        var vm = this;
-
-        vm.label = data.label;
-        vm.mindate = data.mindate;
-        vm.maxdate = data.maxdate;
-
-        vm.hide = hide;
-        vm.cancel = cancel;
-        vm.save = save;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function cancel() {
-            $scope['newRequest'][data.property] = null;
-            hide();
-        }
-
-        function save($value) {
-            $scope['newRequest'][data.property + 'Raw'] = $value;
-
-            if (data.property == 'endTimestamp') {
-                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
-                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
-                }
-            } else {
-                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
-            }
-
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
 
     NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', 'helperService'];
@@ -1031,70 +881,6 @@
 
     angular
         .module('main')
-        .controller('SignatureDialogCtrl', SignatureDialogCtrl);
-
-    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'requestId', 'type', 'helperService', 'apiService'];
-    function SignatureDialogCtrl($scope, $mdDialog, $document, requestId, type, helperService, apiService) {
-        var vm = this;
-        var signaturePad = null;
-        var confirmButton = null;
-
-        vm.hide = hide;
-        vm.clear = clear;
-        vm.confirm = confirm;
-
-        $document.ready(function() {
-            var canvas = document.querySelector('canvas');
-            signaturePad = new SignaturePad(canvas, {
-                minWidth: 0.4,
-                maxWidth: 1.0,
-                onEnd: onEnd
-            });
-
-            confirmButton = angular.element(document.querySelector('button[ng-click="signatureDialog.confirm()"]'));
-            confirmButton.attr('disabled', 'true');
-        });
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function clear() {
-            signaturePad.clear();
-            confirmButton.attr('disabled', 'true');
-        }
-
-        function confirm() {
-            switch (type) {
-                case 0:
-                    $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
-                    break;
-                case 2:
-                    var data = {
-                        approved: true,
-                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
-                        approver_signature: signaturePad.toDataURL()
-                    };
-                    apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
-                    break;
-                default:
-                    break;
-            }
-            hide();
-        }
-
-        function onEnd() {
-            if (!signaturePad.isEmpty()) {
-                confirmButton.removeAttr('disabled');
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('ValidateCtrl', ValidateCtrl);
 
     ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
@@ -1177,6 +963,155 @@
 
     angular
         .module('main')
+        .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
+
+    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
+    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
+        var vm = this;
+
+        vm.label = data.label;
+        vm.mindate = data.mindate;
+        vm.maxdate = data.maxdate;
+
+        vm.hide = hide;
+        vm.cancel = cancel;
+        vm.save = save;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function cancel() {
+            $scope['newRequest'][data.property] = null;
+            hide();
+        }
+
+        function save($value) {
+            $scope['newRequest'][data.property + 'Raw'] = $value;
+
+            if (data.property == 'endTimestamp') {
+                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
+                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
+                }
+            } else {
+                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
+            }
+
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('DetailsDialogCtrl', DetailsDialogCtrl);
+
+    DetailsDialogCtrl.$inject = ['request', '$mdDialog', 'helperService'];
+    function DetailsDialogCtrl(request, $mdDialog, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+
+        vm.getCreationInfo = getCreationInfo;
+        vm.getMainInfo = getMainInfo;
+        vm.getReason = getReason;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function getCreationInfo() {
+            return "Zahtjev je poslan " + helperService.formatDate(request.created_at, "dd.MM.yyyy. 'u' HH:mm") + ".";
+        }
+
+        function getMainInfo() {
+            if (request.quality_check == null) {
+                return "Provjera ispravnosti zahtjeva još nije izvršena."
+            } else if (request.quality_check == false) {
+                return "Zahtjev je ocijenjen neispravnim " + helperService.formatDate(request.quality_check_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (request.approved) {
+                return "Zahtjev je odobren " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (request.approved == false) {
+                return "Zahtjev je odbijen " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else {
+                return "Zahtjev je ispravan i čeka odobrenje.";
+            }
+        }
+
+        function getReason() {
+            if (request.invalidity_reason != null) {
+                return request.invalidity_reason;
+            } else if (request.disapproval_reason != null) {
+                return request.disapproval_reason;
+            } else {
+                return null;
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('DocumentDialogCtrl', DocumentDialogCtrl);
+
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.send = send;
+
+        $document.ready(function() {
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
+                    iframe.attr('src', url);
+                });
+        });
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function send() {
+            var newRequest = {
+                user_id: data.userId,
+                type: data.type,
+                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
+                name: data.name,
+                surname: data.surname,
+                workplace: data.workplace,
+                for_place: data.forPlace,
+                for_faculty: data.type != 'n' ? null : data.forFaculty,
+                for_subject: data.type != 'n' ? null : data.forSubject,
+                advance_payment: data.type == 'n' ? null : data.advancePayment,
+                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                duration: data.duration,
+                description: data.description,
+                transportation: data.transportation,
+                expenses_responsible: data.expensesResponsible,
+                expenses_explanation: data.expensesExplanation,
+                applicant_signature: data.applicantSignature
+            };
+
+            apiService.createRequest(newRequest);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('RejectRequestDialogCtrl', RejectRequestDialogCtrl);
 
     RejectRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'type', 'apiService', 'helperService'];
@@ -1227,6 +1162,70 @@
                     };
                 default:
                     return null;
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('SignatureDialogCtrl', SignatureDialogCtrl);
+
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'requestId', 'type', 'helperService', 'apiService'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document, requestId, type, helperService, apiService) {
+        var vm = this;
+        var signaturePad = null;
+        var confirmButton = null;
+
+        vm.hide = hide;
+        vm.clear = clear;
+        vm.confirm = confirm;
+
+        $document.ready(function() {
+            var canvas = document.querySelector('canvas');
+            signaturePad = new SignaturePad(canvas, {
+                minWidth: 0.4,
+                maxWidth: 1.0,
+                onEnd: onEnd
+            });
+
+            confirmButton = angular.element(document.querySelector('button[ng-click="signatureDialog.confirm()"]'));
+            confirmButton.attr('disabled', 'true');
+        });
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function clear() {
+            signaturePad.clear();
+            confirmButton.attr('disabled', 'true');
+        }
+
+        function confirm() {
+            switch (type) {
+                case 0:
+                    $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
+                    break;
+                case 2:
+                    var data = {
+                        approved: true,
+                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        approver_signature: signaturePad.toDataURL()
+                    };
+                    apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
+                    break;
+                default:
+                    break;
+            }
+            hide();
+        }
+
+        function onEnd() {
+            if (!signaturePad.isEmpty()) {
+                confirmButton.removeAttr('disabled');
             }
         }
     }

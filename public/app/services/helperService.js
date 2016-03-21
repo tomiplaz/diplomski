@@ -17,7 +17,6 @@
         }
 
         function getDuration(start, end) {
-            console.log(start, end, new Date(start));
             var totalMs = new Date(end) - new Date(start);
             var totalHours = totalMs / 1000 / 60 / 60;
             var days = Math.round(totalHours / 24);

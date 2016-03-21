@@ -11,14 +11,17 @@ body {
   }
 
   button.md-mini:not([disabled]){
-    &[ng-click="main.logout()"], &[ng-click="newRequestN.clear()"], &[ng-click="requests.invalid($event)"] {
+    &[ng-click="main.logout()"], &[ng-click="newRequestN.clear()"],
+    &[ng-click="validate.invalid($event)"], &[ng-click="approve.disapprove($event)"] {
       &:hover {
         background-color: $md-warn !important;
       }
     }
 
-    &[ng-click="requests.valid()"]:hover {
-      background-color: $md-primary !important;
+    &[ng-click="validate.valid()"], &[ng-click="approve.approve($event)"] {
+      &:hover {
+        background-color: $md-primary !important;
+      }
     }
 
     &:hover {
