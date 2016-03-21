@@ -2,24 +2,26 @@
     'use strict';
 
     angular
-        .module('main')
-        .controller('ValidateCtrl', ValidateCtrl);
+        .module('requests')
+        .controller('RequestsCtrl', RequestsCtrl);
 
-    ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
-    function ValidateCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog, apiService) {
+    RequestsCtrl.$inject = ['documentService', 'helperService'];
+    function RequestsCtrl(documentService, helperService) {
         var vm = this;
 
-        vm.requests = requests;
+        vm.requests = null;
         vm.current = null;
 
+        vm.init = init;
         vm.previous = previous;
         vm.next = next;
-        vm.invalid = invalid;
-        vm.valid = valid;
 
-        $document.ready(function() {
-            if (vm.requests.length > 0) setRequest(0);
-        });
+        function init() {
+            if (vm.requests.length > 0) {
+                vm.current = 0;
+                setRequest(0);
+            }
+        }
 
         function previous() {
             setRequest(--vm.current);
@@ -27,21 +29,6 @@
 
         function next() {
             setRequest(++vm.current);
-        }
-
-        function invalid($event) {
-            var requestId = vm.requests[vm.current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
-            $mdDialog.show(rejectRequestDialogObject);
-        }
-
-        function valid() {
-            var requestId = vm.requests[vm.current].id;
-            var data = {
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
         }
 
         function setRequest(i) {
@@ -60,7 +47,7 @@
         function getRequestDataObject(request) {
             return {
                 type: request.type,
-                documentDate: request.document_date,
+                documentDate: helperService.formatDate(request.document_date, 'dd.MM.yyyy.'),
                 name: request.name,
                 surname: request.surname,
                 workplace: request.workplace,
@@ -75,7 +62,8 @@
                 transportation: request.transportation,
                 expensesResponsible: request.expenses_responsible,
                 expensesExplanation: request.expenses_explanation,
-                applicantSignature: request.applicant_signature
+                applicantSignature: request.applicant_signature,
+                approverSignature: request.approver_signature
             }
         }
     }

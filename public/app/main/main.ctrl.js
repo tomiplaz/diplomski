@@ -28,19 +28,19 @@
                 type: [0]
             },
             {
-                name: 'main.validate',
+                name: 'main.requests.validate',
                 label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
             },
             {
-                name: 'main.approve',
+                name: 'main.requests.approve',
                 label: 'Odobravanje zahtjeva',
                 icon: 'library_books',
                 type: [2]
             },
             {
-                name: 'main.sent-requests',
+                name: 'main.requests.sent',
                 label: 'Poslani zahtjevi',
                 icon: 'library_books',
                 type: [0]

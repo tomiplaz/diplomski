@@ -137,4 +137,10 @@ body {
   button.badge {
     pointer-events: none;
   }
+
+  .details-dialog {
+    em {
+      text-align: center;
+    }
+  }
 }

@@ -1,0 +1,27 @@
+<div ng-if="requests.requests.length != 0">
+
+    <div layout="row" layout-align="space-between center">
+        <md-button class="md-fab md-mini md-raised" ng-click="requests.previous()" aria-label="Prethodni zahtjev"
+                   ng-disabled="requests.current == 0">
+            <md-tooltip md-direction="bottom">Prethodni zahtjev</md-tooltip>
+            <md-icon md-svg-src="navigate_before"></md-icon>
+        </md-button>
+
+        <iframe class="requests-frame" flex></iframe>
+
+        <md-button class="md-fab md-mini md-raised" ng-click="requests.next()" aria-label="Sljedeći zahtjev"
+                   ng-disabled="requests.current == requests.requests.length - 1">
+            <md-tooltip md-direction="bottom">Sljedeći zahtjev</md-tooltip>
+            <md-icon md-svg-src="navigate_next"></md-icon>
+        </md-button>
+    </div>
+
+    <div layout="row" layout-align="space-around center" ui-view></div>
+
+</div>
+
+<div ng-if="requests.requests.length == 0">
+
+    <p>{{ requests.emptyInfo }}</p>
+
+</div>

@@ -62,5 +62,7 @@ body {
     fill: #448aff; }
   body button.badge {
     pointer-events: none; }
+  body .details-dialog em {
+    text-align: center; }
 
 /*# sourceMappingURL=app.css.map */

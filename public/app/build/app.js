@@ -477,7 +477,132 @@
     'use strict';
 
     angular
-        .module('main', []);
+        .module('requests', []);
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .config(configure);
+
+    function configure($stateProvider) {
+        $stateProvider
+            .state('main.requests', {
+                abstract: true,
+                url: '/requests',
+                templateUrl: 'app/main/requests/requests.html',
+                controller: 'RequestsCtrl as requests'
+            })
+            .state('main.requests.validate', {
+                url: '/validate',
+                templateUrl: 'app/main/requests/validate/validate.html',
+                controller: 'ValidateCtrl as validate',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('nonvalidated');
+                    }
+                }
+            })
+            .state('main.requests.approve', {
+                url: '/approve',
+                templateUrl: 'app/main/requests/approve/approve.html',
+                controller: 'ApproveCtrl as approve',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('approvable');
+                    }
+                }
+            })
+            .state('main.requests.sent', {
+                url: '/sent',
+                templateUrl: 'app/main/requests/sent/sent.html',
+                controller: 'SentCtrl as sent',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('user');
+                    }
+                }
+            });
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('RequestsCtrl', RequestsCtrl);
+
+    RequestsCtrl.$inject = ['documentService', 'helperService'];
+    function RequestsCtrl(documentService, helperService) {
+        var vm = this;
+
+        vm.requests = null;
+        vm.current = null;
+
+        vm.init = init;
+        vm.previous = previous;
+        vm.next = next;
+
+        function init() {
+            if (vm.requests.length > 0) {
+                vm.current = 0;
+                setRequest(0);
+            }
+        }
+
+        function previous() {
+            setRequest(--vm.current);
+        }
+
+        function next() {
+            setRequest(++vm.current);
+        }
+
+        function setRequest(i) {
+            vm.current = i;
+            var data = getRequestDataObject(vm.requests[i]);
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('iframe'));
+                    iframe.attr('src', url);
+                });
+        }
+
+        function getRequestDataObject(request) {
+            return {
+                type: request.type,
+                documentDate: helperService.formatDate(request.document_date, 'dd.MM.yyyy.'),
+                name: request.name,
+                surname: request.surname,
+                workplace: request.workplace,
+                forPlace: request.for_place,
+                forFaculty: request.for_faculty,
+                forSubject: request.for_subject,
+                advancePayment: request.advance_payment,
+                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
+                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
+                duration: request.duration,
+                description: request.description,
+                transportation: request.transportation,
+                expensesResponsible: request.expenses_responsible,
+                expensesExplanation: request.expenses_explanation,
+                applicantSignature: request.applicant_signature,
+                approverSignature: request.approver_signature
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main', ['requests']);
 })();
 
 (function() {
@@ -508,37 +633,7 @@
                 url: '/new-request',
                 templateUrl: 'app/main/new-request/new-request.html',
                 controller: 'NewRequestCtrl as newRequest'
-            })
-            .state('main.validate', {
-                url: '/validate',
-                templateUrl: 'app/main/validate/validate.html',
-                controller: 'ValidateCtrl as validate',
-                resolve: {
-                    requests: function(apiService) {
-                        return apiService.getRequests('nonvalidated');
-                    }
-                }
-            })
-            .state('main.approve', {
-                url: '/approve',
-                templateUrl: 'app/main/approve/approve.html',
-                controller: 'ApproveCtrl as approve',
-                resolve: {
-                    requests: function(apiService) {
-                        return apiService.getRequests('approvable');
-                    }
-                }
-            })
-            .state('main.sent-requests', {
-                url: '/sent-requests',
-                templateUrl: 'app/main/sent-requests/sent-requests.html',
-                controller: 'SentRequestsCtrl as sentRequests',
-                resolve: {
-                    requests: function(apiService) {
-                        return apiService.getRequests('user');
-                    }
-                }
-            })
+            });
     }
 })();
 
@@ -572,19 +667,19 @@
                 type: [0]
             },
             {
-                name: 'main.validate',
+                name: 'main.requests.validate',
                 label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
             },
             {
-                name: 'main.approve',
+                name: 'main.requests.approve',
                 label: 'Odobravanje zahtjeva',
                 icon: 'library_books',
                 type: [2]
             },
             {
-                name: 'main.sent-requests',
+                name: 'main.requests.sent',
                 label: 'Poslani zahtjevi',
                 icon: 'library_books',
                 type: [0]
@@ -612,89 +707,12 @@
 
     angular
         .module('main')
-        .controller('ApproveCtrl', ApproveCtrl);
-
-    ApproveCtrl.$inject = ['$scope', 'requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
-    function ApproveCtrl($scope, requests, $document, documentService, helperService, dialogService, $mdDialog) {
-        var vm = this;
-
-        vm.requests = requests;
-        vm.current = null;
-
-        vm.previous = previous;
-        vm.next = next;
-        vm.disapprove = disapprove;
-        vm.approve = approve;
-
-        $document.ready(function() {
-            if (vm.requests.length > 0) setRequest(0);
-        });
-
-        function previous() {
-            setRequest(--vm.current);
-        }
-
-        function next() {
-            setRequest(++vm.current);
-        }
-
-        function disapprove($event) {
-            var requestId = vm.requests[vm.current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 2);
-            $mdDialog.show(rejectRequestDialogObject);
-        }
-
-        function approve($event) {
-            var requestId = vm.requests[vm.current].id;
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, requestId, 2);
-            $mdDialog.show(signatureDialogObject);
-        }
-
-        function setRequest(i) {
-            vm.current = i;
-            var data = getRequestDataObject(vm.requests[i]);
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('iframe'));
-                    iframe.attr('src', url);
-                });
-        }
-
-        function getRequestDataObject(request) {
-            return {
-                type: request.type,
-                documentDate: request.document_date,
-                name: request.name,
-                surname: request.surname,
-                workplace: request.workplace,
-                forPlace: request.for_place,
-                forFaculty: request.for_faculty,
-                forSubject: request.for_subject,
-                advancePayment: request.advance_payment,
-                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
-                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
-                duration: request.duration,
-                description: request.description,
-                transportation: request.transportation,
-                expensesResponsible: request.expenses_responsible,
-                expensesExplanation: request.expenses_explanation,
-                applicantSignature: request.applicant_signature
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
 
-    NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', 'helperService'];
-    function NewRequestCtrl($scope, dialogService, $mdDialog, helperService) {
+    NewRequestCtrl.$inject = ['$scope', '$state', 'dialogService', '$mdDialog', 'helperService'];
+    function NewRequestCtrl($scope, $state, dialogService, $mdDialog, helperService) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;
@@ -778,183 +796,6 @@
             vm.expensesResponsible = null;
             vm.expensesExplanation = null;
             vm.applicantSignature = null;
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('SentRequestsCtrl', SentRequestsCtrl);
-
-    SentRequestsCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog'];
-    function SentRequestsCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog) {
-        var vm = this;
-
-        vm.requests = requests;
-        vm.current = null;
-
-        vm.previous = previous;
-        vm.next = next;
-
-        vm.showDetails = showDetails;
-
-        $document.ready(function() {
-            if (vm.requests.length > 0) {
-                vm.current = 0;
-                setRequest(0);
-            }
-        });
-
-        function previous() {
-            setRequest(--vm.current);
-        }
-
-        function next() {
-            setRequest(++vm.current);
-        }
-
-        function setRequest(i) {
-            vm.current = i;
-            var data = getRequestDataObject(vm.requests[i]);
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('iframe'));
-                    iframe.attr('src', url);
-                });
-
-            vm.icon = getIcon(i);
-            vm.class = getClass(i);
-        }
-
-        function getRequestDataObject(request) {
-            return {
-                type: request.type,
-                documentDate: helperService.formatDate(request.document_date, 'dd.MM.yyyy.'),
-                name: request.name,
-                surname: request.surname,
-                workplace: request.workplace,
-                forPlace: request.for_place,
-                forFaculty: request.for_faculty,
-                forSubject: request.for_subject,
-                advancePayment: request.advance_payment,
-                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
-                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
-                duration: request.duration,
-                description: request.description,
-                transportation: request.transportation,
-                expensesResponsible: request.expenses_responsible,
-                expensesExplanation: request.expenses_explanation,
-                applicantSignature: request.applicant_signature,
-                approverSignature: request.approver_signature
-            }
-        }
-
-        function getIcon(i) {
-            if (vm.requests[i].invalidity_reason || vm.requests[i].disapproval_reason) {
-                return 'thumb_down';
-            } else if (vm.requests[i].approved) {
-                return 'thumb_up';
-            } else return 'thumbs_up_down';
-        }
-
-        function getClass(i) {
-            if (vm.requests[i].invalidity_reason || vm.requests[i].disapproval_reason) {
-                return 'negative';
-            } else if (vm.requests[i].approved) {
-                return 'positive';
-            } else return 'pending';
-        }
-
-        function showDetails($event) {
-            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[vm.current]);
-            $mdDialog.show(detailsDialogObject);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('ValidateCtrl', ValidateCtrl);
-
-    ValidateCtrl.$inject = ['requests', '$document', 'documentService', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
-    function ValidateCtrl(requests, $document, documentService, helperService, dialogService, $mdDialog, apiService) {
-        var vm = this;
-
-        vm.requests = requests;
-        vm.current = null;
-
-        vm.previous = previous;
-        vm.next = next;
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        $document.ready(function() {
-            if (vm.requests.length > 0) setRequest(0);
-        });
-
-        function previous() {
-            setRequest(--vm.current);
-        }
-
-        function next() {
-            setRequest(++vm.current);
-        }
-
-        function invalid($event) {
-            var requestId = vm.requests[vm.current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
-            $mdDialog.show(rejectRequestDialogObject);
-        }
-
-        function valid() {
-            var requestId = vm.requests[vm.current].id;
-            var data = {
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
-        }
-
-        function setRequest(i) {
-            vm.current = i;
-            var data = getRequestDataObject(vm.requests[i]);
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('iframe'));
-                    iframe.attr('src', url);
-                });
-        }
-
-        function getRequestDataObject(request) {
-            return {
-                type: request.type,
-                documentDate: request.document_date,
-                name: request.name,
-                surname: request.surname,
-                workplace: request.workplace,
-                forPlace: request.for_place,
-                forFaculty: request.for_faculty,
-                forSubject: request.for_subject,
-                advancePayment: request.advance_payment,
-                startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
-                endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
-                duration: request.duration,
-                description: request.description,
-                transportation: request.transportation,
-                expensesResponsible: request.expenses_responsible,
-                expensesExplanation: request.expenses_explanation,
-                applicantSignature: request.applicant_signature
-            }
         }
     }
 })();
@@ -1227,6 +1068,132 @@
             if (!signaturePad.isEmpty()) {
                 confirmButton.removeAttr('disabled');
             }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('ApproveCtrl', ApproveCtrl);
+
+    ApproveCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function ApproveCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 2) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema zahtjeva za odobravanje.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        function disapprove($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 2);
+            $mdDialog.show(rejectRequestDialogObject);
+        }
+
+        function approve($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, requestId, 2);
+            $mdDialog.show(signatureDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('SentCtrl', SentCtrl);
+
+    SentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function SentCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.icon = getIcon($scope['requests'].current);
+        vm.class = getClass($scope['requests'].current);
+        vm.showDetails = showDetails;
+
+        $scope.$watch('requests.current', function() {
+            vm.icon = getIcon($scope['requests'].current);
+            vm.class = getClass($scope['requests'].current);
+            vm.classAria = getClassAria();
+        });
+
+        function showDetails($event) {
+            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[$scope['requests'].current]);
+            $mdDialog.show(detailsDialogObject);
+        }
+
+        function getIcon(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'thumb_down';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'thumb_up';
+            } else return 'thumbs_up_down';
+        }
+
+        function getClass(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'negative';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'positive';
+            } else return 'pending';
+        }
+
+        function getClassAria() {
+            if (vm.class == 'negative') {
+                return 'Odbijen';
+            } else if (vm.class == 'positive') {
+                return 'Odobren';
+            } else return 'U tijeku'
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('ValidateCtrl', ValidateCtrl);
+
+    ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
+    function ValidateCtrl($scope, $state, requests, helperService, dialogService, $mdDialog, apiService) {
+        if ($scope['main'].user.type != 1) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema zahtjeva za validaciju.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        function invalid($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
+            $mdDialog.show(rejectRequestDialogObject);
+        }
+
+        function valid() {
+            var requestId = requests[$scope['requests'].current].id;
+            var data = {
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
         }
     }
 })();

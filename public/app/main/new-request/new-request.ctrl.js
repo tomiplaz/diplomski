@@ -5,8 +5,10 @@
         .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
 
-    NewRequestCtrl.$inject = ['$scope', 'dialogService', '$mdDialog', 'helperService'];
-    function NewRequestCtrl($scope, dialogService, $mdDialog, helperService) {
+    NewRequestCtrl.$inject = ['$scope', '$state', 'dialogService', '$mdDialog', 'helperService'];
+    function NewRequestCtrl($scope, $state, dialogService, $mdDialog, helperService) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
         var vm = this;
 
         vm.showDateTimeDialog = showDateTimeDialog;

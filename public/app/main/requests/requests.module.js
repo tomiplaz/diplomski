@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('main', ['requests']);
+        .module('requests', []);
 })();
