@@ -1,6 +1,6 @@
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif; }
-  body header {
+  body header, body footer {
     padding: 1% 2%; }
   body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover, body button.md-mini:not([disabled])[ng-click="validate.invalid($event)"]:hover, body button.md-mini:not([disabled])[ng-click="approve.disapprove($event)"]:hover {
     background-color: #ffab00 !important; }
