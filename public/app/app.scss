@@ -2,6 +2,7 @@ $font-default: Roboto, "Helvetica Neue", sans-serif;
 $md-primary: rgb(76, 175, 80);
 $md-accent: rgb(68, 138, 255);
 $md-warn: rgb(255, 171, 0);
+$selected: rgb(236, 236, 236);
 
 body {
   font-family: $font-default;
@@ -110,7 +111,29 @@ body {
   }
 
   .requests-frame {
-    height: 700px;
+    height: 600px;
+  }
+
+  .requests-list {
+    height: 600px;
+
+    md-list {
+      overflow-y: scroll;
+      padding: 0;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .index {
+      margin-right: 16px;
+      font-weight: bold;
+    }
+
+    .selected {
+      background-color: $selected;
+    }
   }
 
   .invalid-request-dialog, .details-dialog {

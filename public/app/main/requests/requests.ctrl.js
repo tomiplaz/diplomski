@@ -15,6 +15,13 @@
         vm.init = init;
         vm.previous = previous;
         vm.next = next;
+        vm.formatDate = helperService.formatDate;
+        vm.select = select;
+
+        function select(index) {
+            vm.current = index;
+            setRequest(index);
+        }
 
         function init() {
             if (vm.requests.length > 0) {

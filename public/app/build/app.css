@@ -48,7 +48,19 @@ body {
     body .signature-dialog canvas:active {
       cursor: default; }
   body .requests-frame {
-    height: 700px; }
+    height: 600px; }
+  body .requests-list {
+    height: 600px; }
+    body .requests-list md-list {
+      overflow-y: scroll;
+      padding: 0; }
+      body .requests-list md-list::-webkit-scrollbar {
+        display: none; }
+    body .requests-list .index {
+      margin-right: 16px;
+      font-weight: bold; }
+    body .requests-list .selected {
+      background-color: #ececec; }
   body .invalid-request-dialog, body .details-dialog {
     width: 40%; }
     body .invalid-request-dialog md-dialog-content, body .details-dialog md-dialog-content {
