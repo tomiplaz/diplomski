@@ -542,22 +542,22 @@
         vm.requests = null;
         vm.current = null;
 
+        vm.formatDate = helperService.formatDate;
         vm.init = init;
+        vm.select = select;
         vm.previous = previous;
         vm.next = next;
-        vm.formatDate = helperService.formatDate;
-        vm.select = select;
-
-        function select(index) {
-            vm.current = index;
-            setRequest(index);
-        }
 
         function init() {
             if (vm.requests.length > 0) {
                 vm.current = 0;
                 setRequest(0);
             }
+        }
+
+        function select(index) {
+            vm.current = index;
+            setRequest(index);
         }
 
         function previous() {
@@ -721,6 +721,9 @@
         if ($scope['main'].user.type != 0) return $state.go('main.home');
 
         var vm = this;
+
+        vm.name = $scope['main'].user.name;
+        vm.surname = $scope['main'].user.surname;
 
         vm.showDateTimeDialog = showDateTimeDialog;
         vm.showDocumentDialog = showDocumentDialog;

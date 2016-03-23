@@ -11,6 +11,9 @@
 
         var vm = this;
 
+        vm.name = $scope['main'].user.name;
+        vm.surname = $scope['main'].user.surname;
+
         vm.showDateTimeDialog = showDateTimeDialog;
         vm.showDocumentDialog = showDocumentDialog;
         vm.sign = sign;

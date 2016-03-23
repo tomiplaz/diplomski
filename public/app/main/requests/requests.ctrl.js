@@ -12,22 +12,22 @@
         vm.requests = null;
         vm.current = null;
 
+        vm.formatDate = helperService.formatDate;
         vm.init = init;
+        vm.select = select;
         vm.previous = previous;
         vm.next = next;
-        vm.formatDate = helperService.formatDate;
-        vm.select = select;
-
-        function select(index) {
-            vm.current = index;
-            setRequest(index);
-        }
 
         function init() {
             if (vm.requests.length > 0) {
                 vm.current = 0;
                 setRequest(0);
             }
+        }
+
+        function select(index) {
+            vm.current = index;
+            setRequest(index);
         }
 
         function previous() {
