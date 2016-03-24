@@ -91,17 +91,27 @@
     function apiService(Restangular, $state, toastService) {
         return {
             getUser: getUser,
+            createUser: createUser,
             getRequests: getRequests,
             createRequest: createRequest,
             updateRequest: updateRequest
         };
 
         function getUser() {
-            return Restangular.all('auth').customGET('user').then(function(res) {
+            return Restangular.customGET('user').then(function(res) {
                 return res.user;
             }, function() {
                 toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
                 $state.go('login');
+            });
+        }
+
+        function createUser() {
+            return Restangular.customPOST('user').then(function() {
+                toastService.show("Korisnik spremljen!");
+                $state.go('main.home');
+            }, function() {
+                toastService.show("Greška tijekom spremanja korisnika!", 3000);
             });
         }
 
@@ -118,7 +128,7 @@
         function createRequest(newRequest) {
             Restangular.all('requests').post(newRequest).then(function() {
                 toastService.show("Dokument spremljen!");
-                $state.go('main.sent-requests');
+                $state.go('main.sent');
             }, function() {
                 toastService.show("Greška tijekom spremanja dokumenta!", 3000);
             });
@@ -504,8 +514,8 @@
     LoginCtrl.$inject = ['$auth', '$state', 'toastService'];
     function LoginCtrl($auth, $state, toastService) {
         var vm = this;
+
         vm.login = login;
-        vm.user = null;
 
         function login() {
             $auth.login({ email: vm.email, password: vm.password }).then(function() {
@@ -684,6 +694,11 @@
                 url: '/new-request',
                 templateUrl: 'app/main/new-request/new-request.html',
                 controller: 'NewRequestCtrl as newRequest'
+            })
+            .state('main.new-user', {
+                url: '/new-user',
+                templateUrl: 'app/main/new-user/new-user.html',
+                controller: 'NewUserCtrl as newUser'
             });
     }
 })();
@@ -705,6 +720,12 @@
         vm.goToState = goToState;
 
         vm.allStates = [
+            {
+                name: 'main.new-user',
+                label: 'Novi korisnik',
+                icon: 'details',
+                type: [5]
+            },
             {
                 name: 'main.home',
                 label: 'Početna',
@@ -861,6 +882,43 @@
 
     angular
         .module('main')
+        .controller('NewUserCtrl', NewUserCtrl);
+
+    NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
+    function NewUserCtrl($scope, $state, apiService) {
+        if ($scope['main'].user.type != 5) return $state.go('main.home');
+
+        var vm = this;
+
+        vm.clear = clear;
+        vm.createUser = createUser;
+
+        function clear() {
+            vm.type = null;
+            vm.name = null;
+            vm.surname = null;
+            vm.email = null;
+            vm.password = null;
+        }
+
+        function createUser() {
+            var data = {
+                type: vm.type,
+                name: vm.name,
+                surname: vm.surname,
+                email: vm.email,
+                password: vm.password
+            };
+
+            apiService.createUser(data);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
 
     DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
@@ -946,6 +1004,63 @@
             } else {
                 return null;
             }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('DocumentDialogCtrl', DocumentDialogCtrl);
+
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService', '$state'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService, $state) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.send = send;
+
+        $document.ready(function() {
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
+                    iframe.attr('src', url);
+                });
+        });
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function send() {
+            var newRequest = {
+                user_id: data.userId,
+                type: data.type,
+                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
+                name: data.name,
+                surname: data.surname,
+                workplace: data.workplace,
+                for_place: data.forPlace,
+                for_faculty: data.type != 'n' ? null : data.forFaculty,
+                for_subject: data.type != 'n' ? null : data.forSubject,
+                project_leader: data.type == 'n' ? null : data.projectLeader,
+                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                duration: data.duration,
+                advance_payment: data.advancePayment,
+                description: data.description,
+                transportation: data.transportation,
+                expenses_responsible: data.expensesResponsible,
+                expenses_explanation: data.expensesExplanation,
+                applicant_signature: data.applicantSignature
+            };
+
+            apiService.createRequest(newRequest);
+            hide();
         }
     }
 })();
@@ -1069,63 +1184,6 @@
             if (!signaturePad.isEmpty()) {
                 confirmButton.removeAttr('disabled');
             }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('DocumentDialogCtrl', DocumentDialogCtrl);
-
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.send = send;
-
-        $document.ready(function() {
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
-                    iframe.attr('src', url);
-                });
-        });
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function send() {
-            var newRequest = {
-                user_id: data.userId,
-                type: data.type,
-                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
-                name: data.name,
-                surname: data.surname,
-                workplace: data.workplace,
-                for_place: data.forPlace,
-                for_faculty: data.type != 'n' ? null : data.forFaculty,
-                for_subject: data.type != 'n' ? null : data.forSubject,
-                project_leader: data.type == 'n' ? null : data.projectLeader,
-                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                duration: data.duration,
-                advance_payment: data.advancePayment,
-                description: data.description,
-                transportation: data.transportation,
-                expenses_responsible: data.expensesResponsible,
-                expenses_explanation: data.expensesExplanation,
-                applicant_signature: data.applicantSignature
-            };
-
-            apiService.createRequest(newRequest);
-            hide();
         }
     }
 })();

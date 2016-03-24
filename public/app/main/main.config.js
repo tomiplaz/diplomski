@@ -26,6 +26,11 @@
                 url: '/new-request',
                 templateUrl: 'app/main/new-request/new-request.html',
                 controller: 'NewRequestCtrl as newRequest'
+            })
+            .state('main.new-user', {
+                url: '/new-user',
+                templateUrl: 'app/main/new-user/new-user.html',
+                controller: 'NewUserCtrl as newUser'
             });
     }
 })();

@@ -12,8 +12,17 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'type'
+        'type', 'name', 'surname', 'email', 'password'
     ];
+
+    /**
+     * Encrypts and sets user's password.
+     *
+     * @param $password
+     */
+    public function setPasswordAttribute($password) {
+        $this->attributes['password'] = bcrypt($password);
+    }
 
     /**
      * User can create many requests.

@@ -9,17 +9,27 @@
     function apiService(Restangular, $state, toastService) {
         return {
             getUser: getUser,
+            createUser: createUser,
             getRequests: getRequests,
             createRequest: createRequest,
             updateRequest: updateRequest
         };
 
         function getUser() {
-            return Restangular.all('auth').customGET('user').then(function(res) {
+            return Restangular.customGET('user').then(function(res) {
                 return res.user;
             }, function() {
                 toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
                 $state.go('login');
+            });
+        }
+
+        function createUser() {
+            return Restangular.customPOST('user').then(function() {
+                toastService.show("Korisnik spremljen!");
+                $state.go('main.home');
+            }, function() {
+                toastService.show("Greška tijekom spremanja korisnika!", 3000);
             });
         }
 
@@ -36,7 +46,7 @@
         function createRequest(newRequest) {
             Restangular.all('requests').post(newRequest).then(function() {
                 toastService.show("Dokument spremljen!");
-                $state.go('main.sent-requests');
+                $state.go('main.sent');
             }, function() {
                 toastService.show("Greška tijekom spremanja dokumenta!", 3000);
             });

@@ -16,6 +16,12 @@
 
         vm.allStates = [
             {
+                name: 'main.new-user',
+                label: 'Novi korisnik',
+                icon: 'details',
+                type: [5]
+            },
+            {
                 name: 'main.home',
                 label: 'Početna',
                 icon: 'home',

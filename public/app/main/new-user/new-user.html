@@ -1,0 +1,73 @@
+<div layout="row" layout-align="space-between end">
+
+    <form name="newUserForm" layout="column" layout-align="center start">
+
+        <md-input-container>
+            <label>Tip korisnika</label>
+            <input type="number" name="type" ng-model="newUser.type" required step="any" min="0" max="5">
+            <div ng-messages="newUserForm.type.$error">
+                <div ng-message="required">Potrebno!</div>
+                <div ng-message="min">Neispravan broj!</div>
+                <div ng-message="max">Prevelik broj!</div>
+            </div>
+        </md-input-container>
+
+        <div layout="row" layout-align="start center">
+            <md-input-container>
+                <label>Ime</label>
+                <input type="text" name="name" ng-model="newUser.name" required ng-minlength="2" ng-maxlength="30">
+                <div ng-messages="newUserForm.name.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+            <md-input-container>
+                <label>Prezime</label>
+                <input type="text" name="surname" ng-model="newUser.surname" required ng-minlength="2" ng-maxlength="30">
+                <div ng-messages="newUserForm.surname.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+        </div>
+
+        <md-input-container>
+            <label>Email</label>
+            <input type="email" name="email" ng-model="newUser.email" required ng-minlength="10" ng-maxlength="50">
+            <div ng-messages="newUserForm.email.$error">
+                <div ng-message="required">Potrebno!</div>
+                <div ng-message="minlength">Prekratko!</div>
+                <div ng-message="maxlength">Predugačko!</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container>
+            <label>Lozinka</label>
+            <input type="text" name="password" ng-model="newUser.password" required ng-minlength="5" ng-maxlength="30">
+            <div ng-messages="newUserForm.password.$error">
+                <div ng-message="required">Potrebno!</div>
+                <div ng-message="minlength">Prekratko!</div>
+                <div ng-message="maxlength">Predugačko!</div>
+            </div>
+        </md-input-container>
+
+    </form>
+
+    <div layout="column" layout-align="center center">
+
+        <md-button class="md-fab md-mini md-raised" ng-click="newUser.clear()" aria-label="Obriši sve">
+            <md-tooltip md-direction="left">Obriši sve</md-tooltip>
+            <md-icon md-svg-src="delete"></md-icon>
+        </md-button>
+
+        <md-button class="md-fab md-mini md-raised" ng-click="newUser.createUser()" aria-label="Dodaj korisnika"
+                   ng-disabled="!newUserForm.$valid">
+            <md-tooltip md-direction="left">Dodaj korisnika</md-tooltip>
+            <md-icon md-svg-src="check"></md-icon>
+        </md-button>
+
+    </div>
+
+</div>

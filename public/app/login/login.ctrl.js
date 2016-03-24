@@ -8,8 +8,8 @@
     LoginCtrl.$inject = ['$auth', '$state', 'toastService'];
     function LoginCtrl($auth, $state, toastService) {
         var vm = this;
+
         vm.login = login;
-        vm.user = null;
 
         function login() {
             $auth.login({ email: vm.email, password: vm.password }).then(function() {

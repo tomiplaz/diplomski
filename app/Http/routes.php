@@ -19,6 +19,11 @@ Route::group(['prefix' => 'api/v1'], function() {
 
     Route::group(['middleware' => 'jwt.auth'], function() {
 
+        Route::group(['prefix' => 'user'], function() {
+            Route::get('/', 'AuthController@getAuthenticatedUser');
+            Route::post('/', 'AuthController@createUser');
+        });
+
         Route::group(['prefix' => 'requests'], function() {
             Route::get('/', 'MainController@getRequests');
             Route::post('/', 'MainController@createRequest');
@@ -31,7 +36,6 @@ Route::group(['prefix' => 'api/v1'], function() {
     });
 
     Route::post('auth', 'AuthController@authenticate');
-    Route::get('auth/user', 'AuthController@getAuthenticatedUser');
 });
 
 /*

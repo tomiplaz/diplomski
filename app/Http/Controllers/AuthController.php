@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request as HttpRequest;
 
 use App\Http\Requests;
@@ -51,5 +52,14 @@ class AuthController extends Controller
         }
 
         return response()->json(compact('user'));
+    }
+
+    /**
+     * Create new user.
+     *
+     * @param HttpRequest $httpRequest
+     */
+    public function createUser(HttpRequest $httpRequest) {
+        User::create($httpRequest->all());
     }
 }
