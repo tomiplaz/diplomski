@@ -55,14 +55,15 @@
                 forPlace: vm.forPlace,
                 forFaculty: vm.forFaculty,
                 forSubject: vm.forSubject,
-                advancePayment: vm.advancePayment,
+                projectLeader: vm.projectLeader,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
                 startTimestampRaw: vm.startTimestampRaw,
                 endTimestampRaw: vm.endTimestampRaw,
                 duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
+                advancePayment: vm.advancePayment,
                 description: vm.description,
-                transportation: vm.transportation,
+                transportation: helperService.formatTransportation(vm.transportation),
                 expensesResponsible: vm.expensesResponsible,
                 expensesExplanation: vm.expensesExplanation,
                 applicantSignature: vm.applicantSignature
@@ -85,11 +86,13 @@
             vm.forPlace = null;
             vm.forFaculty = null;
             vm.forSubject = null;
+            vm.projectLeader = null;
             vm.advancePayment = null;
             vm.startTimestamp = null;
             vm.endTimestamp = null;
             vm.startTimestampRaw = null;
             vm.endTimestampRaw = null;
+            vm.advancePayment = null;
             vm.description = null;
             vm.transportation = null;
             vm.expensesResponsible = null;

@@ -33,6 +33,9 @@ body {
     width: 250px; }
   body .md-input-container-height {
     height: 94px; }
+  body .advance-payment-container {
+    width: 120px;
+    margin-left: 84px; }
   body .full-width {
     width: 100%; }
   body .document-dialog {

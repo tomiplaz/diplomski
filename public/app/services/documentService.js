@@ -78,8 +78,18 @@
                 { text: data.forPlace + ", " + data.forFaculty + ", " + data.forSubject, style: 'input' }
             ];
             var centerContentZorS = [
-                { text: "Molim odobrenje službenog puta za (mjesto, akontacija):", style: ['regular', 'topMargin20'] },
-                { text: data.forPlace + ", " + data.advancePayment, style: 'input' }
+                {
+                    columns: [
+                        { text: "Molim odobrenje službenog puta za (mjesto):", style: ['regular', 'topMargin20'], width: '60%' },
+                        { text: "Voditelj projekta:", style: ['regular', 'topMargin20'], width: '*' }
+                    ]
+                },
+                {
+                    columns: [
+                        { text: data.forPlace, style: 'input', width: '60%' },
+                        { text: data.projectLeader, style: 'input', width: '*' }
+                    ]
+                }
             ];
             var bottomContent = [
                 {
@@ -96,10 +106,20 @@
                         { text: data.duration, style: 'input', width: '*' }
                     ]
                 },
-                { text: "Svrha:", style: ['regular', 'topMargin20'] },
+                { text: "Svrha (" + getTypeFull(data.type) + "):", style: ['regular', 'topMargin20'] },
                 { text: data.description, style: 'input' },
-                { text: "Vrsta prijevoza:", style: ['regular', 'topMargin20'] },
-                { text: data.transportation, style: 'input' },
+                {
+                    columns: [
+                        { text: "Akontacija:", style: ['regular', 'topMargin20'], width: '20%' },
+                        { text: "Vrsta prijevoza:", style: ['regular', 'topMargin20'], width: '*' }
+                    ]
+                },
+                {
+                    columns: [
+                        { text: data.advancePayment + " kn", style: 'input', width: '20%' },
+                        { text: data.transportation, style: 'input', width: '*' }
+                    ]
+                },
                 { text: "Troškovi terete:", style: ['regular', 'topMargin20'] },
                 { text: data.expensesResponsible, style: 'input' },
                 { text: "Obrazloženje:", style: 'regular' },
@@ -126,6 +146,17 @@
             ];
 
             return topContent.concat(data.type == 'n' ? centerContentN : centerContentZorS, bottomContent);
+        }
+
+        function getTypeFull(type) {
+            switch (type) {
+                case 'n':
+                    return "nastavna aktivnost";
+                case 'z':
+                    return "znanstvena aktivnost";
+                case 's':
+                    return 'stručna aktivnost';
+            }
         }
     }
 })();

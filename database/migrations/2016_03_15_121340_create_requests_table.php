@@ -27,12 +27,12 @@ class CreateRequestsTable extends Migration
             $table->string('for_place', 50);
             $table->string('for_faculty', 50)->nullable();
             $table->string('for_subject', 50)->nullable();
+            $table->string('project_leader', 60)->nullable();
 
             $table->timestamp('start_timestamp');
             $table->timestamp('end_timestamp');
             $table->string('duration', 20);
-
-            $table->string('advance_payment', 10)->nullable();
+            $table->smallInteger('advance_payment')->unsigned();
 
             $table->text('description');
 

@@ -59,9 +59,9 @@
             </md-input-container>
 
             <md-input-container ng-if="newRequest.type == 'z' || newRequest.type == 's'">
-                <label>Akontacija</label>
-                <input type="text" name="advancePayment" ng-model="newRequest.advancePayment" required ng-maxlength="10">
-                <div ng-messages="newRequestForm.advancePayment.$error">
+                <label>Voditelj projekta</label>
+                <input type="text" name="projectLeader" ng-model="newRequest.projectLeader" required ng-maxlength="60">
+                <div ng-messages="newRequestForm.projectLeader.$error">
                     <div ng-message="required">Potrebno!</div>
                     <div ng-message="maxlength">Predugačko!</div>
                 </div>
@@ -106,6 +106,17 @@
                     <div ng-message="required">Potrebno!</div>
                 </div>
             </md-input-container>
+
+            <md-input-container class="advance-payment-container" flex="none">
+                <label>Akontacija (kn)</label>
+                <input type="number" name="advancePayment" ng-model="newRequest.advancePayment" required
+                       step="any" min="0" max="50000">
+                <div ng-messages="newRequestForm.advancePayment.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="min">Neispravan iznos!</div>
+                    <div ng-message="max">Prevelik iznos!</div>
+                </div>
+            </md-input-container>
         </div>
 
         <md-input-container class="full-width">
@@ -117,14 +128,21 @@
             </div>
         </md-input-container>
 
-        <md-input-container>
-            <label>Vrsta prijevoza</label>
-            <input type="text" name="transportation" ng-model="newRequest.transportation" required ng-maxlength="50">
-            <div ng-messages="newRequestForm.transportation.$error">
-                <div ng-message="required">Potrebno!</div>
-                <div ng-message="maxlength">Predugačko!</div>
-            </div>
-        </md-input-container>
+        <div class="md-input-container-height">
+            <md-input-container>
+                <label>Vrsta prijevoza</label>
+                <md-select name="transportation" ng-model="newRequest.transportation" required multiple>
+                    <md-option value="autobus">autobus</md-option>
+                    <md-option value="automobil">automobil</md-option>
+                    <md-option value="vlak">vlak</md-option>
+                    <md-option value="zrakoplov">zrakoplov</md-option>
+                    <md-option value="ostalo">ostalo</md-option>
+                </md-select>
+                <div ng-messages="newRequestForm.transportation.$error">
+                    <div ng-message="required">Potrebno!</div>
+                </div>
+            </md-input-container>
+        </div>
 
         <div layout="row" layout-align="start center" class="full-width">
             <md-input-container>

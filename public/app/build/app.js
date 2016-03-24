@@ -302,8 +302,18 @@
                 { text: data.forPlace + ", " + data.forFaculty + ", " + data.forSubject, style: 'input' }
             ];
             var centerContentZorS = [
-                { text: "Molim odobrenje službenog puta za (mjesto, akontacija):", style: ['regular', 'topMargin20'] },
-                { text: data.forPlace + ", " + data.advancePayment, style: 'input' }
+                {
+                    columns: [
+                        { text: "Molim odobrenje službenog puta za (mjesto):", style: ['regular', 'topMargin20'], width: '60%' },
+                        { text: "Voditelj projekta:", style: ['regular', 'topMargin20'], width: '*' }
+                    ]
+                },
+                {
+                    columns: [
+                        { text: data.forPlace, style: 'input', width: '60%' },
+                        { text: data.projectLeader, style: 'input', width: '*' }
+                    ]
+                }
             ];
             var bottomContent = [
                 {
@@ -320,10 +330,20 @@
                         { text: data.duration, style: 'input', width: '*' }
                     ]
                 },
-                { text: "Svrha:", style: ['regular', 'topMargin20'] },
+                { text: "Svrha (" + getTypeFull(data.type) + "):", style: ['regular', 'topMargin20'] },
                 { text: data.description, style: 'input' },
-                { text: "Vrsta prijevoza:", style: ['regular', 'topMargin20'] },
-                { text: data.transportation, style: 'input' },
+                {
+                    columns: [
+                        { text: "Akontacija:", style: ['regular', 'topMargin20'], width: '20%' },
+                        { text: "Vrsta prijevoza:", style: ['regular', 'topMargin20'], width: '*' }
+                    ]
+                },
+                {
+                    columns: [
+                        { text: data.advancePayment + " kn", style: 'input', width: '20%' },
+                        { text: data.transportation, style: 'input', width: '*' }
+                    ]
+                },
                 { text: "Troškovi terete:", style: ['regular', 'topMargin20'] },
                 { text: data.expensesResponsible, style: 'input' },
                 { text: "Obrazloženje:", style: 'regular' },
@@ -351,6 +371,17 @@
 
             return topContent.concat(data.type == 'n' ? centerContentN : centerContentZorS, bottomContent);
         }
+
+        function getTypeFull(type) {
+            switch (type) {
+                case 'n':
+                    return "nastavna aktivnost";
+                case 'z':
+                    return "znanstvena aktivnost";
+                case 's':
+                    return 'stručna aktivnost';
+            }
+        }
     }
 })();
 (function() {
@@ -364,7 +395,8 @@
     function helperService($filter) {
         return {
             formatDate: formatDate,
-            getDuration: getDuration
+            getDuration: getDuration,
+            formatTransportation: formatTransportation
         };
 
         function formatDate(timestamp, format) {
@@ -401,6 +433,17 @@
             }
 
             return days + " dan" + daysSuffix + " i " + hours + " sat" + hoursSuffix;
+        }
+
+        function formatTransportation(value) {
+            var options = ['autobus', 'automobil', 'vlak', 'zrakoplov', 'ostalo'];
+            var result = "";
+
+            for (var i = 0; i < 5; i++) {
+                if (value.includes(options[i])) result += options[i] + ", ";
+            }
+
+            return _.capitalize(result.slice(0, -2));
         }
     }
 })();
@@ -591,10 +634,11 @@
                 forPlace: request.for_place,
                 forFaculty: request.for_faculty,
                 forSubject: request.for_subject,
-                advancePayment: request.advance_payment,
+                projectLeader: request.project_leader,
                 startTimestamp: helperService.formatDate(request.start_timestamp, 'dd.MM.yyyy. HH:mm'),
                 endTimestamp: helperService.formatDate(request.end_timestamp, 'dd.MM.yyyy. HH:mm'),
                 duration: request.duration,
+                advancePayment: request.advance_payment,
                 description: request.description,
                 transportation: request.transportation,
                 expensesResponsible: request.expenses_responsible,
@@ -766,14 +810,15 @@
                 forPlace: vm.forPlace,
                 forFaculty: vm.forFaculty,
                 forSubject: vm.forSubject,
-                advancePayment: vm.advancePayment,
+                projectLeader: vm.projectLeader,
                 startTimestamp: vm.startTimestamp,
                 endTimestamp: vm.endTimestamp,
                 startTimestampRaw: vm.startTimestampRaw,
                 endTimestampRaw: vm.endTimestampRaw,
                 duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
+                advancePayment: vm.advancePayment,
                 description: vm.description,
-                transportation: vm.transportation,
+                transportation: helperService.formatTransportation(vm.transportation),
                 expensesResponsible: vm.expensesResponsible,
                 expensesExplanation: vm.expensesExplanation,
                 applicantSignature: vm.applicantSignature
@@ -796,11 +841,13 @@
             vm.forPlace = null;
             vm.forFaculty = null;
             vm.forSubject = null;
+            vm.projectLeader = null;
             vm.advancePayment = null;
             vm.startTimestamp = null;
             vm.endTimestamp = null;
             vm.startTimestampRaw = null;
             vm.endTimestampRaw = null;
+            vm.advancePayment = null;
             vm.description = null;
             vm.transportation = null;
             vm.expensesResponsible = null;
@@ -899,62 +946,6 @@
             } else {
                 return null;
             }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('DocumentDialogCtrl', DocumentDialogCtrl);
-
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.send = send;
-
-        $document.ready(function() {
-            var doc = documentService.getDocument(data);
-
-            pdfMake
-                .createPdf(doc)
-                .getDataUrl(function(url) {
-                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
-                    iframe.attr('src', url);
-                });
-        });
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function send() {
-            var newRequest = {
-                user_id: data.userId,
-                type: data.type,
-                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
-                name: data.name,
-                surname: data.surname,
-                workplace: data.workplace,
-                for_place: data.forPlace,
-                for_faculty: data.type != 'n' ? null : data.forFaculty,
-                for_subject: data.type != 'n' ? null : data.forSubject,
-                advance_payment: data.type == 'n' ? null : data.advancePayment,
-                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                duration: data.duration,
-                description: data.description,
-                transportation: data.transportation,
-                expenses_responsible: data.expensesResponsible,
-                expenses_explanation: data.expensesExplanation,
-                applicant_signature: data.applicantSignature
-            };
-
-            apiService.createRequest(newRequest);
-            hide();
         }
     }
 })();
@@ -1078,6 +1069,63 @@
             if (!signaturePad.isEmpty()) {
                 confirmButton.removeAttr('disabled');
             }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('DocumentDialogCtrl', DocumentDialogCtrl);
+
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.send = send;
+
+        $document.ready(function() {
+            var doc = documentService.getDocument(data);
+
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('.document-dialog iframe'));
+                    iframe.attr('src', url);
+                });
+        });
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function send() {
+            var newRequest = {
+                user_id: data.userId,
+                type: data.type,
+                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
+                name: data.name,
+                surname: data.surname,
+                workplace: data.workplace,
+                for_place: data.forPlace,
+                for_faculty: data.type != 'n' ? null : data.forFaculty,
+                for_subject: data.type != 'n' ? null : data.forSubject,
+                project_leader: data.type == 'n' ? null : data.projectLeader,
+                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                duration: data.duration,
+                advance_payment: data.advancePayment,
+                description: data.description,
+                transportation: data.transportation,
+                expenses_responsible: data.expensesResponsible,
+                expenses_explanation: data.expensesExplanation,
+                applicant_signature: data.applicantSignature
+            };
+
+            apiService.createRequest(newRequest);
+            hide();
         }
     }
 })();

@@ -9,7 +9,8 @@
     function helperService($filter) {
         return {
             formatDate: formatDate,
-            getDuration: getDuration
+            getDuration: getDuration,
+            formatTransportation: formatTransportation
         };
 
         function formatDate(timestamp, format) {
@@ -46,6 +47,17 @@
             }
 
             return days + " dan" + daysSuffix + " i " + hours + " sat" + hoursSuffix;
+        }
+
+        function formatTransportation(value) {
+            var options = ['autobus', 'automobil', 'vlak', 'zrakoplov', 'ostalo'];
+            var result = "";
+
+            for (var i = 0; i < 5; i++) {
+                if (value.includes(options[i])) result += options[i] + ", ";
+            }
+
+            return _.capitalize(result.slice(0, -2));
         }
     }
 })();
