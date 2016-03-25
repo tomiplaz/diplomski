@@ -5,8 +5,8 @@
         .module('requests')
         .controller('ValidateCtrl', ValidateCtrl);
 
-    ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
-    function ValidateCtrl($scope, $state, requests, helperService, dialogService, $mdDialog, apiService) {
+    ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function ValidateCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 1) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema zahtjeva za validaciju.";
@@ -24,13 +24,10 @@
             $mdDialog.show(rejectRequestDialogObject);
         }
 
-        function valid() {
+        function valid($event) {
             var requestId = requests[$scope['requests'].current].id;
-            var data = {
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
+            $mdDialog.show(markRequestDialogObject);
         }
     }
 })();

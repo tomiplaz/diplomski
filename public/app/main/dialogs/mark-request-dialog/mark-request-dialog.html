@@ -1,0 +1,30 @@
+<md-dialog class="mark-request-dialog" aria-label="Oznaka" ng-cloak>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 flex>Oznaka</h2>
+            <md-button class="md-icon-button" ng-click="markRequestDialog.hide()" aria-label="Zatvori">
+                <md-icon md-svg-src="close"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content layout layout-align="center center" flex="none">
+        <form name="markRequestDialogForm">
+            <md-input-container>
+                <label>Oznaka zahtjeva</label>
+                <input type="text" name="mark" ng-model="markRequestDialog.mark" required ng-minlength="10" md-maxlength="10">
+                <div ng-messages="markRequestDialogForm.mark.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="minlength">Prekratko!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+        </form>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button class="md-fab md-mini md-raised" ng-click="markRequestDialog.confirm()" aria-label="Potvrdi"
+                   ng-disabled="!markRequestDialogForm.mark.$valid">
+            <md-tooltip md-direction="left">Potvrdi</md-tooltip>
+            <md-icon md-svg-src="check"></md-icon>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

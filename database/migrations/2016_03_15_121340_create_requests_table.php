@@ -14,6 +14,7 @@ class CreateRequestsTable extends Migration
     {
         Schema::create('requests', function (Blueprint $table) {
             $table->increments('id');
+            $table->char('mark', 10)->nullable()->unique();
             $table->integer('user_id')->unsigned();
             $table->timestamps();
 

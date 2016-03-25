@@ -12,7 +12,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 use App\Request as Request;
 
-class MainController extends Controller
+class RequestsController extends Controller
 {
     /**
      * Get all requests.

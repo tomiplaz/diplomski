@@ -150,6 +150,12 @@ body {
     }
   }
 
+  .mark-request-dialog {
+    md-dialog-content {
+      padding: 20px 10px 10px 10px;
+    }
+  }
+
   md-icon {
     &.negative svg {
       fill: $md-warn;

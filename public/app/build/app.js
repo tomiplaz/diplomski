@@ -98,7 +98,7 @@
         };
 
         function getUser() {
-            return Restangular.all('user').doGET('').then(function(res) {
+            return Restangular.all('users').doGET('').then(function(res) {
                 return res.user;
             }, function() {
                 toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
@@ -107,7 +107,7 @@
         }
 
         function createUser(newUser) {
-            return Restangular.all('user').post(newUser).then(function() {
+            return Restangular.all('users').post(newUser).then(function() {
                 toastService.show("Korisnik spremljen!");
                 $state.go('main.home');
             }, function() {
@@ -157,7 +157,8 @@
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
             getRejectRequestDialogObject: getRejectRequestDialogObject,
-            getDetailsDialogObject: getDetailsDialogObject
+            getDetailsDialogObject: getDetailsDialogObject,
+            getMarkRequestDialogObject: getMarkRequestDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -227,6 +228,19 @@
                 clickOutsideToClose: true,
                 locals: {
                     request: request
+                }
+            }
+        }
+
+        function getMarkRequestDialogObject(event, requestId) {
+            return {
+                controller: 'MarkRequestDialogCtrl as markRequestDialog',
+                templateUrl: 'app/main/dialogs/mark-request-dialog/mark-request-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                locals: {
+                    requestId: requestId
                 }
             }
         }
@@ -1069,6 +1083,35 @@
 
     angular
         .module('main')
+        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
+
+    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = {
+                mark: vm.mark,
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('RejectRequestDialogCtrl', RejectRequestDialogCtrl);
 
     RejectRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'type', 'apiService', 'helperService'];
@@ -1284,8 +1327,8 @@
         .module('requests')
         .controller('ValidateCtrl', ValidateCtrl);
 
-    ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'helperService', 'dialogService', '$mdDialog', 'apiService'];
-    function ValidateCtrl($scope, $state, requests, helperService, dialogService, $mdDialog, apiService) {
+    ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function ValidateCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 1) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema zahtjeva za validaciju.";
@@ -1303,13 +1346,10 @@
             $mdDialog.show(rejectRequestDialogObject);
         }
 
-        function valid() {
+        function valid($event) {
             var requestId = requests[$scope['requests'].current].id;
-            var data = {
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
+            $mdDialog.show(markRequestDialogObject);
         }
     }
 })();

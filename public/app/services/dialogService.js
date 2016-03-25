@@ -11,7 +11,8 @@
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
             getRejectRequestDialogObject: getRejectRequestDialogObject,
-            getDetailsDialogObject: getDetailsDialogObject
+            getDetailsDialogObject: getDetailsDialogObject,
+            getMarkRequestDialogObject: getMarkRequestDialogObject
         };
 
         function getDateTimeDialogObject(scope, event, data) {
@@ -81,6 +82,19 @@
                 clickOutsideToClose: true,
                 locals: {
                     request: request
+                }
+            }
+        }
+
+        function getMarkRequestDialogObject(event, requestId) {
+            return {
+                controller: 'MarkRequestDialogCtrl as markRequestDialog',
+                templateUrl: 'app/main/dialogs/mark-request-dialog/mark-request-dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: true,
+                locals: {
+                    requestId: requestId
                 }
             }
         }

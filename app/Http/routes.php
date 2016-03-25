@@ -17,25 +17,25 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'api/v1'], function() {
 
+    Route::post('auth', 'AuthController@authenticate');
+
     Route::group(['middleware' => 'jwt.auth'], function() {
 
-        Route::group(['prefix' => 'user'], function() {
-            Route::get('/', 'AuthController@getAuthenticatedUser');
-            Route::post('/', 'AuthController@createUser');
+        Route::group(['prefix' => 'users'], function() {
+            Route::get('/', 'UsersController@getAuthenticatedUser');
+            Route::post('/', 'UsersController@createUser');
         });
 
         Route::group(['prefix' => 'requests'], function() {
-            Route::get('/', 'MainController@getRequests');
-            Route::post('/', 'MainController@createRequest');
-            Route::get('nonvalidated', 'MainController@getRequestsNonvalidated');
-            Route::get('approvable', 'MainController@getRequestsApprovable');
-            Route::get('user', 'MainController@getUserRequests');
-            Route::put('{requestId}', 'MainController@updateRequest');
+            Route::get('/', 'RequestsController@getRequests');
+            Route::post('/', 'RequestsController@createRequest');
+            Route::get('nonvalidated', 'RequestsController@getRequestsNonvalidated');
+            Route::get('approvable', 'RequestsController@getRequestsApprovable');
+            Route::get('user', 'RequestsController@getUserRequests');
+            Route::put('{requestId}', 'RequestsController@updateRequest');
         });
 
     });
-
-    Route::post('auth', 'AuthController@authenticate');
 });
 
 /*

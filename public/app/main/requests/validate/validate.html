@@ -5,7 +5,7 @@
 
 <p>{{ requests.current + 1 }}/{{ requests.requests.length }}</p>
 
-<md-button class="md-fab md-mini md-raised" ng-click="validate.valid()" aria-label="Ispravan zahtjev">
+<md-button class="md-fab md-mini md-raised" ng-click="validate.valid($event)" aria-label="Ispravan zahtjev">
     <md-tooltip md-direction="bottom">Ispravan zahtjev</md-tooltip>
     <md-icon md-svg-src="check_circle"></md-icon>
 </md-button>

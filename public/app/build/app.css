@@ -69,6 +69,8 @@ body {
     body .invalid-request-dialog md-dialog-content, body .details-dialog md-dialog-content {
       padding: 20px 10px 10px 10px;
       width: 100%; }
+  body .mark-request-dialog md-dialog-content {
+    padding: 20px 10px 10px 10px; }
   body md-icon.negative svg {
     fill: #ffab00; }
   body md-icon.positive svg {

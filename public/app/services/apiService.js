@@ -16,7 +16,7 @@
         };
 
         function getUser() {
-            return Restangular.all('user').doGET('').then(function(res) {
+            return Restangular.all('users').doGET('').then(function(res) {
                 return res.user;
             }, function() {
                 toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
@@ -25,7 +25,7 @@
         }
 
         function createUser(newUser) {
-            return Restangular.all('user').post(newUser).then(function() {
+            return Restangular.all('users').post(newUser).then(function() {
                 toastService.show("Korisnik spremljen!");
                 $state.go('main.home');
             }, function() {
