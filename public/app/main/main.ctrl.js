@@ -16,16 +16,10 @@
 
         vm.allStates = [
             {
-                name: 'main.new-user',
-                label: 'Novi korisnik',
-                icon: 'details',
-                type: [5]
-            },
-            {
                 name: 'main.home',
                 label: 'Početna',
                 icon: 'home',
-                type: [0, 1, 2, 3]
+                type: [0, 1, 2, 3, 4]
             },
             {
                 name: 'main.new-request',
@@ -50,6 +44,12 @@
                 label: 'Poslani zahtjevi',
                 icon: 'library_books',
                 type: [0]
+            },
+            {
+                name: 'main.new-user',
+                label: 'Novi korisnik',
+                icon: 'details',
+                type: [4]
             }
         ];
 

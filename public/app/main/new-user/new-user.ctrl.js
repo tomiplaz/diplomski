@@ -7,7 +7,7 @@
 
     NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
     function NewUserCtrl($scope, $state, apiService) {
-        if ($scope['main'].user.type != 5) return $state.go('main.home');
+        if ($scope['main'].user.type != 4) return $state.go('main.home');
 
         var vm = this;
 

@@ -98,7 +98,7 @@
         };
 
         function getUser() {
-            return Restangular.customGET('user').then(function(res) {
+            return Restangular.all('user').doGET('').then(function(res) {
                 return res.user;
             }, function() {
                 toastService.show("Greška tijekom dohvaćanja korisnikovih podataka!", 3000);
@@ -106,8 +106,8 @@
             });
         }
 
-        function createUser() {
-            return Restangular.customPOST('user').then(function() {
+        function createUser(newUser) {
+            return Restangular.all('user').post(newUser).then(function() {
                 toastService.show("Korisnik spremljen!");
                 $state.go('main.home');
             }, function() {
@@ -721,16 +721,10 @@
 
         vm.allStates = [
             {
-                name: 'main.new-user',
-                label: 'Novi korisnik',
-                icon: 'details',
-                type: [5]
-            },
-            {
                 name: 'main.home',
                 label: 'Početna',
                 icon: 'home',
-                type: [0, 1, 2, 3]
+                type: [0, 1, 2, 3, 4]
             },
             {
                 name: 'main.new-request',
@@ -755,6 +749,12 @@
                 label: 'Poslani zahtjevi',
                 icon: 'library_books',
                 type: [0]
+            },
+            {
+                name: 'main.new-user',
+                label: 'Novi korisnik',
+                icon: 'details',
+                type: [4]
             }
         ];
 
@@ -886,7 +886,7 @@
 
     NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
     function NewUserCtrl($scope, $state, apiService) {
-        if ($scope['main'].user.type != 5) return $state.go('main.home');
+        if ($scope['main'].user.type != 4) return $state.go('main.home');
 
         var vm = this;
 
@@ -962,6 +962,56 @@
 
     angular
         .module('main')
+        .controller('DetailsDialogCtrl', DetailsDialogCtrl);
+
+    DetailsDialogCtrl.$inject = ['request', '$mdDialog', 'helperService'];
+    function DetailsDialogCtrl(request, $mdDialog, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+
+        vm.getCreationInfo = getCreationInfo;
+        vm.getMainInfo = getMainInfo;
+        vm.getReason = getReason;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function getCreationInfo() {
+            return "Zahtjev je poslan " + helperService.formatDate(request.created_at, "dd.MM.yyyy. 'u' HH:mm") + ".";
+        }
+
+        function getMainInfo() {
+            if (request.quality_check == null) {
+                return "Provjera ispravnosti zahtjeva još nije izvršena."
+            } else if (request.quality_check == false) {
+                return "Zahtjev je ocijenjen neispravnim " + helperService.formatDate(request.quality_check_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (request.approved) {
+                return "Zahtjev je odobren " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (request.approved == false) {
+                return "Zahtjev je odbijen " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else {
+                return "Zahtjev je ispravan i čeka odobrenje.";
+            }
+        }
+
+        function getReason() {
+            if (request.invalidity_reason != null) {
+                return request.invalidity_reason;
+            } else if (request.disapproval_reason != null) {
+                return request.disapproval_reason;
+            } else {
+                return null;
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
     DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService', '$state'];
@@ -1011,56 +1061,6 @@
 
             apiService.createRequest(newRequest);
             hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('DetailsDialogCtrl', DetailsDialogCtrl);
-
-    DetailsDialogCtrl.$inject = ['request', '$mdDialog', 'helperService'];
-    function DetailsDialogCtrl(request, $mdDialog, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-
-        vm.getCreationInfo = getCreationInfo;
-        vm.getMainInfo = getMainInfo;
-        vm.getReason = getReason;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function getCreationInfo() {
-            return "Zahtjev je poslan " + helperService.formatDate(request.created_at, "dd.MM.yyyy. 'u' HH:mm") + ".";
-        }
-
-        function getMainInfo() {
-            if (request.quality_check == null) {
-                return "Provjera ispravnosti zahtjeva još nije izvršena."
-            } else if (request.quality_check == false) {
-                return "Zahtjev je ocijenjen neispravnim " + helperService.formatDate(request.quality_check_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else if (request.approved) {
-                return "Zahtjev je odobren " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else if (request.approved == false) {
-                return "Zahtjev je odbijen " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else {
-                return "Zahtjev je ispravan i čeka odobrenje.";
-            }
-        }
-
-        function getReason() {
-            if (request.invalidity_reason != null) {
-                return request.invalidity_reason;
-            } else if (request.disapproval_reason != null) {
-                return request.disapproval_reason;
-            } else {
-                return null;
-            }
         }
     }
 })();
