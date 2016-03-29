@@ -119,7 +119,7 @@ body {
     height: 600px;
   }
 
-  .requests-list {
+  .requests-list, .warrants-list {
     height: 600px;
 
     md-list {
@@ -175,6 +175,19 @@ body {
   .details-dialog {
     em {
       text-align: center;
+    }
+  }
+
+  .pending-warrants-form {
+    margin-left: 20px;
+    margin-right: 20px;
+
+    .small-width {
+      width: 100px;
+    }
+
+    .select-input {
+      width: 180px;
     }
   }
 }

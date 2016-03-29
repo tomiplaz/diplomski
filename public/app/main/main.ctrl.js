@@ -50,6 +50,12 @@
                 label: 'Novi korisnik',
                 icon: 'details',
                 type: [4]
+            },
+            {
+                name: 'main.pending-warrants',
+                label: 'Tekući putni nalozi',
+                icon: 'library_add',
+                type: [0]
             }
         ];
 

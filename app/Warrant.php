@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Request extends Model
+class Warrant extends Model
 {
     /**
      * The attributes that are not mass assignable.
@@ -16,7 +16,7 @@ class Request extends Model
     ];
 
     /**
-     * Request is owned by a single user.
+     * Warrant is owned by a single user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

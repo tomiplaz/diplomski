@@ -52,17 +52,17 @@ body {
       cursor: default; }
   body .requests-frame {
     height: 600px; }
-  body .requests-list {
+  body .requests-list, body .warrants-list {
     height: 600px; }
-    body .requests-list md-list {
+    body .requests-list md-list, body .warrants-list md-list {
       overflow-y: scroll;
       padding: 0; }
-      body .requests-list md-list::-webkit-scrollbar {
+      body .requests-list md-list::-webkit-scrollbar, body .warrants-list md-list::-webkit-scrollbar {
         display: none; }
-    body .requests-list .index {
+    body .requests-list .index, body .warrants-list .index {
       margin-right: 16px;
       font-weight: bold; }
-    body .requests-list .selected {
+    body .requests-list .selected, body .warrants-list .selected {
       background-color: #ececec; }
   body .invalid-request-dialog, body .details-dialog {
     width: 40%; }
@@ -81,5 +81,12 @@ body {
     pointer-events: none; }
   body .details-dialog em {
     text-align: center; }
+  body .pending-warrants-form {
+    margin-left: 20px;
+    margin-right: 20px; }
+    body .pending-warrants-form .small-width {
+      width: 100px; }
+    body .pending-warrants-form .select-input {
+      width: 180px; }
 
 /*# sourceMappingURL=app.css.map */

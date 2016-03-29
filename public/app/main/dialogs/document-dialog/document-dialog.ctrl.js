@@ -5,8 +5,8 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService', '$state'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService, $state) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
         var vm = this;
 
         vm.hide = hide;

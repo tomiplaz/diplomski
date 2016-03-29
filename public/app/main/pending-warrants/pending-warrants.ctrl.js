@@ -1,0 +1,136 @@
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
+
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService) {
+        var vm = this;
+
+        vm.warrants = warrants;
+        vm.current = 0;
+        vm.numOfWages = 0;
+        vm.wagesTotal = 0;
+        vm.numOfRoutes = 2;
+        vm.routesTotal = 0;
+        vm.numOfOther = 0;
+        vm.otherTotal = 0;
+        vm.allTotal = 0;
+
+        vm.formatDate = helperService.formatDate;
+        vm.selectWarrant = selectWarrant;
+        vm.updateWagesTotal = updateWagesTotal;
+        vm.addRoute = addRoute;
+        vm.removeRoute = removeRoute;
+        vm.updateRoutesTotal = updateRoutesTotal;
+        vm.addOther = addOther;
+        vm.removeOther = removeOther;
+        vm.updateOtherTotal = updateOtherTotal;
+        vm.save = save;
+
+        init();
+
+        function init() {
+            if (vm.warrants.length > 0) {
+                vm.current = 0;
+                selectWarrant(0);
+            }
+        }
+
+        function selectWarrant(index) {
+            vm.current = index;
+
+            var warrant = warrants[vm.current];
+
+            vm.wage = warrant.wage;
+            vm.numOfWages = helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp);
+            vm.wagesTotal = warrant.wages_total;
+
+            vm.numOfRoutes = helperService.getNumberOfRoutes(warrant);
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                vm['routesFrom' + i] = warrant['routes_from_' + i];
+                vm['routesTo' + i] = warrant['routes_to_' + i];
+                vm['routesTransportation' + i] = warrant['routes_transportation_' + i];
+                vm['routesCost' + i] = warrant['routes_cost_' + i];
+            }
+            vm.routesTotal = warrant.routes_total;
+
+            vm.numOfOther = helperService.getNumberOfOther(warrant);
+            for (var i = 0; i < vm.numOfOther; i++) {
+                vm['otherDescription' + i] = warrant['other_description_' + i];
+                vm['otherCost' + i] = warrant['other_cost_' + i];
+            }
+            vm.otherTotal = warrant.other_total;
+
+            vm.allTotal = warrant.all_total;
+            vm.report = warrant.report;
+        }
+
+        function updateWagesTotal() {
+            vm.wagesTotal = vm.wage * vm.numOfWages;
+            updateAllTotal();
+        }
+
+        function addRoute() {
+            vm.numOfRoutes++;
+        }
+
+        function removeRoute() {
+            vm.numOfRoutes--;
+        }
+
+        function updateRoutesTotal() {
+            vm.routesTotal = 0;
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                if (vm['routesCost' + i]) vm.routesTotal += vm['routesCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function addOther() {
+            vm.numOfOther++;
+        }
+
+        function removeOther() {
+            vm.numOfOther--;
+        }
+
+        function updateOtherTotal() {
+            vm.otherTotal = 0;
+            for (var i = 0; i < vm.numOfOther; i++) {
+                if (vm['otherCost' + i]) vm.otherTotal += vm['otherCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function updateAllTotal() {
+            vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
+        }
+
+        function save() {
+            var warrantId = warrants[vm.current].id;
+            var data = {
+                wage: vm.wage,
+                wages_total: vm.wagesTotal,
+                routes_total: vm.routesTotal,
+                other_total: vm.otherTotal,
+                all_total: vm.allTotal,
+                report: vm.report
+            };
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                data['routes_from_' + i] = vm['routesFrom' + i];
+                data['routes_to_' + i] = vm['routesTo' + i];
+                data['routes_transportation_' + i] = vm['routesTransportation' + i];
+                data['routes_cost_' + i] = vm['routesCost' + i];
+            }
+            for (var i = 0; i < vm.numOfOther; i++) {
+                data['other_description_' + i] = vm['otherDescription' + i];
+                data['other_cost_' + i] = vm['otherCost' + i];
+            }
+
+            apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+        }
+    }
+})();

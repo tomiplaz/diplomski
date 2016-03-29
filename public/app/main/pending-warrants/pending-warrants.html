@@ -1,0 +1,198 @@
+<div ng-if="pendingWarrants.warrants.length != 0" layout="row" layout-align="start start">
+
+    <div layout="column" layout-align="start start" class="warrants-list">
+        <md-list>
+            <md-list-item ng-repeat="warrant in pendingWarrants.warrants" class="md-3-line"
+                          ng-click="pendingWarrants.selectWarrant($index)" ng-class="{ 'selected' : $index == pendingWarrants.current }">
+                <div class="index">{{ $index + 1 }}</div>
+                <div class="md-list-item-text">
+                    <p>{{ warrant.name + " " + warrant.surname }}</p>
+                    <p>{{ warrant.for_place }}</p>
+                    <p>{{ pendingWarrants.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                </div>
+            </md-list-item>
+        </md-list>
+    </div>
+
+    <div layout="row" layout-align="space-between end" class="full-width" flex>
+
+        <form name="pendingWarrantsForm" layout="column" layout-align="center start" class="pending-warrants-form">
+
+            <h2>Račun</h2>
+
+            <h4>Dnevnica</h4>
+
+            <div layout="row" layout-align="start center">
+                <md-input-container class="small-width">
+                    <label>Iznos (kn)</label>
+                    <input type="number" name="wage" ng-model="pendingWarrants.wage" required step="any" min="0" max="10000"
+                            ng-change="pendingWarrants.updateWagesTotal()">
+                    <div ng-messages="pendingWarrantsForm.wage.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="min">Neispravan iznos!</div>
+                        <div ng-message="max">Prevelik iznos!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="small-width">
+                    <label>Broj dnevnica</label>
+                    <input type="text" ng-model="pendingWarrants.numOfWages" readonly>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Ukupan iznos: {{ pendingWarrants.wagesTotal }} kn</p>
+            </div>
+
+            <div layout="row" layout-align="start center">
+                <h4>Troškovi prijevoza</h4>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.addRoute()" aria-label="Dodaj relaciju"
+                           ng-disabled="pendingWarrants.numOfRoutes == 7">
+                    <md-tooltip md-direction="bottom">Dodaj relaciju</md-tooltip>
+                    <md-icon md-svg-src="add_circle"></md-icon>
+                </md-button>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.removeRoute()" aria-label="Ukloni relaciju"
+                           ng-disabled="pendingWarrants.numOfRoutes == 2">
+                    <md-tooltip md-direction="bottom">Ukloni relaciju</md-tooltip>
+                    <md-icon md-svg-src="remove_circle"></md-icon>
+                </md-button>
+            </div>
+
+            <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3, 4, 5, 6]" ng-if="pendingWarrants.numOfRoutes > n">
+                <md-input-container>
+                    <label>Od</label>
+                    <input type="text" name="routesFrom + n" ng-model="pendingWarrants['routesFrom' + n]" required ng-maxlength="50">
+                    <div ng-messages="pendingWarrantsForm['routesFrom' + n].$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Do</label>
+                    <input type="text" name="routesTo + n" ng-model="pendingWarrants['routesTo' + n]" required ng-maxlength="50">
+                    <div ng-messages="pendingWarrantsForm['routesTo' + n].$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <div class="md-input-container-height">
+                    <md-input-container class="select-input">
+                        <label>Prijevozno sredstvo</label>
+                        <md-select name="routesTransportation + n" ng-model="pendingWarrants['routesTransportation' + n]" required>
+                            <md-option value="autobus">autobus</md-option>
+                            <md-option value="automobil">automobil</md-option>
+                            <md-option value="vlak">vlak</md-option>
+                            <md-option value="zrakoplov">zrakoplov</md-option>
+                            <md-option value="ostalo">ostalo</md-option>
+                        </md-select>
+                        <div ng-messages="pendingWarrantsForm['routesTransportation' + n].$error">
+                            <div ng-message="required">Potrebno!</div>
+                        </div>
+                    </md-input-container>
+                </div>
+
+                <md-input-container class="small-width">
+                    <label>Iznos (kn)</label>
+                    <input type="number" name="routesCost + n" ng-model="pendingWarrants['routesCost' + n]" required step="any" min="0" max="50000"
+                            ng-change="pendingWarrants.updateRoutesTotal()">
+                    <div ng-messages="pendingWarrantsForm['routesCost' + n].$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="min">Neispravan iznos!</div>
+                        <div ng-message="max">Prevelik iznos!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Ukupan iznos: {{ pendingWarrants.routesTotal }} kn</p>
+            </div>
+
+            <div layout="row" layout-align="center center">
+                <h4>Ostali troškovi</h4>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.addOther()" aria-label="Dodaj trošak"
+                           ng-disabled="pendingWarrants.numOfOther == 4">
+                    <md-tooltip md-direction="bottom">Dodaj trošak</md-tooltip>
+                    <md-icon md-svg-src="add_circle"></md-icon>
+                </md-button>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.removeOther()" aria-label="Ukloni trošak"
+                           ng-disabled="pendingWarrants.numOfOther == 0">
+                    <md-tooltip md-direction="bottom">Ukloni trošak</md-tooltip>
+                    <md-icon md-svg-src="remove_circle"></md-icon>
+                </md-button>
+            </div>
+
+            <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3]" ng-if="pendingWarrants.numOfOther > n" class="full-width">
+                <md-input-container flex>
+                    <label>Opis troška</label>
+                    <input type="text" name="otherDescription + n" ng-model="pendingWarrants['otherDescription' + n]" required ng-maxlength="100">
+                    <div ng-messages="pendingWarrantsForm['otherDescription' + n].$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="small-width">
+                    <label>Iznos (kn)</label>
+                    <input type="number" name="otherCost + n" ng-model="pendingWarrants['otherCost' + n]" required step="any" min="0" max="50000"
+                            ng-change="pendingWarrants.updateOtherTotal()">
+                    <div ng-messages="pendingWarrantsForm['otherCost' + n].$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="min">Neispravan iznos!</div>
+                        <div ng-message="max">Prevelik iznos!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Ukupan iznos: {{ pendingWarrants.otherTotal }} kn</p>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Sveukupno: {{ pendingWarrants.allTotal }} kn</p>
+            </div>
+
+            <div class="full-width">
+                <h2>Izvješće</h2>
+
+                <md-input-container class="full-width">
+                    <label>Izvješće</label>
+                    <textarea name="report" ng-model="pendingWarrants.report" required md-maxlength="1000"></textarea>
+                    <div ng-messages="pendingWarrantsForm.report.$error">
+                        <div ng-message="required">Potrebno!</div>
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+        </form>
+
+        <div layout="column" layout-align="center center">
+
+            <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.save()" aria-label="Spremi">
+                <md-tooltip md-direction="left">Spremi</md-tooltip>
+                <md-icon md-svg-src="save"></md-icon>
+            </md-button>
+
+            <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.showDocumentDialog($event)"
+                       ng-disabled="!pendingWarrantsForm.$valid" aria-label="Prikaži dokument">
+                <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
+                <md-icon md-svg-src="picture_as_pdf"></md-icon>
+            </md-button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div ng-if="pendingWarrants.warrants.length == 0">
+
+    <p>Nema novih putnih naloga.</p>
+
+</div>

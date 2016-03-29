@@ -31,6 +31,16 @@
                 url: '/new-user',
                 templateUrl: 'app/main/new-user/new-user.html',
                 controller: 'NewUserCtrl as newUser'
+            })
+            .state('main.pending-warrants', {
+                url: '/pending-warrants',
+                templateUrl: 'app/main/pending-warrants/pending-warrants.html',
+                controller: 'PendingWarrantsCtrl as pendingWarrants',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('user/pending');
+                    }
+                }
             });
     }
 })();

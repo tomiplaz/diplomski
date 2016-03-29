@@ -29,10 +29,18 @@ Route::group(['prefix' => 'api/v1'], function() {
         Route::group(['prefix' => 'requests'], function() {
             Route::get('/', 'RequestsController@getRequests');
             Route::post('/', 'RequestsController@createRequest');
-            Route::get('nonvalidated', 'RequestsController@getRequestsNonvalidated');
-            Route::get('approvable', 'RequestsController@getRequestsApprovable');
+            Route::get('nonvalidated', 'RequestsController@getNonvalidatedRequests');
+            Route::get('approvable', 'RequestsController@getApprovableRequests');
             Route::get('user', 'RequestsController@getUserRequests');
             Route::put('{requestId}', 'RequestsController@updateRequest');
+        });
+
+        Route::group(['prefix' => 'warrants'], function() {
+            Route::get('/', 'WarrantsController@getWarrants');
+            Route::post('/', 'WarrantsController@createWarrant');
+            Route::get('user/pending', 'WarrantsController@getUserPendingWarrants');
+            Route::get('user/sent', 'WarrantsController@getUserSentWarrants');
+            Route::put('{warrantId}', 'WarrantsController@updateWarrant');
         });
 
     });

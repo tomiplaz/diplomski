@@ -70,7 +70,9 @@
             .icon('thumb_down', 'app/icons/ic_thumb_down_black_24px.svg')
             .icon('thumb_up', 'app/icons/ic_thumb_up_black_24px.svg')
             .icon('thumbs_up_down', 'app/icons/ic_thumbs_up_down_black_24px.svg')
-            .icon('details', 'app/icons/ic_details_black_24px.svg');
+            .icon('details', 'app/icons/ic_details_black_24px.svg')
+            .icon('add_circle', 'app/icons/ic_add_circle_black_24px.svg')
+            .icon('remove_circle', 'app/icons/ic_remove_circle_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';
@@ -94,7 +96,9 @@
             createUser: createUser,
             getRequests: getRequests,
             createRequest: createRequest,
-            updateRequest: updateRequest
+            updateRequest: updateRequest,
+            getWarrants: getWarrants,
+            updateWarrant: updateWarrant
         };
 
         function getUser() {
@@ -108,7 +112,7 @@
 
         function createUser(newUser) {
             return Restangular.all('users').post(newUser).then(function() {
-                toastService.show("Korisnik spremljen!");
+                toastService.show("Korisnik kreiran!");
                 $state.go('main.home');
             }, function() {
                 toastService.show("Greška tijekom spremanja korisnika!", 3000);
@@ -127,20 +131,64 @@
 
         function createRequest(newRequest) {
             Restangular.all('requests').post(newRequest).then(function() {
-                toastService.show("Dokument spremljen!");
+                toastService.show("Zahtjev kreiran!");
                 $state.go('main.sent');
             }, function() {
-                toastService.show("Greška tijekom spremanja dokumenta!", 3000);
+                toastService.show("Greška tijekom kreiranja zahtjeva!", 3000);
             });
         }
 
         function updateRequest(requestId, data, message, refresh) {
-            Restangular.one('requests', requestId).doPUT(data).then(function() {
+            Restangular.one('requests', requestId).doPUT(data).then(function(request) {
+                if (request.approved) {
+                    var newWarrant = {
+                        user_id: request.user_id,
+                        mark: request.mark,
+                        name: request.name,
+                        surname: request.surname,
+                        workplace: request.workplace,
+                        for_place: request.for_place,
+                        start_timestamp: request.start_timestamp,
+                        end_timestamp: request.end_timestamp,
+                        duration: request.duration,
+                        advance_payment: request.advance_payment,
+                        description: request.description,
+                        transportation: request.transportation,
+                        expenses_responsible: request.expenses_responsible,
+                        approver_signature: request.approver_signature
+                    };
+                    Restangular.all('warrants').post(newWarrant).then(function() {
+                        toastService.show("Putni nalog kreiran i poslan podnositelju zahtjeva!", 3000);
+                        if (refresh) $state.go($state.current, {}, { reload: true });
+                    }, function() {
+                        toastService.show("Greška tijekom kreiranja putnog naloga!", 3000);
+                    });
+                } else {
+                    toastService.show(message);
+                    if (refresh) $state.go($state.current, {}, { reload: true });
+                }
+            }, function() {
+                toastService.show("Greška tijekom ažuriranja zahtjeva!", 3000);
+            });
+        }
+
+        function getWarrants(type) {
+            var path = !type ? 'warrants' : 'warrants/' + type;
+            return Restangular.all(path).getList().then(function(res) {
+                return res;
+            }, function() {
+                toastService.show("Greška tijekom dohvaćanja putnih naloga!", 3000);
+                return [];
+            });
+        }
+
+        function updateWarrant(warrantId, data, message, refresh) {
+            Restangular.one('warrants', warrantId).doPUT(data).then(function() {
                 toastService.show(message);
                 if (refresh) $state.go($state.current, {}, { reload: true });
             }, function() {
-                toastService.show("Greška tijekom ažuriranja zahtjeva!", 3000);
-            })
+                toastService.show("Greška tijekom ažuriranja putnog naloga!", 3000);
+            });
         }
     }
 })();
@@ -420,7 +468,10 @@
         return {
             formatDate: formatDate,
             getDuration: getDuration,
-            formatTransportation: formatTransportation
+            formatTransportation: formatTransportation,
+            getDurationDays: getDurationDays,
+            getNumberOfRoutes: getNumberOfRoutes,
+            getNumberOfOther: getNumberOfOther
         };
 
         function formatDate(timestamp, format) {
@@ -430,7 +481,7 @@
         function getDuration(start, end) {
             var totalMs = new Date(end) - new Date(start);
             var totalHours = totalMs / 1000 / 60 / 60;
-            var days = Math.round(totalHours / 24);
+            var days = Math.floor(totalHours / 24);
             var hours = Math.round(totalHours % 24);
 
             var daysString = days.toString();
@@ -447,10 +498,10 @@
 
             switch (hours) {
                 case 1: case 21:
-                break;
+                    break;
                 case 2: case 3: case 4: case 22: case 23: case 24:
-                hoursSuffix += "a";
-                break;
+                    hoursSuffix += "a";
+                    break;
                 default:
                     hoursSuffix += "i";
                     break;
@@ -468,6 +519,27 @@
             }
 
             return _.capitalize(result.slice(0, -2));
+        }
+
+        function getDurationDays(start, end) {
+            var totalMs = new Date(end) - new Date(start);
+            var totalHours = totalMs / 1000 / 60 / 60;
+
+            return Math.round(totalHours / 24);
+        }
+
+        function getNumberOfRoutes(warrant) {
+            for (var i = 2; i < 7; i++) {
+                if (!warrant['routes_cost_' + i]) return i;
+            }
+            return 7;
+        }
+
+        function getNumberOfOther(warrant) {
+            for (var i = 0; i < 4; i++) {
+                if (!warrant['other_cost_' + i]) return i;
+            }
+            return 4;
         }
     }
 })();
@@ -713,6 +785,16 @@
                 url: '/new-user',
                 templateUrl: 'app/main/new-user/new-user.html',
                 controller: 'NewUserCtrl as newUser'
+            })
+            .state('main.pending-warrants', {
+                url: '/pending-warrants',
+                templateUrl: 'app/main/pending-warrants/pending-warrants.html',
+                controller: 'PendingWarrantsCtrl as pendingWarrants',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('user/pending');
+                    }
+                }
             });
     }
 })();
@@ -769,6 +851,12 @@
                 label: 'Novi korisnik',
                 icon: 'details',
                 type: [4]
+            },
+            {
+                name: 'main.pending-warrants',
+                label: 'Tekući putni nalozi',
+                icon: 'library_add',
+                type: [0]
             }
         ];
 
@@ -933,6 +1021,143 @@
 
     angular
         .module('main')
+        .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
+
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService) {
+        var vm = this;
+
+        vm.warrants = warrants;
+        vm.current = 0;
+        vm.numOfWages = 0;
+        vm.wagesTotal = 0;
+        vm.numOfRoutes = 2;
+        vm.routesTotal = 0;
+        vm.numOfOther = 0;
+        vm.otherTotal = 0;
+        vm.allTotal = 0;
+
+        vm.formatDate = helperService.formatDate;
+        vm.selectWarrant = selectWarrant;
+        vm.updateWagesTotal = updateWagesTotal;
+        vm.addRoute = addRoute;
+        vm.removeRoute = removeRoute;
+        vm.updateRoutesTotal = updateRoutesTotal;
+        vm.addOther = addOther;
+        vm.removeOther = removeOther;
+        vm.updateOtherTotal = updateOtherTotal;
+        vm.save = save;
+
+        init();
+
+        function init() {
+            if (vm.warrants.length > 0) {
+                vm.current = 0;
+                selectWarrant(0);
+            }
+        }
+
+        function selectWarrant(index) {
+            vm.current = index;
+
+            var warrant = warrants[vm.current];
+
+            vm.wage = warrant.wage;
+            vm.numOfWages = helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp);
+            vm.wagesTotal = warrant.wages_total;
+
+            vm.numOfRoutes = helperService.getNumberOfRoutes(warrant);
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                vm['routesFrom' + i] = warrant['routes_from_' + i];
+                vm['routesTo' + i] = warrant['routes_to_' + i];
+                vm['routesTransportation' + i] = warrant['routes_transportation_' + i];
+                vm['routesCost' + i] = warrant['routes_cost_' + i];
+            }
+            vm.routesTotal = warrant.routes_total;
+
+            vm.numOfOther = helperService.getNumberOfOther(warrant);
+            for (var i = 0; i < vm.numOfOther; i++) {
+                vm['otherDescription' + i] = warrant['other_description_' + i];
+                vm['otherCost' + i] = warrant['other_cost_' + i];
+            }
+            vm.otherTotal = warrant.other_total;
+
+            vm.allTotal = warrant.all_total;
+            vm.report = warrant.report;
+        }
+
+        function updateWagesTotal() {
+            vm.wagesTotal = vm.wage * vm.numOfWages;
+            updateAllTotal();
+        }
+
+        function addRoute() {
+            vm.numOfRoutes++;
+        }
+
+        function removeRoute() {
+            vm.numOfRoutes--;
+        }
+
+        function updateRoutesTotal() {
+            vm.routesTotal = 0;
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                if (vm['routesCost' + i]) vm.routesTotal += vm['routesCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function addOther() {
+            vm.numOfOther++;
+        }
+
+        function removeOther() {
+            vm.numOfOther--;
+        }
+
+        function updateOtherTotal() {
+            vm.otherTotal = 0;
+            for (var i = 0; i < vm.numOfOther; i++) {
+                if (vm['otherCost' + i]) vm.otherTotal += vm['otherCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function updateAllTotal() {
+            vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
+        }
+
+        function save() {
+            var warrantId = warrants[vm.current].id;
+            var data = {
+                wage: vm.wage,
+                wages_total: vm.wagesTotal,
+                routes_total: vm.routesTotal,
+                other_total: vm.otherTotal,
+                all_total: vm.allTotal,
+                report: vm.report
+            };
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                data['routes_from_' + i] = vm['routesFrom' + i];
+                data['routes_to_' + i] = vm['routesTo' + i];
+                data['routes_transportation_' + i] = vm['routesTransportation' + i];
+                data['routes_cost_' + i] = vm['routesCost' + i];
+            }
+            for (var i = 0; i < vm.numOfOther; i++) {
+                data['other_description_' + i] = vm['otherDescription' + i];
+                data['other_cost_' + i] = vm['otherCost' + i];
+            }
+
+            apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
 
     DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
@@ -1028,8 +1253,8 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService', '$state'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService, $state) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
         var vm = this;
 
         vm.hide = hide;
@@ -1074,35 +1299,6 @@
             };
 
             apiService.createRequest(newRequest);
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
-
-    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
-    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = {
-                mark: vm.mark,
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
             hide();
         }
     }
@@ -1171,6 +1367,35 @@
 
     angular
         .module('main')
+        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
+
+    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = {
+                mark: vm.mark,
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('SignatureDialogCtrl', SignatureDialogCtrl);
 
     SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'requestId', 'type', 'helperService', 'apiService'];
@@ -1215,7 +1440,7 @@
                         approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
                         approver_signature: signaturePad.toDataURL()
                     };
-                    apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
+                    apiService.updateRequest(requestId, data, null, true);
                     break;
                 default:
                     break;

@@ -10,7 +10,10 @@
         return {
             formatDate: formatDate,
             getDuration: getDuration,
-            formatTransportation: formatTransportation
+            formatTransportation: formatTransportation,
+            getDurationDays: getDurationDays,
+            getNumberOfRoutes: getNumberOfRoutes,
+            getNumberOfOther: getNumberOfOther
         };
 
         function formatDate(timestamp, format) {
@@ -20,7 +23,7 @@
         function getDuration(start, end) {
             var totalMs = new Date(end) - new Date(start);
             var totalHours = totalMs / 1000 / 60 / 60;
-            var days = Math.round(totalHours / 24);
+            var days = Math.floor(totalHours / 24);
             var hours = Math.round(totalHours % 24);
 
             var daysString = days.toString();
@@ -37,10 +40,10 @@
 
             switch (hours) {
                 case 1: case 21:
-                break;
+                    break;
                 case 2: case 3: case 4: case 22: case 23: case 24:
-                hoursSuffix += "a";
-                break;
+                    hoursSuffix += "a";
+                    break;
                 default:
                     hoursSuffix += "i";
                     break;
@@ -58,6 +61,27 @@
             }
 
             return _.capitalize(result.slice(0, -2));
+        }
+
+        function getDurationDays(start, end) {
+            var totalMs = new Date(end) - new Date(start);
+            var totalHours = totalMs / 1000 / 60 / 60;
+
+            return Math.round(totalHours / 24);
+        }
+
+        function getNumberOfRoutes(warrant) {
+            for (var i = 2; i < 7; i++) {
+                if (!warrant['routes_cost_' + i]) return i;
+            }
+            return 7;
+        }
+
+        function getNumberOfOther(warrant) {
+            for (var i = 0; i < 4; i++) {
+                if (!warrant['other_cost_' + i]) return i;
+            }
+            return 4;
         }
     }
 })();

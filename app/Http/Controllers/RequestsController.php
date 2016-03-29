@@ -27,7 +27,7 @@ class RequestsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getRequestsNonvalidated() {
+    public function getNonvalidatedRequests() {
         $requests = Request::whereNull('quality_check')->get()->toArray();
         return response()->json($requests);
     }
@@ -37,7 +37,7 @@ class RequestsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getRequestsApprovable() {
+    public function getApprovableRequests() {
         $requests = Request::where('quality_check', true)->whereNull('approved')->get()->toArray();
         return response()->json($requests);
     }
@@ -56,10 +56,14 @@ class RequestsController extends Controller
      *
      * @param $requestId
      * @param HttpRequest $httpRequest
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function updateRequest($requestId, HttpRequest $httpRequest) {
         $request = Request::findOrFail($requestId);
         $request->update($httpRequest->all());
+
+        return response()->json(Request::findOrFail($requestId));
     }
 
     /**

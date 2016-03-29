@@ -17,7 +17,7 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function authenticate(HttpRequest $httpRequest) {
-        $credentials = $httpRequest->only('email', 'password');
+        $credentials = $httpRequest->only(['email', 'password']);
 
         try {
             if (!$token = JWTAuth::attempt($credentials)) {

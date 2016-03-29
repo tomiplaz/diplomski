@@ -25,11 +25,20 @@ class User extends Authenticatable
     }
 
     /**
-     * User can create many requests.
+     * User can have many requests.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function requests() {
         return $this->hasMany('App\Request');
+    }
+
+    /**
+     * User can have many warrants.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function warrants() {
+        return $this->hasMany('App\Warrant');
     }
 }

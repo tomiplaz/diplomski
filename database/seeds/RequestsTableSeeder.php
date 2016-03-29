@@ -14,7 +14,7 @@ class RequestsTableSeeder extends Seeder
     public function run()
     {
         Request::create([
-            'user_id' => '1',
+            'user_id' => '2',
             'type' => 'n',
             'document_date' => date('Y-m-d'),
             'name' => "Tomislav",
@@ -35,7 +35,7 @@ class RequestsTableSeeder extends Seeder
         ]);
 
         Request::create([
-            'user_id' => '2',
+            'user_id' => '3',
             'type' => 'z',
             'document_date' => date('Y-m-d'),
             'name' => "Tamara",

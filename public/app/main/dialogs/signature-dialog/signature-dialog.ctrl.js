@@ -47,7 +47,7 @@
                         approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
                         approver_signature: signaturePad.toDataURL()
                     };
-                    apiService.updateRequest(requestId, data, "Zahtjev uspješno odobren!", true);
+                    apiService.updateRequest(requestId, data, null, true);
                     break;
                 default:
                     break;
