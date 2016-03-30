@@ -5,8 +5,8 @@
         .module('app')
         .factory('apiService', apiService);
 
-    apiService.$inject = ['Restangular', '$state', 'toastService'];
-    function apiService(Restangular, $state, toastService) {
+    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService'];
+    function apiService(Restangular, $state, toastService, helperService) {
         return {
             getUser: getUser,
             createUser: createUser,
@@ -60,6 +60,8 @@
                     var newWarrant = {
                         user_id: request.user_id,
                         mark: request.mark,
+                        type: request.type,
+                        document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
                         name: request.name,
                         surname: request.surname,
                         workplace: request.workplace,

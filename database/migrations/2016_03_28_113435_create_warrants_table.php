@@ -18,6 +18,8 @@ class CreateWarrantsTable extends Migration
             $table->integer('user_id')->unsigned();
 
             $table->char('mark', 10)->unique();
+            $table->char('type', 1);
+            $table->date('document_date');
 
             $table->string('name', 30);
             $table->string('surname', 30);

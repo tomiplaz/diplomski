@@ -89,8 +89,8 @@
         .module('app')
         .factory('apiService', apiService);
 
-    apiService.$inject = ['Restangular', '$state', 'toastService'];
-    function apiService(Restangular, $state, toastService) {
+    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService'];
+    function apiService(Restangular, $state, toastService, helperService) {
         return {
             getUser: getUser,
             createUser: createUser,
@@ -144,6 +144,8 @@
                     var newWarrant = {
                         user_id: request.user_id,
                         mark: request.mark,
+                        type: request.type,
+                        document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
                         name: request.name,
                         surname: request.surname,
                         workplace: request.workplace,
@@ -310,7 +312,7 @@
             return {
                 pageSize: 'A4',
                 pageMargins: 60,
-                content: getContent(data),
+                content: !data.report ? getRequestContent(data) : getWarrantContent(data),
                 styles: {
                     header: {
                         fontSize: 16,
@@ -353,12 +355,22 @@
                     },
                     right: {
                         alignment: 'right'
+                    },
+                    inlineRegular: {
+                        fontSize: 11
+                    },
+                    inlineInput: {
+                        fontSize: 13,
+                        bold: true
+                    },
+                    bold: {
+                        bold: true
                     }
                 }
             }
         }
 
-        function getContent(data) {
+        function getRequestContent(data) {
             var topContent = [
                 { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
                 { text: "Elektrotehnički fakultet", style: 'header' },
@@ -442,6 +454,72 @@
             ];
 
             return topContent.concat(data.type == 'n' ? centerContentN : centerContentZorS, bottomContent);
+        }
+
+        function getWarrantContent(data) {
+            return [
+                { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
+                { text: "Elektrotehnički fakultet", style: 'header' },
+                { text: "U Osijeku, " + data.documentDate, style: 'documentDate' },
+                { text: "Putni nalog".toUpperCase(), style: ['center', 'titleMiddle'] },
+                { text: "Broj: " + data.mark, style: ['center', 'titleBottom'] },
+                {
+                    text: [
+                        { text: "Određujem da ", style: 'inlineRegular' },
+                        { text: data.name + " " + data.surname, style: 'inlineInput' },
+                        { text: " na radnom mjestu ", style: 'inlineRegular' },
+                        { text: data.workplace, style: 'inlineInput' },
+                        { text: " službeno otputuje ", style: 'inlineRegular' },
+                        { text: data.startDate, style: 'inlineInput' },
+                        { text: " u ", style: 'inlineRegular' },
+                        { text: data.forPlace, style: 'inlineInput' },
+                        { text: ".", style: 'inlineRegular' }
+                    ]
+                },
+                { text: "Svrha putovanja (" + getTypeFull(data.type) + "):", style: ['inlineRegular', 'topMargin20'] },
+                { text: data.description, style: ['inlineInput', 'bold'] },
+                {
+                    text: [
+                        { text: "Putovanje može trajati ", style: 'inlineRegular' },
+                        { text: data.durationDays.toString(), style: 'inlineInput' },
+                        { text: " dana.", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                {
+                    text: [
+                        { text: "Odobravam upotrebu prijevoznih sredstava: ", style: 'inlineRegular' },
+                        { text: data.transportation.toLowerCase(), style: 'inlineInput' },
+                        { text: ".", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                {
+                    text: [
+                        { text: "Troškovi putovanja terete ", style: 'inlineRegular' },
+                        { text: data.expensesResponsible, style: 'inlineInput' },
+                        { text: ".", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                {
+                    text: [
+                        { text: "Odobravam isplatu predujma u iznosu od ", style: 'inlineRegular' },
+                        { text: data.advancePayment.toString(), style: 'inlineInput' },
+                        { text: " kn.", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                { text: "Nakon povratka u roku od tri dana treba izvršiti obračun ovog putovanja i podnijeti pismeno izvješće.", style: ['inlineRegular', 'topMargin20'] },
+                { text: "Odobrava:", style: ['inlineRegular', 'topMargin40', 'right'] },
+                {
+                    columns: [
+                        { text: "", width: '*' },
+                        { image: data.approverSignature, width: 125, height: 35 }
+                    ]
+                },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['inlineRegular', 'right'] }
+            ];
         }
 
         function getTypeFull(type) {
@@ -1023,8 +1101,8 @@
         .module('main')
         .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
 
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService) {
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog) {
         var vm = this;
 
         vm.warrants = warrants;
@@ -1047,6 +1125,7 @@
         vm.removeOther = removeOther;
         vm.updateOtherTotal = updateOtherTotal;
         vm.save = save;
+        vm.showDocumentDialog = showDocumentDialog;
 
         init();
 
@@ -1076,7 +1155,7 @@
             vm.routesTotal = warrant.routes_total;
 
             vm.numOfOther = helperService.getNumberOfOther(warrant);
-            for (var i = 0; i < vm.numOfOther; i++) {
+            for (i = 0; i < vm.numOfOther; i++) {
                 vm['otherDescription' + i] = warrant['other_description_' + i];
                 vm['otherCost' + i] = warrant['other_cost_' + i];
             }
@@ -1143,12 +1222,52 @@
                 data['routes_transportation_' + i] = vm['routesTransportation' + i];
                 data['routes_cost_' + i] = vm['routesCost' + i];
             }
-            for (var i = 0; i < vm.numOfOther; i++) {
+            for (i = 0; i < vm.numOfOther; i++) {
                 data['other_description_' + i] = vm['otherDescription' + i];
                 data['other_cost_' + i] = vm['otherCost' + i];
             }
 
             apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+        }
+
+        function showDocumentDialog($event) {
+            var warrant = warrants[vm.current];
+            var data = {
+                warrantId: warrant.id,
+                mark: warrant.mark,
+                type: warrant.type,
+                documentDate: warrant.document_date,
+                name: warrant.name,
+                surname: warrant.surname,
+                workplace: warrant.workplace,
+                startDate: helperService.formatDate(warrant.start_timestamp, 'dd.MM.yyyy.'),
+                forPlace: warrant.for_place,
+                description: warrant.description,
+                durationDays: helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp),
+                transportation: warrant.transportation,
+                expensesResponsible: warrant.expenses_responsible,
+                advancePayment: warrant.advance_payment,
+                approverSignature: warrant.approver_signature,
+                wage: vm.wage,
+                wagesTotal: vm.wagesTotal,
+                routesTotal: vm.routesTotal,
+                otherTotal: vm.otherTotal,
+                allTotal: vm.allTotal,
+                report: vm.report
+            };
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                data['routesFrom' + i] = vm['routesFrom' + i];
+                data['routesTo' + i] = vm['routesTo' + i];
+                data['routesTransportation' + i] = vm['routesTransportation' + i];
+                data['routesCost' + i] = vm['routesCost' + i];
+            }
+            for (i = 0; i < vm.numOfOther; i++) {
+                data['otherDescription' + i] = vm['otherDescription' + i];
+                data['otherCost' + i] = vm['otherCost' + i];
+            }
+
+            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
+            $mdDialog.show(documentDialogObject);
         }
     }
 })();
@@ -1276,29 +1395,64 @@
         }
 
         function send() {
-            var newRequest = {
-                user_id: data.userId,
-                type: data.type,
-                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
-                name: data.name,
-                surname: data.surname,
-                workplace: data.workplace,
-                for_place: data.forPlace,
-                for_faculty: data.type != 'n' ? null : data.forFaculty,
-                for_subject: data.type != 'n' ? null : data.forSubject,
-                project_leader: data.type == 'n' ? null : data.projectLeader,
-                start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
-                duration: data.duration,
-                advance_payment: data.advancePayment,
-                description: data.description,
-                transportation: data.transportation,
-                expenses_responsible: data.expensesResponsible,
-                expenses_explanation: data.expensesExplanation,
-                applicant_signature: data.applicantSignature
-            };
+            if (!data.report) {
+                var newRequest = {
+                    user_id: data.userId,
+                    type: data.type,
+                    document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
+                    name: data.name,
+                    surname: data.surname,
+                    workplace: data.workplace,
+                    for_place: data.forPlace,
+                    for_faculty: data.type != 'n' ? null : data.forFaculty,
+                    for_subject: data.type != 'n' ? null : data.forSubject,
+                    project_leader: data.type == 'n' ? null : data.projectLeader,
+                    start_timestamp: helperService.formatDate(data.startTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                    end_timestamp: helperService.formatDate(data.endTimestampRaw, 'yyyy-MM-dd HH:mm:ss'),
+                    duration: data.duration,
+                    advance_payment: data.advancePayment,
+                    description: data.description,
+                    transportation: data.transportation,
+                    expenses_responsible: data.expensesResponsible,
+                    expenses_explanation: data.expensesExplanation,
+                    applicant_signature: data.applicantSignature
+                };
+                apiService.createRequest(newRequest);
+            } else {
+                var newWarrant = {
+                };
+                apiService.updateWarrant(data.warrantId, newWarrant, "Putni zahtjev poslan!", true);
+            }
 
-            apiService.createRequest(newRequest);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
+
+    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = {
+                mark: vm.mark,
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
             hide();
         }
     }
@@ -1359,35 +1513,6 @@
                 default:
                     return null;
             }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
-
-    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
-    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = {
-                mark: vm.mark,
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
-            hide();
         }
     }
 })();

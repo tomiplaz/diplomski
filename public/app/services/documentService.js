@@ -14,7 +14,7 @@
             return {
                 pageSize: 'A4',
                 pageMargins: 60,
-                content: getContent(data),
+                content: !data.report ? getRequestContent(data) : getWarrantContent(data),
                 styles: {
                     header: {
                         fontSize: 16,
@@ -57,12 +57,22 @@
                     },
                     right: {
                         alignment: 'right'
+                    },
+                    inlineRegular: {
+                        fontSize: 11
+                    },
+                    inlineInput: {
+                        fontSize: 13,
+                        bold: true
+                    },
+                    bold: {
+                        bold: true
                     }
                 }
             }
         }
 
-        function getContent(data) {
+        function getRequestContent(data) {
             var topContent = [
                 { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
                 { text: "Elektrotehnički fakultet", style: 'header' },
@@ -146,6 +156,72 @@
             ];
 
             return topContent.concat(data.type == 'n' ? centerContentN : centerContentZorS, bottomContent);
+        }
+
+        function getWarrantContent(data) {
+            return [
+                { text: "Sveučilište J. J. Strossmayera u Osijeku", style: 'header' },
+                { text: "Elektrotehnički fakultet", style: 'header' },
+                { text: "U Osijeku, " + data.documentDate, style: 'documentDate' },
+                { text: "Putni nalog".toUpperCase(), style: ['center', 'titleMiddle'] },
+                { text: "Broj: " + data.mark, style: ['center', 'titleBottom'] },
+                {
+                    text: [
+                        { text: "Određujem da ", style: 'inlineRegular' },
+                        { text: data.name + " " + data.surname, style: 'inlineInput' },
+                        { text: " na radnom mjestu ", style: 'inlineRegular' },
+                        { text: data.workplace, style: 'inlineInput' },
+                        { text: " službeno otputuje ", style: 'inlineRegular' },
+                        { text: data.startDate, style: 'inlineInput' },
+                        { text: " u ", style: 'inlineRegular' },
+                        { text: data.forPlace, style: 'inlineInput' },
+                        { text: ".", style: 'inlineRegular' }
+                    ]
+                },
+                { text: "Svrha putovanja (" + getTypeFull(data.type) + "):", style: ['inlineRegular', 'topMargin20'] },
+                { text: data.description, style: ['inlineInput', 'bold'] },
+                {
+                    text: [
+                        { text: "Putovanje može trajati ", style: 'inlineRegular' },
+                        { text: data.durationDays.toString(), style: 'inlineInput' },
+                        { text: " dana.", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                {
+                    text: [
+                        { text: "Odobravam upotrebu prijevoznih sredstava: ", style: 'inlineRegular' },
+                        { text: data.transportation.toLowerCase(), style: 'inlineInput' },
+                        { text: ".", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                {
+                    text: [
+                        { text: "Troškovi putovanja terete ", style: 'inlineRegular' },
+                        { text: data.expensesResponsible, style: 'inlineInput' },
+                        { text: ".", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                {
+                    text: [
+                        { text: "Odobravam isplatu predujma u iznosu od ", style: 'inlineRegular' },
+                        { text: data.advancePayment.toString(), style: 'inlineInput' },
+                        { text: " kn.", style: 'inlineRegular' }
+                    ],
+                    style: 'topMargin20'
+                },
+                { text: "Nakon povratka u roku od tri dana treba izvršiti obračun ovog putovanja i podnijeti pismeno izvješće.", style: ['inlineRegular', 'topMargin20'] },
+                { text: "Odobrava:", style: ['inlineRegular', 'topMargin40', 'right'] },
+                {
+                    columns: [
+                        { text: "", width: '*' },
+                        { image: data.approverSignature, width: 125, height: 35 }
+                    ]
+                },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['inlineRegular', 'right'] }
+            ];
         }
 
         function getTypeFull(type) {

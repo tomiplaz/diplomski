@@ -5,8 +5,8 @@
         .module('main')
         .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
 
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService) {
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog) {
         var vm = this;
 
         vm.warrants = warrants;
@@ -29,6 +29,7 @@
         vm.removeOther = removeOther;
         vm.updateOtherTotal = updateOtherTotal;
         vm.save = save;
+        vm.showDocumentDialog = showDocumentDialog;
 
         init();
 
@@ -58,7 +59,7 @@
             vm.routesTotal = warrant.routes_total;
 
             vm.numOfOther = helperService.getNumberOfOther(warrant);
-            for (var i = 0; i < vm.numOfOther; i++) {
+            for (i = 0; i < vm.numOfOther; i++) {
                 vm['otherDescription' + i] = warrant['other_description_' + i];
                 vm['otherCost' + i] = warrant['other_cost_' + i];
             }
@@ -125,12 +126,52 @@
                 data['routes_transportation_' + i] = vm['routesTransportation' + i];
                 data['routes_cost_' + i] = vm['routesCost' + i];
             }
-            for (var i = 0; i < vm.numOfOther; i++) {
+            for (i = 0; i < vm.numOfOther; i++) {
                 data['other_description_' + i] = vm['otherDescription' + i];
                 data['other_cost_' + i] = vm['otherCost' + i];
             }
 
             apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+        }
+
+        function showDocumentDialog($event) {
+            var warrant = warrants[vm.current];
+            var data = {
+                warrantId: warrant.id,
+                mark: warrant.mark,
+                type: warrant.type,
+                documentDate: warrant.document_date,
+                name: warrant.name,
+                surname: warrant.surname,
+                workplace: warrant.workplace,
+                startDate: helperService.formatDate(warrant.start_timestamp, 'dd.MM.yyyy.'),
+                forPlace: warrant.for_place,
+                description: warrant.description,
+                durationDays: helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp),
+                transportation: warrant.transportation,
+                expensesResponsible: warrant.expenses_responsible,
+                advancePayment: warrant.advance_payment,
+                approverSignature: warrant.approver_signature,
+                wage: vm.wage,
+                wagesTotal: vm.wagesTotal,
+                routesTotal: vm.routesTotal,
+                otherTotal: vm.otherTotal,
+                allTotal: vm.allTotal,
+                report: vm.report
+            };
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                data['routesFrom' + i] = vm['routesFrom' + i];
+                data['routesTo' + i] = vm['routesTo' + i];
+                data['routesTransportation' + i] = vm['routesTransportation' + i];
+                data['routesCost' + i] = vm['routesCost' + i];
+            }
+            for (i = 0; i < vm.numOfOther; i++) {
+                data['otherDescription' + i] = vm['otherDescription' + i];
+                data['otherCost' + i] = vm['otherCost' + i];
+            }
+
+            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
+            $mdDialog.show(documentDialogObject);
         }
     }
 })();
