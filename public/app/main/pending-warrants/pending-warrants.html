@@ -63,7 +63,7 @@
             <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3, 4, 5, 6]" ng-if="pendingWarrants.numOfRoutes > n">
                 <md-input-container>
                     <label>Od</label>
-                    <input type="text" name="routesFrom + n" ng-model="pendingWarrants['routesFrom' + n]" required ng-maxlength="50">
+                    <input type="text" name="{{ routesFrom + n }}" ng-model="pendingWarrants['routesFrom' + n]" required ng-maxlength="50">
                     <div ng-messages="pendingWarrantsForm['routesFrom' + n].$error">
                         <div ng-message="required">Potrebno!</div>
                         <div ng-message="maxlength">Predugačko!</div>
@@ -72,7 +72,7 @@
 
                 <md-input-container>
                     <label>Do</label>
-                    <input type="text" name="routesTo + n" ng-model="pendingWarrants['routesTo' + n]" required ng-maxlength="50">
+                    <input type="text" name="{{ routesTo + n }}" ng-model="pendingWarrants['routesTo' + n]" required ng-maxlength="50">
                     <div ng-messages="pendingWarrantsForm['routesTo' + n].$error">
                         <div ng-message="required">Potrebno!</div>
                         <div ng-message="maxlength">Predugačko!</div>
@@ -82,7 +82,7 @@
                 <div class="md-input-container-height">
                     <md-input-container class="select-input">
                         <label>Prijevozno sredstvo</label>
-                        <md-select name="routesTransportation + n" ng-model="pendingWarrants['routesTransportation' + n]" required>
+                        <md-select name="{{ routesTransportation + n }}" ng-model="pendingWarrants['routesTransportation' + n]" required>
                             <md-option value="autobus">autobus</md-option>
                             <md-option value="automobil">automobil</md-option>
                             <md-option value="vlak">vlak</md-option>
@@ -97,7 +97,7 @@
 
                 <md-input-container class="small-width">
                     <label>Iznos (kn)</label>
-                    <input type="number" name="routesCost + n" ng-model="pendingWarrants['routesCost' + n]" required step="any" min="0" max="50000"
+                    <input type="number" name="{{ routesCost + n }}" ng-model="pendingWarrants['routesCost' + n]" required step="any" min="0" max="50000"
                             ng-change="pendingWarrants.updateRoutesTotal()">
                     <div ng-messages="pendingWarrantsForm['routesCost' + n].$error">
                         <div ng-message="required">Potrebno!</div>
@@ -130,7 +130,7 @@
             <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3]" ng-if="pendingWarrants.numOfOther > n" class="full-width">
                 <md-input-container flex>
                     <label>Opis troška</label>
-                    <input type="text" name="otherDescription + n" ng-model="pendingWarrants['otherDescription' + n]" required ng-maxlength="100">
+                    <input type="text" name="{{ otherDescription + n }}" ng-model="pendingWarrants['otherDescription' + n]" required ng-maxlength="100">
                     <div ng-messages="pendingWarrantsForm['otherDescription' + n].$error">
                         <div ng-message="required">Potrebno!</div>
                         <div ng-message="maxlength">Predugačko!</div>
@@ -139,7 +139,7 @@
 
                 <md-input-container class="small-width">
                     <label>Iznos (kn)</label>
-                    <input type="number" name="otherCost + n" ng-model="pendingWarrants['otherCost' + n]" required step="any" min="0" max="50000"
+                    <input type="number" name="{{ otherCost + n }}" ng-model="pendingWarrants['otherCost' + n]" required step="any" min="0" max="50000"
                             ng-change="pendingWarrants.updateOtherTotal()">
                     <div ng-messages="pendingWarrantsForm['otherCost' + n].$error">
                         <div ng-message="required">Potrebno!</div>
@@ -170,7 +170,32 @@
                 </md-input-container>
             </div>
 
-            <h2>Prilozi</h2>
+
+
+            <div layout="row" layout-align="center center">
+                <h2>Prilozi</h2>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.addAttachment()" aria-label="Dodaj prilog"
+                           ng-disabled="pendingWarrants.numOfAttachments == 10">
+                    <md-tooltip md-direction="bottom">Dodaj prilog</md-tooltip>
+                    <md-icon md-svg-src="add_circle"></md-icon>
+                </md-button>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.removeAttachment()" aria-label="Ukloni prilog"
+                           ng-disabled="pendingWarrants.numOfOther == 0">
+                    <md-tooltip md-direction="bottom">Ukloni prilog</md-tooltip>
+                    <md-icon md-svg-src="remove_circle"></md-icon>
+                </md-button>
+            </div>
+
+            <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
+                 ng-if="pendingWarrants.numOfAttachments > n" class="full-width">
+                <input type="file" accept="application/pdf, image/png, image/jpeg, image/jpg" required id="{{'attachment' + n}}"
+                       name="{{attachment + n}}" class="ng-hide" aria-label="Prilog" on-file-change="pendingWarrants.handleInputFileChange">
+                <label for="{{'attachment' + n}}" class="md-button md-raised">Odaberi datoteku</label>
+                <div ng-if="!pendingWarrants['attachment' + n]">Datoteka nije odabrana</div>
+                <div ng-if="pendingWarrants['attachment' + n]">{{ pendingWarrants['attachment' + n] | fileName }}</div>
+            </div>
 
         </form>
 

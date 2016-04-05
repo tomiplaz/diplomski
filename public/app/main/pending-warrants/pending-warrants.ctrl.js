@@ -5,8 +5,8 @@
         .module('main')
         .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
 
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog) {
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService', '$scope'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService, $scope) {
         var vm = this;
 
         vm.warrants = warrants;
@@ -16,6 +16,7 @@
         vm.numOfRoutes = 2;
         vm.routesTotal = 0;
         vm.numOfOther = 0;
+        vm.numOfAttachments = 0;
         vm.otherTotal = 0;
         vm.allTotal = 0;
 
@@ -27,7 +28,10 @@
         vm.updateRoutesTotal = updateRoutesTotal;
         vm.addOther = addOther;
         vm.removeOther = removeOther;
+        vm.addAttachment = addAttachment;
+        vm.removeAttachment = removeAttachment;
         vm.updateOtherTotal = updateOtherTotal;
+        vm.handleInputFileChange = handleInputFileChange;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -79,7 +83,11 @@
         }
 
         function removeRoute() {
-            vm.numOfRoutes--;
+            var i = --vm.numOfRoutes;
+            vm['routesFrom' + i] = null;
+            vm['routesTo' + i] = null;
+            vm['routesTransportation' + i] = null;
+            vm['routesCost' + i] = null;
         }
 
         function updateRoutesTotal() {
@@ -95,7 +103,18 @@
         }
 
         function removeOther() {
-            vm.numOfOther--;
+            var i = --vm.numOfOther;
+            vm['otherDescription' + i] = null;
+            vm['otherCost' + i] = null;
+        }
+
+        function addAttachment() {
+            vm.numOfAttachments++;
+        }
+
+        function removeAttachment() {
+            var i = --vm.numOfAttachments;
+            vm['attachment' + i] = null;
         }
 
         function updateOtherTotal() {
@@ -108,6 +127,15 @@
 
         function updateAllTotal() {
             vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
+        }
+
+        function handleInputFileChange(elementId, filePath) {
+            if (helperService.isFileExtensionValid(filePath)) {
+                vm[elementId] = filePath;
+                $scope.$apply();
+            } else {
+                toastService.show("Nedozvoljen tip datoteke!");
+            }
         }
 
         function save() {

@@ -714,7 +714,8 @@
             formatTransportation: formatTransportation,
             getDurationDays: getDurationDays,
             getNumberOfRoutes: getNumberOfRoutes,
-            getNumberOfOther: getNumberOfOther
+            getNumberOfOther: getNumberOfOther,
+            isFileExtensionValid: isFileExtensionValid
         };
 
         function formatDate(timestamp, format) {
@@ -784,6 +785,12 @@
             }
             return 4;
         }
+
+        function isFileExtensionValid(fileName) {
+            var split = fileName.split('.');
+            var extension = split[split.length - 1];
+            return _.includes(['pdf', 'png', 'jpeg', 'jpg'], extension);
+        }
     }
 })();
 (function() {
@@ -808,6 +815,40 @@
                     .capsule(true)
                     .hideDelay(duration == undefined ? 2000 : duration)
             );
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .directive('onFileChange', onFileChange);
+
+    function onFileChange() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                element.bind('change', function() {
+                    var elementId = element[0].id;
+                    var filePath = element[0].value;
+                    var func = scope.$eval(attrs.onFileChange);
+                    element.bind('change', func(elementId, filePath));
+                });
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('app')
+        .filter('fileName', fileName);
+
+    function fileName() {
+        return function(filePath) {
+            return filePath.replace(/^.*[\\\/]/, '');
         }
     }
 })();
@@ -1124,43 +1165,6 @@
 
     angular
         .module('main')
-        .controller('NewUserCtrl', NewUserCtrl);
-
-    NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
-    function NewUserCtrl($scope, $state, apiService) {
-        if ($scope['main'].user.type != 4) return $state.go('main.home');
-
-        var vm = this;
-
-        vm.clear = clear;
-        vm.createUser = createUser;
-
-        function clear() {
-            vm.type = null;
-            vm.name = null;
-            vm.surname = null;
-            vm.email = null;
-            vm.password = null;
-        }
-
-        function createUser() {
-            var data = {
-                type: vm.type,
-                name: vm.name,
-                surname: vm.surname,
-                email: vm.email,
-                password: vm.password
-            };
-
-            apiService.createUser(data);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
 
     NewRequestCtrl.$inject = ['$scope', '$state', 'dialogService', '$mdDialog', 'helperService'];
@@ -1264,10 +1268,47 @@
 
     angular
         .module('main')
+        .controller('NewUserCtrl', NewUserCtrl);
+
+    NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
+    function NewUserCtrl($scope, $state, apiService) {
+        if ($scope['main'].user.type != 4) return $state.go('main.home');
+
+        var vm = this;
+
+        vm.clear = clear;
+        vm.createUser = createUser;
+
+        function clear() {
+            vm.type = null;
+            vm.name = null;
+            vm.surname = null;
+            vm.email = null;
+            vm.password = null;
+        }
+
+        function createUser() {
+            var data = {
+                type: vm.type,
+                name: vm.name,
+                surname: vm.surname,
+                email: vm.email,
+                password: vm.password
+            };
+
+            apiService.createUser(data);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
 
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog) {
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService', '$scope'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService, $scope) {
         var vm = this;
 
         vm.warrants = warrants;
@@ -1277,6 +1318,7 @@
         vm.numOfRoutes = 2;
         vm.routesTotal = 0;
         vm.numOfOther = 0;
+        vm.numOfAttachments = 0;
         vm.otherTotal = 0;
         vm.allTotal = 0;
 
@@ -1288,7 +1330,10 @@
         vm.updateRoutesTotal = updateRoutesTotal;
         vm.addOther = addOther;
         vm.removeOther = removeOther;
+        vm.addAttachment = addAttachment;
+        vm.removeAttachment = removeAttachment;
         vm.updateOtherTotal = updateOtherTotal;
+        vm.handleInputFileChange = handleInputFileChange;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -1340,7 +1385,11 @@
         }
 
         function removeRoute() {
-            vm.numOfRoutes--;
+            var i = --vm.numOfRoutes;
+            vm['routesFrom' + i] = null;
+            vm['routesTo' + i] = null;
+            vm['routesTransportation' + i] = null;
+            vm['routesCost' + i] = null;
         }
 
         function updateRoutesTotal() {
@@ -1356,7 +1405,18 @@
         }
 
         function removeOther() {
-            vm.numOfOther--;
+            var i = --vm.numOfOther;
+            vm['otherDescription' + i] = null;
+            vm['otherCost' + i] = null;
+        }
+
+        function addAttachment() {
+            vm.numOfAttachments++;
+        }
+
+        function removeAttachment() {
+            var i = --vm.numOfAttachments;
+            vm['attachment' + i] = null;
         }
 
         function updateOtherTotal() {
@@ -1369,6 +1429,15 @@
 
         function updateAllTotal() {
             vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
+        }
+
+        function handleInputFileChange(elementId, filePath) {
+            if (helperService.isFileExtensionValid(filePath)) {
+                vm[elementId] = filePath;
+                $scope.$apply();
+            } else {
+                toastService.show("Nedozvoljen tip datoteke!");
+            }
         }
 
         function save() {

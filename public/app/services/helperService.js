@@ -13,7 +13,8 @@
             formatTransportation: formatTransportation,
             getDurationDays: getDurationDays,
             getNumberOfRoutes: getNumberOfRoutes,
-            getNumberOfOther: getNumberOfOther
+            getNumberOfOther: getNumberOfOther,
+            isFileExtensionValid: isFileExtensionValid
         };
 
         function formatDate(timestamp, format) {
@@ -82,6 +83,12 @@
                 if (!warrant['other_cost_' + i]) return i;
             }
             return 4;
+        }
+
+        function isFileExtensionValid(fileName) {
+            var split = fileName.split('.');
+            var extension = split[split.length - 1];
+            return _.includes(['pdf', 'png', 'jpeg', 'jpg'], extension);
         }
     }
 })();
