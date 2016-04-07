@@ -170,32 +170,26 @@
                 </md-input-container>
             </div>
 
-
-
             <div layout="row" layout-align="center center">
                 <h2>Prilozi</h2>
 
-                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.addAttachment()" aria-label="Dodaj prilog"
-                           ng-disabled="pendingWarrants.numOfAttachments == 10">
-                    <md-tooltip md-direction="bottom">Dodaj prilog</md-tooltip>
-                    <md-icon md-svg-src="add_circle"></md-icon>
+                <md-button class="md-fab md-mini md-raised" ngf-select ng-model="pendingWarrants.files" ngf-multiple="true" aria-label="Odaberi datoteke">
+                    <md-tooltip md-direction="bottom">Odaberi datoteke</md-tooltip>
+                    <md-icon md-svg-src="attachment"></md-icon>
                 </md-button>
 
-                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.removeAttachment()" aria-label="Ukloni prilog"
-                           ng-disabled="pendingWarrants.numOfOther == 0">
-                    <md-tooltip md-direction="bottom">Ukloni prilog</md-tooltip>
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.removeFiles()" aria-label="Ukloni datoteke">
+                    <md-tooltip md-direction="bottom">Ukloni datoteke</md-tooltip>
                     <md-icon md-svg-src="remove_circle"></md-icon>
                 </md-button>
             </div>
 
-            <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
-                 ng-if="pendingWarrants.numOfAttachments > n" class="full-width">
-                <input type="file" accept="application/pdf, image/png, image/jpeg, image/jpg" required id="{{'attachment' + n}}"
-                       name="{{attachment + n}}" class="ng-hide" aria-label="Prilog" on-file-change="pendingWarrants.handleInputFileChange">
-                <label for="{{'attachment' + n}}" class="md-button md-raised">Odaberi datoteku</label>
-                <div ng-if="!pendingWarrants['attachment' + n]">Datoteka nije odabrana</div>
-                <div ng-if="pendingWarrants['attachment' + n]">{{ pendingWarrants['attachment' + n] | fileName }}</div>
-            </div>
+            <p ng-if="pendingWarrants.files" ng-repeat="file in pendingWarrants.files">
+                {{ file.name }} ({{ file.type }}, {{ file.size }} kB)
+            </p>
+            <p ng-if="!pendingWarrants.files">
+                Nema odabranih datoteka
+            </p>
 
         </form>
 

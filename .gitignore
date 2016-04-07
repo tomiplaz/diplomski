@@ -1,6 +1,6 @@
 /vendor
 /node_modules
-/public/storage
+/storage/attachments
 /public/node_modules
 /public/bower_components
 /.sass-cache

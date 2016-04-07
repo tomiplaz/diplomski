@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request as HttpRequest;
+use Log;
+use File;
 
 use App\Http\Requests;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -84,5 +86,37 @@ class WarrantsController extends Controller
     public function updateWarrant($warrantId, HttpRequest $httpRequest) {
         $warrant = Warrant::findOrFail($warrantId);
         $warrant->update($httpRequest->all());
+    }
+
+    /**
+     * Saves files attached to a warrant. Deletes all of the previously stored files for that warrant.
+     *
+     * @param $warrantId
+     * @param HttpRequest $httpRequest
+     */
+    public function postAttachments($warrantId, HttpRequest $httpRequest) {
+        $files = $httpRequest->files->all();
+        $path = storage_path('attachments/' . $warrantId);
+
+        File::deleteDirectory($path);
+        File::makeDirectory($path);
+
+        foreach ($files as $file) {
+            $name = $file->getClientOriginalName();
+            $file->move($path, $name);
+        }
+    }
+
+    /**
+     * Get all files attached to a warrant.
+     *
+     * @param $warrantId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAttachments($warrantId) {
+        $path = storage_path('attachments/' . $warrantId);
+        $files = File::allFiles($path);
+        Log::info(print_r($files, true));
+        return $files;
     }
 }

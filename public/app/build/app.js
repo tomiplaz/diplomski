@@ -3,7 +3,7 @@
 
     angular
         .module('app', [
-            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'scDateTime', 'login', 'main'
+            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'scDateTime', 'login', 'main', 'ngFileUpload'
         ]);
 })();
 
@@ -72,7 +72,8 @@
             .icon('thumbs_up_down', 'app/icons/ic_thumbs_up_down_black_24px.svg')
             .icon('details', 'app/icons/ic_details_black_24px.svg')
             .icon('add_circle', 'app/icons/ic_add_circle_black_24px.svg')
-            .icon('remove_circle', 'app/icons/ic_remove_circle_black_24px.svg');
+            .icon('remove_circle', 'app/icons/ic_remove_circle_black_24px.svg')
+            .icon('attachment', 'app/icons/ic_attachment_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';
@@ -89,8 +90,8 @@
         .module('app')
         .factory('apiService', apiService);
 
-    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService'];
-    function apiService(Restangular, $state, toastService, helperService) {
+    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService', 'Upload', '$http'];
+    function apiService(Restangular, $state, toastService, helperService, Upload, $http) {
         return {
             getUser: getUser,
             createUser: createUser,
@@ -98,7 +99,9 @@
             createRequest: createRequest,
             updateRequest: updateRequest,
             getWarrants: getWarrants,
-            updateWarrant: updateWarrant
+            updateWarrant: updateWarrant,
+            postAttachments: postAttachments,
+            getAttachments: getAttachments
         };
 
         function getUser() {
@@ -190,6 +193,24 @@
                 if (refresh) $state.go($state.current, {}, { reload: true });
             }, function() {
                 toastService.show("Greška tijekom ažuriranja putnog naloga!", 3000);
+            });
+        }
+
+        function postAttachments(warrantId, files) {
+            Upload.upload({
+                url: 'api/v1/warrants/' + warrantId + '/attachments',
+                data: files
+            }).then(null, function() {
+                toastService.show("Greška tijekom spremanja datoteka!", 3000);
+            });
+        }
+
+        function getAttachments(warrantId) {
+            return $http.get('api/v1/warrants/' + warrantId + '/attachments').then(function(res) {
+                return res;
+            }, function() {
+                toastService.show("Greška tijekom dohvaćanja priloga!", 3000);
+                return [];
             });
         }
     }
@@ -715,7 +736,8 @@
             getDurationDays: getDurationDays,
             getNumberOfRoutes: getNumberOfRoutes,
             getNumberOfOther: getNumberOfOther,
-            isFileExtensionValid: isFileExtensionValid
+            areFilesExtensionsValid: areFilesExtensionsValid,
+            isFilesArrayUnderMaxSize: isFilesArrayUnderMaxSize
         };
 
         function formatDate(timestamp, format) {
@@ -791,6 +813,23 @@
             var extension = split[split.length - 1];
             return _.includes(['pdf', 'png', 'jpeg', 'jpg'], extension);
         }
+
+        function areFilesExtensionsValid(files) {
+            for (var i = 0; i < files.length; i++) {
+                if (!isFileExtensionValid(files[i].name)) return false;
+            }
+            return true;
+        }
+
+        function isFilesArrayUnderMaxSize(files) {
+            var size = 0;
+
+            for (var i = 0; i < files.length; i++) {
+                size += files[i].size;
+            }
+
+            return size < 10000;
+        }
     }
 })();
 (function() {
@@ -815,27 +854,6 @@
                     .capsule(true)
                     .hideDelay(duration == undefined ? 2000 : duration)
             );
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app')
-        .directive('onFileChange', onFileChange);
-
-    function onFileChange() {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                element.bind('change', function() {
-                    var elementId = element[0].id;
-                    var filePath = element[0].value;
-                    var func = scope.$eval(attrs.onFileChange);
-                    element.bind('change', func(elementId, filePath));
-                });
-            }
         }
     }
 })();
@@ -1307,8 +1325,8 @@
         .module('main')
         .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
 
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService', '$scope'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService, $scope) {
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService) {
         var vm = this;
 
         vm.warrants = warrants;
@@ -1321,6 +1339,7 @@
         vm.numOfAttachments = 0;
         vm.otherTotal = 0;
         vm.allTotal = 0;
+        vm.files = null;
 
         vm.formatDate = helperService.formatDate;
         vm.selectWarrant = selectWarrant;
@@ -1330,10 +1349,8 @@
         vm.updateRoutesTotal = updateRoutesTotal;
         vm.addOther = addOther;
         vm.removeOther = removeOther;
-        vm.addAttachment = addAttachment;
-        vm.removeAttachment = removeAttachment;
         vm.updateOtherTotal = updateOtherTotal;
-        vm.handleInputFileChange = handleInputFileChange;
+        vm.removeFiles = removeFiles;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -1373,6 +1390,11 @@
 
             vm.allTotal = warrant.all_total;
             vm.report = warrant.report;
+
+            apiService.getAttachments(warrant.id).then(function(files) {
+                console.log(files);
+                if (files.length > 0) vm.files = files;
+            });
         }
 
         function updateWagesTotal() {
@@ -1410,15 +1432,6 @@
             vm['otherCost' + i] = null;
         }
 
-        function addAttachment() {
-            vm.numOfAttachments++;
-        }
-
-        function removeAttachment() {
-            var i = --vm.numOfAttachments;
-            vm['attachment' + i] = null;
-        }
-
         function updateOtherTotal() {
             vm.otherTotal = 0;
             for (var i = 0; i < vm.numOfOther; i++) {
@@ -1431,13 +1444,8 @@
             vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
         }
 
-        function handleInputFileChange(elementId, filePath) {
-            if (helperService.isFileExtensionValid(filePath)) {
-                vm[elementId] = filePath;
-                $scope.$apply();
-            } else {
-                toastService.show("Nedozvoljen tip datoteke!");
-            }
+        function removeFiles() {
+            vm.files = null;
         }
 
         function save() {
@@ -1461,7 +1469,21 @@
                 data['other_cost_' + i] = vm['otherCost' + i];
             }
 
-            apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+            if (vm.files) {
+                if (!helperService.areFilesExtensionsValid(vm.files)) {
+                    vm.files = null;
+                    toastService.show("Odabrani neprihvatljivi tipovi datoteka! Prihvatljivi tipovi datoteka su .pdf, .png, .jpg, .jpeg.", 6000);
+                } else if (!helperService.isFilesArrayUnderMaxSize(vm.files)) {
+                    vm.files = null;
+                    toastService.show("Odabrane datoteke zauzimaju previše memorije! Skup odabranih datoteka mora zauzimati manje od 10 MB.", 6000);
+                } else {
+                    apiService.postAttachments(warrantId, vm.files);
+                    apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+
+                }
+            } else {
+                apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+            }
         }
 
         function showDocumentDialog($event) {

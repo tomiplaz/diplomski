@@ -5,8 +5,8 @@
         .module('main')
         .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
 
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService', '$scope'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService, $scope) {
+    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService'];
+    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService) {
         var vm = this;
 
         vm.warrants = warrants;
@@ -19,6 +19,7 @@
         vm.numOfAttachments = 0;
         vm.otherTotal = 0;
         vm.allTotal = 0;
+        vm.files = null;
 
         vm.formatDate = helperService.formatDate;
         vm.selectWarrant = selectWarrant;
@@ -28,10 +29,8 @@
         vm.updateRoutesTotal = updateRoutesTotal;
         vm.addOther = addOther;
         vm.removeOther = removeOther;
-        vm.addAttachment = addAttachment;
-        vm.removeAttachment = removeAttachment;
         vm.updateOtherTotal = updateOtherTotal;
-        vm.handleInputFileChange = handleInputFileChange;
+        vm.removeFiles = removeFiles;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -71,6 +70,11 @@
 
             vm.allTotal = warrant.all_total;
             vm.report = warrant.report;
+
+            apiService.getAttachments(warrant.id).then(function(files) {
+                console.log(files);
+                if (files.length > 0) vm.files = files;
+            });
         }
 
         function updateWagesTotal() {
@@ -108,15 +112,6 @@
             vm['otherCost' + i] = null;
         }
 
-        function addAttachment() {
-            vm.numOfAttachments++;
-        }
-
-        function removeAttachment() {
-            var i = --vm.numOfAttachments;
-            vm['attachment' + i] = null;
-        }
-
         function updateOtherTotal() {
             vm.otherTotal = 0;
             for (var i = 0; i < vm.numOfOther; i++) {
@@ -129,13 +124,8 @@
             vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
         }
 
-        function handleInputFileChange(elementId, filePath) {
-            if (helperService.isFileExtensionValid(filePath)) {
-                vm[elementId] = filePath;
-                $scope.$apply();
-            } else {
-                toastService.show("Nedozvoljen tip datoteke!");
-            }
+        function removeFiles() {
+            vm.files = null;
         }
 
         function save() {
@@ -159,7 +149,21 @@
                 data['other_cost_' + i] = vm['otherCost' + i];
             }
 
-            apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+            if (vm.files) {
+                if (!helperService.areFilesExtensionsValid(vm.files)) {
+                    vm.files = null;
+                    toastService.show("Odabrani neprihvatljivi tipovi datoteka! Prihvatljivi tipovi datoteka su .pdf, .png, .jpg, .jpeg.", 6000);
+                } else if (!helperService.isFilesArrayUnderMaxSize(vm.files)) {
+                    vm.files = null;
+                    toastService.show("Odabrane datoteke zauzimaju previše memorije! Skup odabranih datoteka mora zauzimati manje od 10 MB.", 6000);
+                } else {
+                    apiService.postAttachments(warrantId, vm.files);
+                    apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+
+                }
+            } else {
+                apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+            }
         }
 
         function showDocumentDialog($event) {

@@ -24,6 +24,7 @@
         <script src="node_modules/satellizer/satellizer.min.js"></script>
         <script src="node_modules/restangular/node_modules/lodash/lodash.min.js"></script>
         <script src="node_modules/restangular/dist/restangular.min.js"></script>
+        <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
         <script src="node_modules/sc-date-time/sc-date-time.js"></script>
         <script src="bower_components/pdfmake/build/pdfmake.js"></script>
         <script src="bower_components/pdfmake/build/vfs_fonts.js"></script>

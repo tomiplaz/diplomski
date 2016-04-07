@@ -14,7 +14,8 @@
             getDurationDays: getDurationDays,
             getNumberOfRoutes: getNumberOfRoutes,
             getNumberOfOther: getNumberOfOther,
-            isFileExtensionValid: isFileExtensionValid
+            areFilesExtensionsValid: areFilesExtensionsValid,
+            isFilesArrayUnderMaxSize: isFilesArrayUnderMaxSize
         };
 
         function formatDate(timestamp, format) {
@@ -89,6 +90,23 @@
             var split = fileName.split('.');
             var extension = split[split.length - 1];
             return _.includes(['pdf', 'png', 'jpeg', 'jpg'], extension);
+        }
+
+        function areFilesExtensionsValid(files) {
+            for (var i = 0; i < files.length; i++) {
+                if (!isFileExtensionValid(files[i].name)) return false;
+            }
+            return true;
+        }
+
+        function isFilesArrayUnderMaxSize(files) {
+            var size = 0;
+
+            for (var i = 0; i < files.length; i++) {
+                size += files[i].size;
+            }
+
+            return size < 10000;
         }
     }
 })();

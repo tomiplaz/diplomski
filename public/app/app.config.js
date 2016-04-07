@@ -63,7 +63,8 @@
             .icon('thumbs_up_down', 'app/icons/ic_thumbs_up_down_black_24px.svg')
             .icon('details', 'app/icons/ic_details_black_24px.svg')
             .icon('add_circle', 'app/icons/ic_add_circle_black_24px.svg')
-            .icon('remove_circle', 'app/icons/ic_remove_circle_black_24px.svg');
+            .icon('remove_circle', 'app/icons/ic_remove_circle_black_24px.svg')
+            .icon('attachment', 'app/icons/ic_attachment_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';

@@ -5,8 +5,8 @@
         .module('app')
         .factory('apiService', apiService);
 
-    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService'];
-    function apiService(Restangular, $state, toastService, helperService) {
+    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService', 'Upload', '$http'];
+    function apiService(Restangular, $state, toastService, helperService, Upload, $http) {
         return {
             getUser: getUser,
             createUser: createUser,
@@ -14,7 +14,9 @@
             createRequest: createRequest,
             updateRequest: updateRequest,
             getWarrants: getWarrants,
-            updateWarrant: updateWarrant
+            updateWarrant: updateWarrant,
+            postAttachments: postAttachments,
+            getAttachments: getAttachments
         };
 
         function getUser() {
@@ -106,6 +108,24 @@
                 if (refresh) $state.go($state.current, {}, { reload: true });
             }, function() {
                 toastService.show("Greška tijekom ažuriranja putnog naloga!", 3000);
+            });
+        }
+
+        function postAttachments(warrantId, files) {
+            Upload.upload({
+                url: 'api/v1/warrants/' + warrantId + '/attachments',
+                data: files
+            }).then(null, function() {
+                toastService.show("Greška tijekom spremanja datoteka!", 3000);
+            });
+        }
+
+        function getAttachments(warrantId) {
+            return $http.get('api/v1/warrants/' + warrantId + '/attachments').then(function(res) {
+                return res;
+            }, function() {
+                toastService.show("Greška tijekom dohvaćanja priloga!", 3000);
+                return [];
             });
         }
     }
