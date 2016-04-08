@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\Request as HttpRequest;
-use Log;
 use File;
 
 use App\Http\Requests;
@@ -31,9 +29,9 @@ class WarrantsController extends Controller
      * @param HttpRequest $httpRequest
      */
     public function createWarrant(HttpRequest $httpRequest) {
-        // make directory; use cleanDirectory
-
-        Warrant::create($httpRequest->all());
+        $warrant = Warrant::create($httpRequest->all());
+        $path = storage_path('attachments/' . $warrant->id);
+        File::makeDirectory($path);
     }
 
     /**
@@ -101,8 +99,7 @@ class WarrantsController extends Controller
         $files = $httpRequest->files->all();
         $path = storage_path('attachments/' . $warrantId);
 
-        File::deleteDirectory($path);
-        File::makeDirectory($path);
+        File::cleanDirectory($path);
 
         foreach ($files as $file) {
             $name = $file->getClientOriginalName();
@@ -117,9 +114,7 @@ class WarrantsController extends Controller
      */
     public function deleteAttachments($warrantId) {
         $path = storage_path('attachments/' . $warrantId);
-
-        File::deleteDirectory($path);
-        File::makeDirectory($path);
+        File::cleanDirectory($path);
     }
 
     /**
