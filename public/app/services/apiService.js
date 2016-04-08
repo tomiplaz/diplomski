@@ -16,6 +16,7 @@
             getWarrants: getWarrants,
             updateWarrant: updateWarrant,
             postAttachments: postAttachments,
+            deleteAttachments: deleteAttachments,
             getAttachments: getAttachments
         };
 
@@ -120,12 +121,18 @@
             });
         }
 
+        function deleteAttachments(warrantId) {
+            Restangular.one('warrants', warrantId).all('attachments').remove().then(null, function() {
+                toastService.show("Greška tijekom ažuriranja datoteka!", 3000);
+            });
+        }
+
         function getAttachments(warrantId) {
-            return $http.get('api/v1/warrants/' + warrantId + '/attachments').then(function(res) {
+            return Restangular.one('warrants', warrantId).all('attachments').getList().then(function(res) {
                 return res;
             }, function() {
                 toastService.show("Greška tijekom dohvaćanja priloga!", 3000);
-                return [];
+                return null;
             });
         }
     }

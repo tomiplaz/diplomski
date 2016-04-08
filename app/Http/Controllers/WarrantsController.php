@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\Request as HttpRequest;
 use Log;
 use File;
@@ -30,6 +31,8 @@ class WarrantsController extends Controller
      * @param HttpRequest $httpRequest
      */
     public function createWarrant(HttpRequest $httpRequest) {
+        // make directory; use cleanDirectory
+
         Warrant::create($httpRequest->all());
     }
 
@@ -89,7 +92,7 @@ class WarrantsController extends Controller
     }
 
     /**
-     * Saves files attached to a warrant. Deletes all of the previously stored files for that warrant.
+     * Save files attached to a warrant. Deletes all of the previously stored files for that warrant.
      *
      * @param $warrantId
      * @param HttpRequest $httpRequest
@@ -108,6 +111,18 @@ class WarrantsController extends Controller
     }
 
     /**
+     * Remove files attached to a warrant.
+     *
+     * @param $warrantId
+     */
+    public function deleteAttachments($warrantId) {
+        $path = storage_path('attachments/' . $warrantId);
+
+        File::deleteDirectory($path);
+        File::makeDirectory($path);
+    }
+
+    /**
      * Get all files attached to a warrant.
      *
      * @param $warrantId
@@ -115,8 +130,16 @@ class WarrantsController extends Controller
      */
     public function getAttachments($warrantId) {
         $path = storage_path('attachments/' . $warrantId);
-        $files = File::allFiles($path);
-        Log::info(print_r($files, true));
+        $filePaths = File::files($path);
+        $files = array();
+
+        foreach ($filePaths as $filePath) {
+            $files[] = array(
+                'name' => File::name($filePath),
+                'size' => File::size($filePath)
+            );
+        }
+
         return $files;
     }
 }

@@ -19,7 +19,7 @@
         vm.numOfAttachments = 0;
         vm.otherTotal = 0;
         vm.allTotal = 0;
-        vm.files = null;
+        vm.attachments = null;
 
         vm.formatDate = helperService.formatDate;
         vm.selectWarrant = selectWarrant;
@@ -30,7 +30,8 @@
         vm.addOther = addOther;
         vm.removeOther = removeOther;
         vm.updateOtherTotal = updateOtherTotal;
-        vm.removeFiles = removeFiles;
+        vm.removeAttachments = removeAttachments;
+        vm.downloadAttachment = downloadAttachment;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -71,9 +72,8 @@
             vm.allTotal = warrant.all_total;
             vm.report = warrant.report;
 
-            apiService.getAttachments(warrant.id).then(function(files) {
-                console.log(files);
-                if (files.length > 0) vm.files = files;
+            apiService.getAttachments(warrant.id).then(function(attachments) {
+                vm.attachments = attachments.length == 0 ? null : attachments;
             });
         }
 
@@ -124,8 +124,12 @@
             vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
         }
 
-        function removeFiles() {
-            vm.files = null;
+        function removeAttachments() {
+            vm.attachments = null;
+        }
+
+        function downloadAttachment() {
+
         }
 
         function save() {
@@ -149,19 +153,20 @@
                 data['other_cost_' + i] = vm['otherCost' + i];
             }
 
-            if (vm.files) {
-                if (!helperService.areFilesExtensionsValid(vm.files)) {
-                    vm.files = null;
+            if (vm.attachments) {
+                if (!helperService.areFilesExtensionsValid(vm.attachments)) {
+                    vm.attachments = null;
                     toastService.show("Odabrani neprihvatljivi tipovi datoteka! Prihvatljivi tipovi datoteka su .pdf, .png, .jpg, .jpeg.", 6000);
-                } else if (!helperService.isFilesArrayUnderMaxSize(vm.files)) {
-                    vm.files = null;
+                } else if (!helperService.isFilesArrayUnderMaxSize(vm.attachments)) {
+                    vm.attachments = null;
                     toastService.show("Odabrane datoteke zauzimaju previše memorije! Skup odabranih datoteka mora zauzimati manje od 10 MB.", 6000);
                 } else {
-                    apiService.postAttachments(warrantId, vm.files);
+                    apiService.postAttachments(warrantId, vm.attachments);
                     apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
 
                 }
             } else {
+                apiService.deleteAttachments(warrantId);
                 apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
             }
         }

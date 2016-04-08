@@ -42,6 +42,7 @@ Route::group(['prefix' => 'api/v1'], function() {
             Route::get('user/sent', 'WarrantsController@getUserSentWarrants');
             Route::put('{warrantId}', 'WarrantsController@updateWarrant');
             Route::post('{warrantId}/attachments', 'WarrantsController@postAttachments');
+            Route::delete('{warrantId}/attachments', 'WarrantsController@deleteAttachments');
             Route::get('{warrantId}/attachments', 'WarrantsController@getAttachments');
         });
 

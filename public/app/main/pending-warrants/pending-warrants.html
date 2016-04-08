@@ -173,21 +173,25 @@
             <div layout="row" layout-align="center center">
                 <h2>Prilozi</h2>
 
-                <md-button class="md-fab md-mini md-raised" ngf-select ng-model="pendingWarrants.files" ngf-multiple="true" aria-label="Odaberi datoteke">
-                    <md-tooltip md-direction="bottom">Odaberi datoteke</md-tooltip>
+                <md-button class="md-fab md-mini md-raised" ngf-select ng-model="pendingWarrants.attachments" ngf-multiple="true" aria-label="Odaberi priloge">
+                    <md-tooltip md-direction="bottom">Odaberi priloge</md-tooltip>
                     <md-icon md-svg-src="attachment"></md-icon>
                 </md-button>
 
-                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.removeFiles()" aria-label="Ukloni datoteke">
-                    <md-tooltip md-direction="bottom">Ukloni datoteke</md-tooltip>
+                <md-button class="md-fab md-mini md-raised" ng-if="pendingWarrants.attachments" ng-click="pendingWarrants.removeAttachments()" aria-label="Ukloni priloge">
+                    <md-tooltip md-direction="bottom">Ukloni priloge</md-tooltip>
                     <md-icon md-svg-src="remove_circle"></md-icon>
                 </md-button>
             </div>
 
-            <p ng-if="pendingWarrants.files" ng-repeat="file in pendingWarrants.files">
-                {{ file.name }} ({{ file.type }}, {{ file.size }} kB)
-            </p>
-            <p ng-if="!pendingWarrants.files">
+            <div layout="row" layout-align="start center" ng-if="pendingWarrants.attachments" ng-repeat="attachment in pendingWarrants.attachments">
+                <p>{{ attachment.name }} ({{ attachment.size }} kB)</p>
+                <!--<md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.downloadAttachment(attachment.name)" aria-label="Dohvati datoteku">
+                    <md-tooltip md-direction="bottom">Dohvati datoteku</md-tooltip>
+                    <md-icon md-svg-src="file_download"></md-icon>
+                </md-button>-->
+            </div>
+            <p ng-if="!pendingWarrants.attachments">
                 Nema odabranih datoteka
             </p>
 
