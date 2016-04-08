@@ -1198,7 +1198,7 @@
 
         function getWarrantDataObject(warrant) {
             return apiService.getAttachments(warrant.id).then(function(attachments) {
-                return {
+                var data = {
                     warrantId: warrant.id,
                     mark: warrant.mark,
                     type: warrant.type,
@@ -1224,6 +1224,18 @@
                     report: warrant.report,
                     attachments: attachments
                 };
+                for (var i = 0; i < helperService.getNumberOfRoutes(warrant); i++) {
+                    data['routesFrom' + i] = warrant['routes_from_' + i];
+                    data['routesTo' + i] = warrant['routes_to_' + i];
+                    data['routesTransportation' + i] = warrant['routes_transportation_' + i];
+                    data['routesCost' + i] = warrant['routes_cost_' + i];
+                }
+                for (i = 0; i < helperService.getNumberOfOther(warrant); i++) {
+                    data['otherDescription' + i] = warrant['other_description_' + i];
+                    data['otherCost' + i] = warrant['other_cost_' + i];
+                }
+
+                return data;
             });
         }
     }
@@ -2070,63 +2082,6 @@
 
     angular
         .module('requests')
-        .controller('SentCtrl', SentCtrl);
-
-    SentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function SentCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 0) return $state.go('main.home');
-
-        $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
-        $scope['requests'].requests = requests;
-        $scope['requests'].init();
-
-        var vm = this;
-
-        vm.icon = getIcon($scope['requests'].current);
-        vm.class = getClass($scope['requests'].current);
-        vm.showDetails = showDetails;
-
-        $scope.$watch('requests.current', function() {
-            vm.icon = getIcon($scope['requests'].current);
-            vm.class = getClass($scope['requests'].current);
-            vm.classAria = getClassAria();
-        });
-
-        function showDetails($event) {
-            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[$scope['requests'].current]);
-            $mdDialog.show(detailsDialogObject);
-        }
-
-        function getIcon(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
-                return 'thumb_down';
-            } else if ($scope['requests'].requests[i].approved) {
-                return 'thumb_up';
-            } else return 'thumbs_up_down';
-        }
-
-        function getClass(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
-                return 'negative';
-            } else if ($scope['requests'].requests[i].approved) {
-                return 'positive';
-            } else return 'pending';
-        }
-
-        function getClassAria() {
-            if (vm.class == 'negative') {
-                return 'Odbijen';
-            } else if (vm.class == 'positive') {
-                return 'Odobren';
-            } else return 'U tijeku'
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('requests')
         .controller('ValidateCtrl', ValidateCtrl);
 
     ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
@@ -2188,6 +2143,63 @@
                 quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
             };
             apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('SentCtrl', SentCtrl);
+
+    SentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function SentCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.icon = getIcon($scope['requests'].current);
+        vm.class = getClass($scope['requests'].current);
+        vm.showDetails = showDetails;
+
+        $scope.$watch('requests.current', function() {
+            vm.icon = getIcon($scope['requests'].current);
+            vm.class = getClass($scope['requests'].current);
+            vm.classAria = getClassAria();
+        });
+
+        function showDetails($event) {
+            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[$scope['requests'].current]);
+            $mdDialog.show(detailsDialogObject);
+        }
+
+        function getIcon(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'thumb_down';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'thumb_up';
+            } else return 'thumbs_up_down';
+        }
+
+        function getClass(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'negative';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'positive';
+            } else return 'pending';
+        }
+
+        function getClassAria() {
+            if (vm.class == 'negative') {
+                return 'Odbijen';
+            } else if (vm.class == 'positive') {
+                return 'Odobren';
+            } else return 'U tijeku'
         }
     }
 })();

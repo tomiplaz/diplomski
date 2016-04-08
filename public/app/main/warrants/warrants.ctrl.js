@@ -54,7 +54,7 @@
 
         function getWarrantDataObject(warrant) {
             return apiService.getAttachments(warrant.id).then(function(attachments) {
-                return {
+                var data = {
                     warrantId: warrant.id,
                     mark: warrant.mark,
                     type: warrant.type,
@@ -80,6 +80,18 @@
                     report: warrant.report,
                     attachments: attachments
                 };
+                for (var i = 0; i < helperService.getNumberOfRoutes(warrant); i++) {
+                    data['routesFrom' + i] = warrant['routes_from_' + i];
+                    data['routesTo' + i] = warrant['routes_to_' + i];
+                    data['routesTransportation' + i] = warrant['routes_transportation_' + i];
+                    data['routesCost' + i] = warrant['routes_cost_' + i];
+                }
+                for (i = 0; i < helperService.getNumberOfOther(warrant); i++) {
+                    data['otherDescription' + i] = warrant['other_description_' + i];
+                    data['otherCost' + i] = warrant['other_cost_' + i];
+                }
+
+                return data;
             });
         }
     }
