@@ -208,6 +208,7 @@
                 data['otherDescription' + i] = vm['otherDescription' + i];
                 data['otherCost' + i] = vm['otherCost' + i];
             }
+            data.attachments = !vm.attachments ? [] : vm.attachments;
 
             var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
             $mdDialog.show(documentDialogObject);

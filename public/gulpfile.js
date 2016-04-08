@@ -7,6 +7,7 @@ var jsSrc = [
     'app/filters/*.js',
     'app/login/login.module.js', 'app/login/*.js',
     'app/main/requests/requests.module.js', 'app/main/requests/*.js',
+    'app/main/warrants/warrants.module.js', 'app/main/warrants/*.js',
     'app/main/main.module.js', 'app/main/*.js', 'app/main/**/*.js'
 ];
 

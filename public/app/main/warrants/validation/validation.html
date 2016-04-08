@@ -1,0 +1,11 @@
+<md-button class="md-fab md-mini md-raised" ng-click="validation.invalid($event)" aria-label="Neispravan putni nalog">
+    <md-tooltip md-direction="bottom">Neispravan putni nalog</md-tooltip>
+    <md-icon md-svg-src="cancel"></md-icon>
+</md-button>
+
+<p>{{ warrants.current + 1 }}/{{ warrants.warrants.length }}</p>
+
+<md-button class="md-fab md-mini md-raised" ng-click="validation.valid()" aria-label="Ispravan putni nalog">
+    <md-tooltip md-direction="bottom">Ispravan putni nalog</md-tooltip>
+    <md-icon md-svg-src="check_circle"></md-icon>
+</md-button>

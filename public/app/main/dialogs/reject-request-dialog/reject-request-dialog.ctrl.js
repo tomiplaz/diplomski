@@ -33,7 +33,7 @@
 
         function confirm() {
             var data = getDataObject();
-            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev uspješno odbijen!", true);
+            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev odbijen!", true);
             hide();
         }
 

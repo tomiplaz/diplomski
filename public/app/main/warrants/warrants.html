@@ -1,0 +1,45 @@
+<div ng-if="warrants.warrants.length != 0" layout="row" layout-align="center start">
+
+    <div layout="column" layout-align="start start" class="warrants-list">
+        <md-list>
+            <md-list-item ng-repeat="warrant in warrants.warrants" class="md-3-line"
+                          ng-click="warrants.select($index)" ng-class="{ 'selected' : $index == warrants.current }">
+                <div class="index">{{ $index + 1 }}</div>
+                <div class="md-list-item-text">
+                    <p>{{ warrant.name + " " + warrant.surname }}</p>
+                    <p>{{ warrant.for_place }}</p>
+                    <p>{{ warrants.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                </div>
+            </md-list-item>
+        </md-list>
+    </div>
+
+    <div layout="column" layout-align="center space-between" flex>
+
+        <div layout="row" layout-align="center center" class="full-width">
+            <md-button class="md-fab md-mini md-raised" ng-click="warrants.previous()" aria-label="Prethodni putni nalog"
+                       ng-disabled="warrants.current == 0">
+                <md-tooltip md-direction="bottom">Prethodni putni nalog</md-tooltip>
+                <md-icon md-svg-src="navigate_before"></md-icon>
+            </md-button>
+
+            <iframe class="warrants-frame" flex></iframe>
+
+            <md-button class="md-fab md-mini md-raised" ng-click="requests.next()" aria-label="Sljedeći putni nalog"
+                       ng-disabled="warrants.current == warrants.warrants.length - 1">
+                <md-tooltip md-direction="bottom">Sljedeći putni nalog</md-tooltip>
+                <md-icon md-svg-src="navigate_next"></md-icon>
+            </md-button>
+        </div>
+
+        <div layout="row" layout-align="space-around center" ui-view></div>
+
+    </div>
+
+</div>
+
+<div ng-if="warrants.warrants.length == 0">
+
+    <p>{{ warrants.emptyInfo }}</p>
+
+</div>

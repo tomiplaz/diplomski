@@ -22,7 +22,7 @@
                 quality_check: true,
                 quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
             };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
             hide();
         }
     }

@@ -56,6 +56,12 @@
                 label: 'Tekući putni nalozi',
                 icon: 'library_add',
                 type: [0]
+            },
+            {
+                name: 'main.warrants.validation',
+                label: 'Putni nalozi',
+                icon: 'library_books',
+                type: [1]
             }
         ];
 

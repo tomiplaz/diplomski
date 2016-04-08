@@ -658,7 +658,13 @@
 
                 // attachments start here
 
-                { text: "Prilozi".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' }
+                { text: "Prilozi".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
+                {
+                    table: {
+                        widths: ['*'],
+                        body: getAttachments(data.attachments)
+                    }
+                }
             ];
         }
 
@@ -725,6 +731,22 @@
             }
 
             return other;
+        }
+
+        function getAttachments(dataAttachments) {
+            if (dataAttachments.length == 0) {
+                return { text: "Nema priloga", style: 'regular' };
+            } else {
+                var attachments = [];
+
+                for (var i = 0; i < dataAttachments.length; i++) {
+                    attachments.push([
+                        { text: dataAttachments[i].name, style: 'inputItalics' }
+                    ]);
+                }
+
+                return attachments;
+            }
         }
     }
 })();
@@ -1059,7 +1081,158 @@
     'use strict';
 
     angular
-        .module('main', ['requests']);
+        .module('warrants', []);
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('warrants')
+        .config(configure);
+
+    function configure($stateProvider) {
+        $stateProvider
+            .state('main.warrants', {
+                abstract: true,
+                url: '/warrants',
+                templateUrl: 'app/main/warrants/warrants.html',
+                controller: 'WarrantsCtrl as warrants'
+            })
+            .state('main.warrants.validation', {
+                url: '/validation',
+                templateUrl: 'app/main/warrants/validation/validation.html',
+                controller: 'ValidationCtrl as validation',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('nonvalidated');
+                    }
+                }
+            })
+            .state('main.warrants.approval', {
+                url: '/approval',
+                templateUrl: 'app/main/warrants/approval/approval.html',
+                controller: 'ApprovalCtrl as approval',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('approvable');
+                    }
+                }
+            })
+            .state('main.warrants.accounting', {
+                url: '/accounting',
+                templateUrl: 'app/main/warrants/accounting/accounting.html',
+                controller: 'AccountingCtrl as accounting',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('nonaccounted');
+                    }
+                }
+            })
+            .state('main.warrants.sent', {
+                url: '/sent',
+                templateUrl: 'app/main/warrants/sent/sent.html',
+                controller: 'SentCtrl as sent',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('user/sent');
+                    }
+                }
+            });
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('warrants')
+        .controller('WarrantsCtrl', WarrantsCtrl);
+
+    WarrantsCtrl.$inject = ['documentService', 'helperService', 'apiService'];
+    function WarrantsCtrl(documentService, helperService, apiService) {
+        var vm = this;
+
+        vm.warrants = null;
+        vm.current = null;
+
+        vm.formatDate = helperService.formatDate;
+        vm.init = init;
+        vm.select = select;
+        vm.previous = previous;
+        vm.next = next;
+
+        function init() {
+            if (vm.warrants.length > 0) {
+                vm.current = 0;
+                setWarrant(0);
+            }
+        }
+
+        function select(index) {
+            vm.current = index;
+            setWarrant(index);
+        }
+
+        function previous() {
+            setWarrant(--vm.current);
+        }
+
+        function next() {
+            setWarrant(++vm.current);
+        }
+
+        function setWarrant(i) {
+            vm.current = i;
+            getWarrantDataObject(vm.warrants[i]).then(function(data) {
+                var doc = documentService.getDocument(data);
+
+                pdfMake
+                    .createPdf(doc)
+                    .getDataUrl(function(url) {
+                        var iframe = angular.element(document.querySelector('iframe'));
+                        iframe.attr('src', url);
+                    });
+            });
+        }
+
+        function getWarrantDataObject(warrant) {
+            return apiService.getAttachments(warrant.id).then(function(attachments) {
+                return {
+                    warrantId: warrant.id,
+                    mark: warrant.mark,
+                    type: warrant.type,
+                    documentDate: helperService.formatDate(warrant.document_date, 'dd.MM.yyyy.'),
+                    name: warrant.name,
+                    surname: warrant.surname,
+                    workplace: warrant.workplace,
+                    startDate: helperService.formatDate(warrant.start_timestamp, 'dd.MM.yyyy.'),
+                    forPlace: warrant.for_place,
+                    description: warrant.description,
+                    startTimestamp: helperService.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
+                    endTimestamp: helperService.formatDate(warrant.end_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
+                    durationDays: helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp),
+                    transportation: warrant.transportation,
+                    expensesResponsible: warrant.expenses_responsible,
+                    advancePayment: warrant.advance_payment,
+                    approverSignature: warrant.approver_signature,
+                    wage: warrant.wage,
+                    wagesTotal: warrant.wages_total,
+                    routesTotal: warrant.routes_total,
+                    otherTotal: warrant.other_total,
+                    allTotal: warrant.all_total,
+                    report: warrant.report,
+                    attachments: attachments
+                };
+            });
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main', ['requests', 'warrants']);
 })();
 
 (function() {
@@ -1167,6 +1340,12 @@
                 label: 'Tekući putni nalozi',
                 icon: 'library_add',
                 type: [0]
+            },
+            {
+                name: 'main.warrants.validation',
+                label: 'Putni nalozi',
+                icon: 'library_books',
+                type: [1]
             }
         ];
 
@@ -1536,6 +1715,7 @@
                 data['otherDescription' + i] = vm['otherDescription' + i];
                 data['otherCost' + i] = vm['otherCost' + i];
             }
+            data.attachments = !vm.attachments ? [] : vm.attachments;
 
             var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
             $mdDialog.show(documentDialogObject);
@@ -1691,6 +1871,7 @@
                 apiService.createRequest(newRequest);
             } else {
                 var newWarrant = {
+                    sent: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
                 };
                 apiService.updateWarrant(data.warrantId, newWarrant, "Putni zahtjev poslan!", true);
             }
@@ -1723,7 +1904,7 @@
                 quality_check: true,
                 quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
             };
-            apiService.updateRequest(requestId, data, "Zahtjev uspješno prosljeđen!", true);
+            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
             hide();
         }
     }
@@ -1763,7 +1944,7 @@
 
         function confirm() {
             var data = getDataObject();
-            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev uspješno odbijen!", true);
+            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev odbijen!", true);
             hide();
         }
 
@@ -1971,6 +2152,42 @@
             var requestId = requests[$scope['requests'].current].id;
             var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
             $mdDialog.show(markRequestDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('warrants')
+        .controller('ValidationCtrl', ValidationCtrl);
+
+    ValidationCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog', 'apiService', 'helperService'];
+    function ValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
+        if ($scope['main'].user.type != 1) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za validaciju.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        function invalid($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            /*var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
+            $mdDialog.show(rejectRequestDialogObject);*/
+        }
+
+        function valid() {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var data = {
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
         }
     }
 })();

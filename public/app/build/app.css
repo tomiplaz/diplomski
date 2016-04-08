@@ -50,7 +50,7 @@ body {
     border: 1px solid #4caf50; }
     body .signature-dialog canvas:active {
       cursor: default; }
-  body .requests-frame {
+  body .requests-frame, body .warrants-frame {
     height: 600px; }
   body .requests-list, body .warrants-list {
     height: 600px; }

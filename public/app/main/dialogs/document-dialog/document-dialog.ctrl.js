@@ -53,6 +53,7 @@
                 apiService.createRequest(newRequest);
             } else {
                 var newWarrant = {
+                    sent: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
                 };
                 apiService.updateWarrant(data.warrantId, newWarrant, "Putni zahtjev poslan!", true);
             }

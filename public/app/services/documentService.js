@@ -331,7 +331,13 @@
 
                 // attachments start here
 
-                { text: "Prilozi".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' }
+                { text: "Prilozi".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
+                {
+                    table: {
+                        widths: ['*'],
+                        body: getAttachments(data.attachments)
+                    }
+                }
             ];
         }
 
@@ -398,6 +404,22 @@
             }
 
             return other;
+        }
+
+        function getAttachments(dataAttachments) {
+            if (dataAttachments.length == 0) {
+                return { text: "Nema priloga", style: 'regular' };
+            } else {
+                var attachments = [];
+
+                for (var i = 0; i < dataAttachments.length; i++) {
+                    attachments.push([
+                        { text: dataAttachments[i].name, style: 'inputItalics' }
+                    ]);
+                }
+
+                return attachments;
+            }
         }
     }
 })();

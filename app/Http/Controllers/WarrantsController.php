@@ -78,6 +78,11 @@ class WarrantsController extends Controller
         return response()->json($warrants);
     }
 
+    public function getNonvalidatedWarrants() {
+        $warrants = Warrant::whereNotNull('sent')->whereNull('quality_check')->get()->toArray();
+        return response()->json($warrants);
+    }
+
     /**
      * Update warrant.
      *
@@ -130,11 +135,11 @@ class WarrantsController extends Controller
 
         foreach ($filePaths as $filePath) {
             $files[] = array(
-                'name' => File::name($filePath),
+                'name' => File::name($filePath) . '.' . File::extension($filePath),
                 'size' => File::size($filePath)
             );
         }
 
-        return $files;
+        return response()->json($files);
     }
 }
