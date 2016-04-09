@@ -3,7 +3,7 @@
 
     angular
         .module('app', [
-            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'scDateTime', 'login', 'main', 'ngFileUpload'
+            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'scDateTime', 'ngFileUpload', 'login', 'main'
         ]);
 })();
 
@@ -91,8 +91,8 @@
         .module('app')
         .factory('apiService', apiService);
 
-    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService', 'Upload', '$http'];
-    function apiService(Restangular, $state, toastService, helperService, Upload, $http) {
+    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService', 'Upload'];
+    function apiService(Restangular, $state, toastService, helperService, Upload) {
         return {
             getUser: getUser,
             createUser: createUser,
@@ -579,8 +579,6 @@
                 },
                 { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regular', 'right'] },
 
-                // bill starts here
-
                 { text: "Putni račun".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
                 {
                     table: {
@@ -651,20 +649,8 @@
                     style: 'right'
                 },
 
-                // report starts here
-
                 { text: "Izvješće".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
-                { text: data.report, style: 'inputItalics' },
-
-                // attachments start here
-
-                { text: "Prilozi".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
-                {
-                    table: {
-                        widths: ['*'],
-                        body: getAttachments(data.attachments)
-                    }
-                }
+                { text: data.report, style: 'inputItalics' }
             ];
         }
 
@@ -731,22 +717,6 @@
             }
 
             return other;
-        }
-
-        function getAttachments(dataAttachments) {
-            if (dataAttachments.length == 0) {
-                return { text: "Nema priloga", style: 'regular' };
-            } else {
-                var attachments = [];
-
-                for (var i = 0; i < dataAttachments.length; i++) {
-                    attachments.push([
-                        { text: dataAttachments[i].name, style: 'inputItalics' }
-                    ]);
-                }
-
-                return attachments;
-            }
         }
     }
 })();
@@ -838,9 +808,13 @@
             return 4;
         }
 
-        function isFileExtensionValid(fileName) {
+        function getFileExtension(fileName) {
             var split = fileName.split('.');
-            var extension = split[split.length - 1];
+            return split[split.length - 1];
+        }
+
+        function isFileExtensionValid(fileName) {
+            var extension = getFileExtension(fileName);
             return _.includes(['pdf', 'png', 'jpeg', 'jpg'], extension);
         }
 
@@ -1155,12 +1129,14 @@
 
         vm.warrants = null;
         vm.current = null;
+        vm.attachments = [];
 
         vm.formatDate = helperService.formatDate;
         vm.init = init;
         vm.select = select;
         vm.previous = previous;
         vm.next = next;
+        vm.downloadAttachment = downloadAttachment;
 
         function init() {
             if (vm.warrants.length > 0) {
@@ -1184,59 +1160,64 @@
 
         function setWarrant(i) {
             vm.current = i;
-            getWarrantDataObject(vm.warrants[i]).then(function(data) {
-                var doc = documentService.getDocument(data);
+            var data = getWarrantDataObject(vm.warrants[i]);
+            var doc = documentService.getDocument(data);
 
-                pdfMake
-                    .createPdf(doc)
-                    .getDataUrl(function(url) {
-                        var iframe = angular.element(document.querySelector('iframe'));
-                        iframe.attr('src', url);
-                    });
+            pdfMake
+                .createPdf(doc)
+                .getDataUrl(function(url) {
+                    var iframe = angular.element(document.querySelector('iframe.warrants-frame'));
+                    iframe.attr('src', url);
+                });
+
+            apiService.getAttachments(data.warrantId).then(function(attachments) {
+                vm.attachments = attachments.length == 0 ? null : attachments;
             });
         }
 
         function getWarrantDataObject(warrant) {
-            return apiService.getAttachments(warrant.id).then(function(attachments) {
-                var data = {
-                    warrantId: warrant.id,
-                    mark: warrant.mark,
-                    type: warrant.type,
-                    documentDate: helperService.formatDate(warrant.document_date, 'dd.MM.yyyy.'),
-                    name: warrant.name,
-                    surname: warrant.surname,
-                    workplace: warrant.workplace,
-                    startDate: helperService.formatDate(warrant.start_timestamp, 'dd.MM.yyyy.'),
-                    forPlace: warrant.for_place,
-                    description: warrant.description,
-                    startTimestamp: helperService.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
-                    endTimestamp: helperService.formatDate(warrant.end_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
-                    durationDays: helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp),
-                    transportation: warrant.transportation,
-                    expensesResponsible: warrant.expenses_responsible,
-                    advancePayment: warrant.advance_payment,
-                    approverSignature: warrant.approver_signature,
-                    wage: warrant.wage,
-                    wagesTotal: warrant.wages_total,
-                    routesTotal: warrant.routes_total,
-                    otherTotal: warrant.other_total,
-                    allTotal: warrant.all_total,
-                    report: warrant.report,
-                    attachments: attachments
-                };
-                for (var i = 0; i < helperService.getNumberOfRoutes(warrant); i++) {
-                    data['routesFrom' + i] = warrant['routes_from_' + i];
-                    data['routesTo' + i] = warrant['routes_to_' + i];
-                    data['routesTransportation' + i] = warrant['routes_transportation_' + i];
-                    data['routesCost' + i] = warrant['routes_cost_' + i];
-                }
-                for (i = 0; i < helperService.getNumberOfOther(warrant); i++) {
-                    data['otherDescription' + i] = warrant['other_description_' + i];
-                    data['otherCost' + i] = warrant['other_cost_' + i];
-                }
+            var data = {
+                warrantId: warrant.id,
+                mark: warrant.mark,
+                type: warrant.type,
+                documentDate: helperService.formatDate(warrant.document_date, 'dd.MM.yyyy.'),
+                name: warrant.name,
+                surname: warrant.surname,
+                workplace: warrant.workplace,
+                startDate: helperService.formatDate(warrant.start_timestamp, 'dd.MM.yyyy.'),
+                forPlace: warrant.for_place,
+                description: warrant.description,
+                startTimestamp: helperService.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
+                endTimestamp: helperService.formatDate(warrant.end_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
+                durationDays: helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp),
+                transportation: warrant.transportation,
+                expensesResponsible: warrant.expenses_responsible,
+                advancePayment: warrant.advance_payment,
+                approverSignature: warrant.approver_signature,
+                wage: warrant.wage,
+                wagesTotal: warrant.wages_total,
+                routesTotal: warrant.routes_total,
+                otherTotal: warrant.other_total,
+                allTotal: warrant.all_total,
+                report: warrant.report
+            };
+            for (var i = 0; i < helperService.getNumberOfRoutes(warrant); i++) {
+                data['routesFrom' + i] = warrant['routes_from_' + i];
+                data['routesTo' + i] = warrant['routes_to_' + i];
+                data['routesTransportation' + i] = warrant['routes_transportation_' + i];
+                data['routesCost' + i] = warrant['routes_cost_' + i];
+            }
+            for (i = 0; i < helperService.getNumberOfOther(warrant); i++) {
+                data['otherDescription' + i] = warrant['other_description_' + i];
+                data['otherCost' + i] = warrant['other_cost_' + i];
+            }
 
-                return data;
-            });
+            return data;
+        }
+
+        function downloadAttachment(name) {
+            var iframe = angular.element(document.querySelector('iframe.attachments-frame'));
+            iframe.attr('src', 'api/v1/warrants/' + vm.warrants[vm.current].id + '/attachments/' + name);
         }
     }
 })();
@@ -1550,7 +1531,6 @@
         vm.removeOther = removeOther;
         vm.updateOtherTotal = updateOtherTotal;
         vm.removeAttachments = removeAttachments;
-        vm.downloadAttachment = downloadAttachment;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -1645,10 +1625,6 @@
 
         function removeAttachments() {
             vm.attachments = null;
-        }
-
-        function downloadAttachment() {
-
         }
 
         function save() {
@@ -2082,6 +2058,63 @@
 
     angular
         .module('requests')
+        .controller('SentCtrl', SentCtrl);
+
+    SentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function SentCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.icon = getIcon($scope['requests'].current);
+        vm.class = getClass($scope['requests'].current);
+        vm.showDetails = showDetails;
+
+        $scope.$watch('requests.current', function() {
+            vm.icon = getIcon($scope['requests'].current);
+            vm.class = getClass($scope['requests'].current);
+            vm.classAria = getClassAria();
+        });
+
+        function showDetails($event) {
+            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[$scope['requests'].current]);
+            $mdDialog.show(detailsDialogObject);
+        }
+
+        function getIcon(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'thumb_down';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'thumb_up';
+            } else return 'thumbs_up_down';
+        }
+
+        function getClass(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'negative';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'positive';
+            } else return 'pending';
+        }
+
+        function getClassAria() {
+            if (vm.class == 'negative') {
+                return 'Odbijen';
+            } else if (vm.class == 'positive') {
+                return 'Odobren';
+            } else return 'U tijeku'
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
         .controller('ValidateCtrl', ValidateCtrl);
 
     ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
@@ -2143,63 +2176,6 @@
                 quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
             };
             apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('requests')
-        .controller('SentCtrl', SentCtrl);
-
-    SentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function SentCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 0) return $state.go('main.home');
-
-        $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
-        $scope['requests'].requests = requests;
-        $scope['requests'].init();
-
-        var vm = this;
-
-        vm.icon = getIcon($scope['requests'].current);
-        vm.class = getClass($scope['requests'].current);
-        vm.showDetails = showDetails;
-
-        $scope.$watch('requests.current', function() {
-            vm.icon = getIcon($scope['requests'].current);
-            vm.class = getClass($scope['requests'].current);
-            vm.classAria = getClassAria();
-        });
-
-        function showDetails($event) {
-            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[$scope['requests'].current]);
-            $mdDialog.show(detailsDialogObject);
-        }
-
-        function getIcon(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
-                return 'thumb_down';
-            } else if ($scope['requests'].requests[i].approved) {
-                return 'thumb_up';
-            } else return 'thumbs_up_down';
-        }
-
-        function getClass(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
-                return 'negative';
-            } else if ($scope['requests'].requests[i].approved) {
-                return 'positive';
-            } else return 'pending';
-        }
-
-        function getClassAria() {
-            if (vm.class == 'negative') {
-                return 'Odbijen';
-            } else if (vm.class == 'positive') {
-                return 'Odobren';
-            } else return 'U tijeku'
         }
     }
 })();

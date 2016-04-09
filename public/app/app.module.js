@@ -3,6 +3,6 @@
 
     angular
         .module('app', [
-            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'scDateTime', 'login', 'main', 'ngFileUpload'
+            'ui.router', 'restangular', 'ngMaterial', 'ngMessages', 'satellizer', 'scDateTime', 'ngFileUpload', 'login', 'main'
         ]);
 })();

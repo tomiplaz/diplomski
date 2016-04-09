@@ -252,8 +252,6 @@
                 },
                 { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regular', 'right'] },
 
-                // bill starts here
-
                 { text: "Putni račun".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
                 {
                     table: {
@@ -324,20 +322,8 @@
                     style: 'right'
                 },
 
-                // report starts here
-
                 { text: "Izvješće".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
-                { text: data.report, style: 'inputItalics' },
-
-                // attachments start here
-
-                { text: "Prilozi".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
-                {
-                    table: {
-                        widths: ['*'],
-                        body: getAttachments(data.attachments)
-                    }
-                }
+                { text: data.report, style: 'inputItalics' }
             ];
         }
 
@@ -404,22 +390,6 @@
             }
 
             return other;
-        }
-
-        function getAttachments(dataAttachments) {
-            if (dataAttachments.length == 0) {
-                return { text: "Nema priloga", style: 'regular' };
-            } else {
-                var attachments = [];
-
-                for (var i = 0; i < dataAttachments.length; i++) {
-                    attachments.push([
-                        { text: dataAttachments[i].name, style: 'inputItalics' }
-                    ]);
-                }
-
-                return attachments;
-            }
         }
     }
 })();

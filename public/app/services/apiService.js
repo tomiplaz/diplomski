@@ -5,8 +5,8 @@
         .module('app')
         .factory('apiService', apiService);
 
-    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService', 'Upload', '$http'];
-    function apiService(Restangular, $state, toastService, helperService, Upload, $http) {
+    apiService.$inject = ['Restangular', '$state', 'toastService', 'helperService', 'Upload'];
+    function apiService(Restangular, $state, toastService, helperService, Upload) {
         return {
             getUser: getUser,
             createUser: createUser,

@@ -78,6 +78,11 @@ class WarrantsController extends Controller
         return response()->json($warrants);
     }
 
+    /**
+     * Get warrants that need to be validated.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getNonvalidatedWarrants() {
         $warrants = Warrant::whereNotNull('sent')->whereNull('quality_check')->get()->toArray();
         return response()->json($warrants);
@@ -141,5 +146,17 @@ class WarrantsController extends Controller
         }
 
         return response()->json($files);
+    }
+
+    /**
+     * Download warrant's attachment.
+     *
+     * @param $warrantId
+     * @param $name
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function downloadAttachment($warrantId, $name) {
+        $path = storage_path('attachments/' . $warrantId . '/' . $name);
+        return response()->download($path);
     }
 }

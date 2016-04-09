@@ -31,7 +31,6 @@
         vm.removeOther = removeOther;
         vm.updateOtherTotal = updateOtherTotal;
         vm.removeAttachments = removeAttachments;
-        vm.downloadAttachment = downloadAttachment;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -126,10 +125,6 @@
 
         function removeAttachments() {
             vm.attachments = null;
-        }
-
-        function downloadAttachment() {
-
         }
 
         function save() {

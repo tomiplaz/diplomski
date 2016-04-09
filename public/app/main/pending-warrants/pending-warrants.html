@@ -186,14 +186,8 @@
 
             <div layout="row" layout-align="start center" ng-if="pendingWarrants.attachments" ng-repeat="attachment in pendingWarrants.attachments">
                 <p>{{ attachment.name }} ({{ attachment.size }} kB)</p>
-                <!--<md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.downloadAttachment(attachment.name)" aria-label="Dohvati datoteku">
-                    <md-tooltip md-direction="bottom">Dohvati datoteku</md-tooltip>
-                    <md-icon md-svg-src="file_download"></md-icon>
-                </md-button>-->
             </div>
-            <p ng-if="!pendingWarrants.attachments">
-                Nema priloga
-            </p>
+            <p ng-if="!pendingWarrants.attachments">Nema priloga</p>
 
         </form>
 

@@ -48,6 +48,8 @@ Route::group(['prefix' => 'api/v1'], function() {
         });
 
     });
+
+    Route::get('warrants/{warrantId}/attachments/{name}', 'WarrantsController@downloadAttachment');
 });
 
 /*

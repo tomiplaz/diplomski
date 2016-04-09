@@ -86,9 +86,13 @@
             return 4;
         }
 
-        function isFileExtensionValid(fileName) {
+        function getFileExtension(fileName) {
             var split = fileName.split('.');
-            var extension = split[split.length - 1];
+            return split[split.length - 1];
+        }
+
+        function isFileExtensionValid(fileName) {
+            var extension = getFileExtension(fileName);
             return _.includes(['pdf', 'png', 'jpeg', 'jpg'], extension);
         }
 
