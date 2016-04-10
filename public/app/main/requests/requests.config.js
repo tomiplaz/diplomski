@@ -13,20 +13,20 @@
                 templateUrl: 'app/main/requests/requests.html',
                 controller: 'RequestsCtrl as requests'
             })
-            .state('main.requests.validate', {
-                url: '/validate',
-                templateUrl: 'app/main/requests/validate/validate.html',
-                controller: 'ValidateCtrl as validate',
+            .state('main.requests.validation', {
+                url: '/validation',
+                templateUrl: 'app/main/requests/validation/validation.html',
+                controller: 'ValidationCtrl as validation',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('nonvalidated');
                     }
                 }
             })
-            .state('main.requests.approve', {
-                url: '/approve',
-                templateUrl: 'app/main/requests/approve/approve.html',
-                controller: 'ApproveCtrl as approve',
+            .state('main.requests.approval', {
+                url: '/approval',
+                templateUrl: 'app/main/requests/approval/approval.html',
+                controller: 'ApprovalCtrl as approval',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('approvable');

@@ -939,20 +939,20 @@
                 templateUrl: 'app/main/requests/requests.html',
                 controller: 'RequestsCtrl as requests'
             })
-            .state('main.requests.validate', {
-                url: '/validate',
-                templateUrl: 'app/main/requests/validate/validate.html',
-                controller: 'ValidateCtrl as validate',
+            .state('main.requests.validation', {
+                url: '/validation',
+                templateUrl: 'app/main/requests/validation/validation.html',
+                controller: 'ValidationCtrl as validation',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('nonvalidated');
                     }
                 }
             })
-            .state('main.requests.approve', {
-                url: '/approve',
-                templateUrl: 'app/main/requests/approve/approve.html',
-                controller: 'ApproveCtrl as approve',
+            .state('main.requests.approval', {
+                url: '/approval',
+                templateUrl: 'app/main/requests/approval/approval.html',
+                controller: 'ApprovalCtrl as approval',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('approvable');
@@ -1303,13 +1303,13 @@
                 type: [0]
             },
             {
-                name: 'main.requests.validate',
+                name: 'main.requests.validation',
                 label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
             },
             {
-                name: 'main.requests.approve',
+                name: 'main.requests.approval',
                 label: 'Odobravanje zahtjeva',
                 icon: 'library_books',
                 type: [2]
@@ -2023,10 +2023,10 @@
 
     angular
         .module('main')
-        .controller('ApproveCtrl', ApproveCtrl);
+        .controller('ApprovalCtrl', ApprovalCtrl);
 
-    ApproveCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function ApproveCtrl($scope, $state, requests, dialogService, $mdDialog) {
+    ApprovalCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function ApprovalCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 2) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema zahtjeva za odobravanje.";
@@ -2113,10 +2113,10 @@
 
     angular
         .module('requests')
-        .controller('ValidateCtrl', ValidateCtrl);
+        .controller('ValidationCtrl', ValidationCtrl);
 
-    ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function ValidateCtrl($scope, $state, requests, dialogService, $mdDialog) {
+    ValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function ValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 1) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema zahtjeva za validaciju.";

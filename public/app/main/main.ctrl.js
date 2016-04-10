@@ -27,13 +27,13 @@
                 type: [0]
             },
             {
-                name: 'main.requests.validate',
+                name: 'main.requests.validation',
                 label: 'Validacija zahtjeva',
                 icon: 'library_books',
                 type: [1]
             },
             {
-                name: 'main.requests.approve',
+                name: 'main.requests.approval',
                 label: 'Odobravanje zahtjeva',
                 icon: 'library_books',
                 type: [2]

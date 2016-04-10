@@ -3,10 +3,10 @@
 
     angular
         .module('requests')
-        .controller('ValidateCtrl', ValidateCtrl);
+        .controller('ValidationCtrl', ValidationCtrl);
 
-    ValidateCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function ValidateCtrl($scope, $state, requests, dialogService, $mdDialog) {
+    ValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function ValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 1) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema zahtjeva za validaciju.";

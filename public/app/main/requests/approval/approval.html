@@ -1,11 +1,11 @@
-<md-button class="md-fab md-mini md-raised" ng-click="approve.disapprove($event)" aria-label="Odbij zahtjev">
+<md-button class="md-fab md-mini md-raised" ng-click="approval.disapprove($event)" aria-label="Odbij zahtjev">
     <md-tooltip md-direction="bottom">Odbij zahtjev</md-tooltip>
     <md-icon md-svg-src="cancel"></md-icon>
 </md-button>
 
 <p>{{ requests.current + 1 }}/{{ requests.requests.length }}</p>
 
-<md-button class="md-fab md-mini md-raised" ng-click="approve.approve($event)" aria-label="Odobrij zahtjev">
+<md-button class="md-fab md-mini md-raised" ng-click="approval.approve($event)" aria-label="Odobrij zahtjev">
     <md-tooltip md-direction="bottom">Odobrij zahtjev</md-tooltip>
     <md-icon md-svg-src="check_circle"></md-icon>
 </md-button>

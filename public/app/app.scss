@@ -13,13 +13,13 @@ body {
 
   button.md-mini:not([disabled]){
     &[ng-click="main.logout()"], &[ng-click="newRequestN.clear()"],
-    &[ng-click="validate.invalid($event)"], &[ng-click="approve.disapprove($event)"] {
+    &[ng-click="validation.invalid($event)"], &[ng-click="approval.disapprove($event)"] {
       &:hover {
         background-color: $md-warn !important;
       }
     }
 
-    &[ng-click="validate.valid()"], &[ng-click="approve.approve($event)"] {
+    &[ng-click="validation.valid()"], &[ng-click="approval.approve($event)"] {
       &:hover {
         background-color: $md-primary !important;
       }

@@ -2,9 +2,9 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif; }
   body header, body footer {
     padding: 1% 2%; }
-  body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover, body button.md-mini:not([disabled])[ng-click="validate.invalid($event)"]:hover, body button.md-mini:not([disabled])[ng-click="approve.disapprove($event)"]:hover {
+  body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover, body button.md-mini:not([disabled])[ng-click="validation.invalid($event)"]:hover, body button.md-mini:not([disabled])[ng-click="approval.disapprove($event)"]:hover {
     background-color: #ffab00 !important; }
-  body button.md-mini:not([disabled])[ng-click="validate.valid()"]:hover, body button.md-mini:not([disabled])[ng-click="approve.approve($event)"]:hover {
+  body button.md-mini:not([disabled])[ng-click="validation.valid()"]:hover, body button.md-mini:not([disabled])[ng-click="approval.approve($event)"]:hover {
     background-color: #4caf50 !important; }
   body button.md-mini:not([disabled]):hover {
     background-color: #448aff !important; }

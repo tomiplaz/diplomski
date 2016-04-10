@@ -3,10 +3,10 @@
 
     angular
         .module('main')
-        .controller('ApproveCtrl', ApproveCtrl);
+        .controller('ApprovalCtrl', ApprovalCtrl);
 
-    ApproveCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function ApproveCtrl($scope, $state, requests, dialogService, $mdDialog) {
+    ApprovalCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function ApprovalCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 2) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema zahtjeva za odobravanje.";
