@@ -2,13 +2,21 @@
 
     <div layout="column" layout-align="start start" class="warrants-list">
         <md-list>
-            <md-list-item ng-repeat="warrant in warrants.warrants" class="md-3-line"
-                          ng-click="warrants.select($index)" ng-class="{ 'selected' : $index == warrants.current }">
+            <md-list-item ng-repeat="warrant in warrants.warrants" class="md-2-line"
+                          ng-click="warrants.select($index)" ng-class="{ 'selected' : $index == warrants.current }"
+                          ng-mouseenter="warrants.verbose[$index] = true" ng-mouseleave="warrants.verbose[$index] = false">
                 <div class="index">{{ $index + 1 }}</div>
                 <div class="md-list-item-text">
                     <p>{{ warrant.name + " " + warrant.surname }}</p>
                     <p>{{ warrant.for_place }}</p>
-                    <p>{{ warrants.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                </div>
+                <div ng-if="warrants.verbose[$index]" class="verbose md-list-item-text">
+                    <p>Osoba: {{ warrant.name + " " + warrant.surname }}</p>
+                    <p>Mjesto: {{ warrant.for_place }}</p>
+                    <p>Polazak: {{ warrants.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                    <p>Povratak: {{ warrants.formatDate(warrant.end_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                    <p>Trajanje: {{ warrant.duration }}</p>
+                    <p>Prijevoz: {{ warrant.transportation }}</p>
                 </div>
             </md-list-item>
         </md-list>

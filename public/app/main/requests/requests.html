@@ -2,13 +2,21 @@
 
     <div layout="column" layout-align="start start" class="requests-list">
         <md-list>
-            <md-list-item ng-repeat="request in requests.requests" class="md-3-line"
-                          ng-click="requests.select($index)" ng-class="{ 'selected' : $index == requests.current }">
+            <md-list-item ng-repeat="request in requests.requests" class="md-2-line"
+                          ng-click="requests.select($index)" ng-class="{ 'selected' : $index == requests.current }"
+                          ng-mouseenter="requests.verbose[$index] = true" ng-mouseleave="requests.verbose[$index] = false">
                 <div class="index">{{ $index + 1 }}</div>
                 <div class="md-list-item-text">
                     <p>{{ request.name + " " + request.surname }}</p>
                     <p>{{ request.for_place }}</p>
-                    <p>{{ requests.formatDate(request.start_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                </div>
+                <div ng-if="requests.verbose[$index]" class="verbose md-list-item-text">
+                    <p>Osoba: {{ request.name + " " + request.surname }}</p>
+                    <p>Mjesto: {{ request.for_place }}</p>
+                    <p>Polazak: {{ requests.formatDate(request.start_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                    <p>Povratak: {{ requests.formatDate(request.end_timestamp, "dd.MM.yyyy. 'u' HH:mm") }}</p>
+                    <p>Trajanje: {{ request.duration }}</p>
+                    <p>Prijevoz: {{ request.transportation }}</p>
                 </div>
             </md-list-item>
         </md-list>

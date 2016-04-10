@@ -139,6 +139,14 @@ body {
     .selected {
       background-color: $selected;
     }
+
+    .verbose {
+      position: fixed;
+      margin-left: 16px !important;
+      padding: 16px;
+      background-color: $selected;
+      z-index: 99;
+    }
   }
 
   .invalid-request-dialog, .details-dialog {

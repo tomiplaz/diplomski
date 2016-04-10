@@ -64,6 +64,12 @@ body {
       font-weight: bold; }
     body .requests-list .selected, body .warrants-list .selected {
       background-color: #ececec; }
+    body .requests-list .verbose, body .warrants-list .verbose {
+      position: fixed;
+      margin-left: 16px !important;
+      padding: 16px;
+      background-color: #ececec;
+      z-index: 99; }
   body .invalid-request-dialog, body .details-dialog {
     width: 40%; }
     body .invalid-request-dialog md-dialog-content, body .details-dialog md-dialog-content {
