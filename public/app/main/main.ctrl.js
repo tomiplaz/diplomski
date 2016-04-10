@@ -10,7 +10,6 @@
         var vm = this;
 
         vm.user = user;
-        vm.openDial = false;
         vm.logout = logout;
         vm.goToState = goToState;
 

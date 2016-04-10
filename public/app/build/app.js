@@ -59,7 +59,6 @@
             .icon('home', 'app/icons/ic_home_black_24px.svg')
             .icon('library_add', 'app/icons/ic_library_add_black_24px.svg')
             .icon('library_books', 'app/icons/ic_library_books_black_24px.svg')
-            .icon('menu', 'app/icons/ic_menu_black_24px.svg')
             .icon('picture_as_pdf', 'app/icons/ic_picture_as_pdf_black_24px.svg')
             .icon('save', 'app/icons/ic_save_black_24px.svg')
             .icon('send', 'app/icons/ic_send_black_24px.svg')
@@ -1287,7 +1286,6 @@
         var vm = this;
 
         vm.user = user;
-        vm.openDial = false;
         vm.logout = logout;
         vm.goToState = goToState;
 
