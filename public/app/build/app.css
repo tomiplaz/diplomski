@@ -54,6 +54,8 @@ body {
     height: 600px; }
   body .requests-list, body .warrants-list {
     height: 600px; }
+    body .requests-list md-input-container, body .warrants-list md-input-container {
+      margin: 15px 0 0 0; }
     body .requests-list md-list, body .warrants-list md-list {
       overflow-y: scroll;
       padding: 0; }

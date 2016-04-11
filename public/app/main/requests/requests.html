@@ -1,9 +1,29 @@
 <div ng-if="requests.requests.length != 0" layout="row" layout-align="center start">
 
     <div layout="column" layout-align="start start" class="requests-list">
+
+        <md-input-container class="full-width">
+            <label>Poredaj po</label>
+            <md-select ng-model="requests.orderBy">
+                <md-option value="">primitku (novo-staro)</md-option>
+                <md-option value="-">primitku (staro-novo)</md-option>
+                <md-option value="surname">prezimenu (A-Z)</md-option>
+                <md-option value="-surname">prezimenu (Z-A)</md-option>
+                <md-option value="start_timestamp">polasku (prije-poslije)</md-option>
+                <md-option value="-start_timestamp">polasku (poslije-prije)</md-option>
+                <md-option value="end_timestamp">povratku (prije-poslije)</md-option>
+                <md-option value="-end_timestamp">povratku (poslije-prije)</md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-input-container>
+            <label>Traži prezime</label>
+            <input type="text" ng-model="requests.searchSurname">
+        </md-input-container>
+
         <md-list>
-            <md-list-item ng-repeat="request in requests.requests" class="md-2-line"
-                          ng-click="requests.select($index)" ng-class="{ 'selected' : $index == requests.current }"
+            <md-list-item ng-repeat="request in requests.requests | filter: { surname: requests.searchSurname } | orderBy: requests.orderBy"
+                          ng-click="requests.select($index)" ng-class="{ 'selected' : $index == requests.current }" class="md-2-line"
                           ng-mouseenter="requests.verbose[$index] = true" ng-mouseleave="requests.verbose[$index] = false">
                 <div class="index">{{ $index + 1 }}</div>
                 <div class="md-list-item-text">
@@ -20,6 +40,7 @@
                 </div>
             </md-list-item>
         </md-list>
+
     </div>
 
     <div layout="column" layout-align="center space-between" flex>
