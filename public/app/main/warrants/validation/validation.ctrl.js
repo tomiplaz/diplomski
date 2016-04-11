@@ -3,10 +3,10 @@
 
     angular
         .module('warrants')
-        .controller('ValidationCtrl', ValidationCtrl);
+        .controller('WarrantsValidationCtrl', WarrantsValidationCtrl);
 
-    ValidationCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog', 'apiService', 'helperService'];
-    function ValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
+    WarrantsValidationCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog', 'apiService', 'helperService'];
+    function WarrantsValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
         if ($scope['main'].user.type != 1) return $state.go('main.home');
 
         $scope['warrants'].emptyInfo = "Nema putnih naloga za validaciju.";

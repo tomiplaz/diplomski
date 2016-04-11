@@ -16,7 +16,7 @@
             .state('main.warrants.validation', {
                 url: '/validation',
                 templateUrl: 'app/main/warrants/validation/validation.html',
-                controller: 'ValidationCtrl as validation',
+                controller: 'WarrantsValidationCtrl as warrantsValidation',
                 resolve: {
                     warrants: function(apiService) {
                         return apiService.getWarrants('nonvalidated');
@@ -26,7 +26,7 @@
             .state('main.warrants.approval', {
                 url: '/approval',
                 templateUrl: 'app/main/warrants/approval/approval.html',
-                controller: 'ApprovalCtrl as approval',
+                controller: 'WarrantsApprovalCtrl as warrantsApproval',
                 resolve: {
                     warrants: function(apiService) {
                         return apiService.getWarrants('approvable');
@@ -36,7 +36,7 @@
             .state('main.warrants.accounting', {
                 url: '/accounting',
                 templateUrl: 'app/main/warrants/accounting/accounting.html',
-                controller: 'AccountingCtrl as accounting',
+                controller: 'WarrantsAccountingCtrl as warrantsAccounting',
                 resolve: {
                     warrants: function(apiService) {
                         return apiService.getWarrants('nonaccounted');
@@ -46,7 +46,7 @@
             .state('main.warrants.sent', {
                 url: '/sent',
                 templateUrl: 'app/main/warrants/sent/sent.html',
-                controller: 'SentCtrl as sent',
+                controller: 'WarrantsSentCtrl as warrantsSent',
                 resolve: {
                     warrants: function(apiService) {
                         return apiService.getWarrants('user/sent');

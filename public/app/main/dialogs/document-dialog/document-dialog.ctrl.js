@@ -5,8 +5,8 @@
         .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
-    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService'];
-    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService) {
+    DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService', '$scope', 'toastService'];
+    function DocumentDialogCtrl($mdDialog, documentService, $document, data, helperService, apiService, $scope, toastService) {
         var vm = this;
 
         vm.hide = hide;
@@ -52,10 +52,42 @@
                 };
                 apiService.createRequest(newRequest);
             } else {
-                var newWarrant = {
+                var warrant = {
+                    wage: data.wage,
+                    wages_total: data.wagesTotal,
+                    routes_total: data.routesTotal,
+                    other_total: data.otherTotal,
+                    all_total: data.allTotal,
+                    report: data.report,
                     sent: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
                 };
-                apiService.updateWarrant(data.warrantId, newWarrant, "Putni zahtjev poslan!", true);
+                for (var i = 0; i < data.numOfRoutes; i++) {
+                    warrant['routes_from_' + i] = data['routesFrom' + i];
+                    warrant['routes_to_' + i] = data['routesTo' + i];
+                    warrant['routes_transportation_' + i] = data['routesTransportation' + i];
+                    warrant['routes_cost_' + i] = data['routesCost' + i];
+                }
+                for (i = 0; i < data.numOfOther; i++) {
+                    warrant['other_description_' + i] = data['otherDescription' + i];
+                    warrant['other_cost_' + i] = data['otherCost' + i];
+                }
+
+                if (data.attachments) {
+                    if (!helperService.areFilesExtensionsValid(data.attachments)) {
+                        $scope['pendingWarrants'].attachments = null;
+                        toastService.show("Odabrani neprihvatljivi tipovi datoteka! Prihvatljivi tipovi datoteka su .pdf, .png, .jpg, .jpeg.", 6000);
+                    } else if (!helperService.isFilesArrayUnderMaxSize(data.attachments)) {
+                        $scope['pendingWarrants'].attachments = null;
+                        toastService.show("Odabrane datoteke zauzimaju previše memorije! Skup odabranih datoteka mora zauzimati manje od 10 MB.", 6000);
+                    } else {
+                        apiService.postAttachments(data.warrantId, data.attachments);
+                        apiService.updateWarrant(data.warrantId, warrant, "Putni zahtjev poslan!", true);
+
+                    }
+                } else {
+                    apiService.deleteAttachments(data.warrantId);
+                    apiService.updateWarrant(data.warrantId, warrant, "Putni zahtjev poslan!", true);
+                }
             }
 
             hide();

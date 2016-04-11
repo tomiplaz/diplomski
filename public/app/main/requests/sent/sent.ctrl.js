@@ -3,10 +3,10 @@
 
     angular
         .module('requests')
-        .controller('SentCtrl', SentCtrl);
+        .controller('RequestsSentCtrl', RequestsSentCtrl);
 
-    SentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function SentCtrl($scope, $state, requests, dialogService, $mdDialog) {
+    RequestsSentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function RequestsSentCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 0) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";

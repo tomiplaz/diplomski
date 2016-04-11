@@ -21,7 +21,7 @@
             <input type="text" ng-model="requests.searchSurname">
         </md-input-container>
 
-        <md-list>
+        <md-list class="full-width">
             <md-list-item ng-repeat="request in requests.requests | filter: { surname: requests.searchSurname } | orderBy: requests.orderBy"
                           ng-click="requests.select($index)" ng-class="{ 'selected' : $index == requests.current }" class="md-2-line"
                           ng-mouseenter="requests.verbose[$index] = true" ng-mouseleave="requests.verbose[$index] = false">

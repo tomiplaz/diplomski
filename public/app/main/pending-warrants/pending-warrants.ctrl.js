@@ -10,15 +10,14 @@
         var vm = this;
 
         vm.warrants = warrants;
-        vm.current = 0;
-        vm.numOfWages = 0;
-        vm.wagesTotal = 0;
-        vm.numOfRoutes = 2;
-        vm.routesTotal = 0;
-        vm.numOfOther = 0;
-        vm.numOfAttachments = 0;
-        vm.otherTotal = 0;
-        vm.allTotal = 0;
+        vm.current = null;
+        vm.numOfWages = null;
+        vm.wagesTotal = null;
+        vm.numOfRoutes = null;
+        vm.routesTotal = null;
+        vm.numOfOther = null;
+        vm.otherTotal = null;
+        vm.allTotal = null;
         vm.attachments = null;
 
         vm.formatDate = helperService.formatDate;
@@ -47,10 +46,11 @@
             vm.current = index;
 
             var warrant = warrants[vm.current];
+            console.log(warrant);
 
             vm.wage = warrant.wage;
             vm.numOfWages = helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp);
-            vm.wagesTotal = warrant.wages_total;
+            vm.wagesTotal = warrant.wages_total == null ? 0 : warrant.wages_total;
 
             vm.numOfRoutes = helperService.getNumberOfRoutes(warrant);
             for (var i = 0; i < vm.numOfRoutes; i++) {
@@ -59,16 +59,16 @@
                 vm['routesTransportation' + i] = warrant['routes_transportation_' + i];
                 vm['routesCost' + i] = warrant['routes_cost_' + i];
             }
-            vm.routesTotal = warrant.routes_total;
+            vm.routesTotal = warrant.routes_total == null ? 0 : warrant.routes_total;
 
             vm.numOfOther = helperService.getNumberOfOther(warrant);
             for (i = 0; i < vm.numOfOther; i++) {
                 vm['otherDescription' + i] = warrant['other_description_' + i];
                 vm['otherCost' + i] = warrant['other_cost_' + i];
             }
-            vm.otherTotal = warrant.other_total;
+            vm.otherTotal = warrant.other_total == null ? 0 : warrant.other_total;
 
-            vm.allTotal = warrant.all_total;
+            vm.allTotal = warrant.all_total == null ? 0 : warrant.all_total;
             vm.report = warrant.report;
 
             apiService.getAttachments(warrant.id).then(function(attachments) {
@@ -188,10 +188,13 @@
                 approverSignature: warrant.approver_signature,
                 wage: vm.wage,
                 wagesTotal: vm.wagesTotal,
+                numOfRoutes: vm.numOfRoutes,
                 routesTotal: vm.routesTotal,
+                numOfOther: vm.numOfOther,
                 otherTotal: vm.otherTotal,
                 allTotal: vm.allTotal,
-                report: vm.report
+                report: vm.report,
+                attachments: vm.attachments
             };
             for (var i = 0; i < vm.numOfRoutes; i++) {
                 data['routesFrom' + i] = vm['routesFrom' + i];
@@ -203,7 +206,6 @@
                 data['otherDescription' + i] = vm['otherDescription' + i];
                 data['otherCost' + i] = vm['otherCost' + i];
             }
-            data.attachments = !vm.attachments ? [] : vm.attachments;
 
             var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
             $mdDialog.show(documentDialogObject);

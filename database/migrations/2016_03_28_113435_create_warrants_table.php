@@ -42,7 +42,7 @@ class CreateWarrantsTable extends Migration
                 $table->string('routes_from_' . $i, 50)->nullable();
                 $table->string('routes_to_' . $i, 50)->nullable();
                 $table->string('routes_transportation_' . $i, 30)->nullable();
-                $table->smallInteger('routes_cost_' . $i)->unsigned();
+                $table->smallInteger('routes_cost_' . $i)->unsigned()->nullable();
             }
             $table->mediumInteger('routes_total')->unsigned()->nullable();
             for ($i = 0; $i < 4; $i++) {

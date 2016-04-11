@@ -16,7 +16,7 @@
             .state('main.requests.validation', {
                 url: '/validation',
                 templateUrl: 'app/main/requests/validation/validation.html',
-                controller: 'ValidationCtrl as validation',
+                controller: 'RequestsValidationCtrl as requestsValidation',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('nonvalidated');
@@ -26,7 +26,7 @@
             .state('main.requests.approval', {
                 url: '/approval',
                 templateUrl: 'app/main/requests/approval/approval.html',
-                controller: 'ApprovalCtrl as approval',
+                controller: 'RequestsApprovalCtrl as requestsApproval',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('approvable');
@@ -36,7 +36,7 @@
             .state('main.requests.sent', {
                 url: '/sent',
                 templateUrl: 'app/main/requests/sent/sent.html',
-                controller: 'SentCtrl as sent',
+                controller: 'RequestsSentCtrl as requestsSent',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('user');
