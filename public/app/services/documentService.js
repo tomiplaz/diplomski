@@ -243,14 +243,14 @@
                     ],
                     style: 'topMargin20'
                 },
-                { text: "Odobrava:", style: ['regular', 'topMargin40', 'right'] },
+                { text: "Odobrava:", style: ['regularBold', 'topMargin40', 'right'] },
                 {
                     columns: [
                         { text: "", width: '*' },
-                        { image: data.approverSignature, width: 125, height: 35 }
+                        { image: data.approverStartSignature, width: 125, height: 35 }
                     ]
                 },
-                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regular', 'right'] },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regularBold', 'right'] },
 
                 { text: "Putni račun".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
                 {
@@ -321,9 +321,40 @@
                     ],
                     style: 'right'
                 },
+                {
+                    columns: [
+                        { text: "Podnositelj računa:", style: ['regularBold', 'topMargin40', 'left'] },
+                        { text: "Pregledao likvidator:", style: ['regularBold', 'topMargin40', 'center'] },
+                        { text: "Odobrava:", style: ['regularBold', 'topMargin40', 'right'] }
+                    ]
+                },
+                {
+                    columns: [
+                        { image: data.applicantSignature, width: 125, height: 35 },
+                        { text: "", width: '*' },
+                        !data.accountantSignature ? {} : { image: data.accountantSignature, width: 125, height: 35 },
+                        { text: "", width: '*' },
+                        !data.approverSignature ? {} : { image: data.approverSignature, width: 125, height: 35 }
+                    ]
+                },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regularBold', 'right'] },
 
                 { text: "Izvješće".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
-                { text: data.report, style: 'inputItalics' }
+                { text: data.report, style: 'inputItalics' },
+                {
+                    columns: [
+                        { text: "Podnositelj izvješća:", style: ['regularBold', 'topMargin40', 'left'] },
+                        { text: "Odobrava:", style: ['regularBold', 'topMargin40', 'right'] }
+                    ]
+                },
+                {
+                    columns: [
+                        { image: data.applicantSignature, width: 125, height: 35 },
+                        { text: "", width: '*' },
+                        !data.approverSignature ? {} : { image: data.approverSignature, width: 125, height: 35 }
+                    ]
+                },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regularBold', 'right'] }
             ];
         }
 

@@ -10,7 +10,7 @@
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
-            getRejectRequestDialogObject: getRejectRequestDialogObject,
+            getRejectDialogObject: getRejectDialogObject,
             getDetailsDialogObject: getDetailsDialogObject,
             getMarkRequestDialogObject: getMarkRequestDialogObject
         };
@@ -43,7 +43,7 @@
             }
         }
 
-        function getSignatureDialogObject(scope, event, requestId, type) {
+        function getSignatureDialogObject(scope, event, docType, docId, userType) {
             return {
                 controller: 'SignatureDialogCtrl as signatureDialog',
                 templateUrl: 'app/main/dialogs/signature-dialog/signature-dialog.html',
@@ -53,27 +53,30 @@
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    requestId: requestId,
-                    type: type
+                    docType: docType,
+                    docId: docId,
+                    userType: userType
                 }
             }
         }
 
-        function getRejectRequestDialogObject(event, requestId, type) {
+        function getRejectDialogObject(event, docType, docId, userType, warrant) {
             return {
-                controller: 'RejectRequestDialogCtrl as rejectRequestDialog',
-                templateUrl: 'app/main/dialogs/reject-request-dialog/reject-request-dialog.html',
+                controller: 'RejectDialogCtrl as rejectDialog',
+                templateUrl: 'app/main/dialogs/reject-dialog/reject-dialog-' + (userType != 3 ? 'reason' : 'bill') + '.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    requestId: requestId,
-                    type: type
+                    docType: docType,
+                    docId: docId,
+                    userType: userType,
+                    warrant: warrant
                 }
             }
         }
 
-        function getDetailsDialogObject(event, request) {
+        function getDetailsDialogObject(event, doc) {
             return {
                 controller: 'DetailsDialogCtrl as detailsDialog',
                 templateUrl: 'app/main/dialogs/details-dialog/details-dialog.html',
@@ -81,7 +84,7 @@
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    request: request
+                    doc: doc
                 }
             }
         }

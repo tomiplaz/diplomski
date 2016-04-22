@@ -9,7 +9,7 @@
     function RequestsValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
         if ($scope['main'].user.type != 1) return $state.go('main.home');
 
-        $scope['requests'].emptyInfo = "Nema zahtjeva za validaciju.";
+        $scope['requests'].emptyInfo = "Nema zahtjeva za pregled.";
         $scope['requests'].requests = requests;
         $scope['requests'].init();
 
@@ -20,8 +20,8 @@
 
         function invalid($event) {
             var requestId = requests[$scope['requests'].current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
-            $mdDialog.show(rejectRequestDialogObject);
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 1);
+            $mdDialog.show(rejectDialogObject);
         }
 
         function valid($event) {

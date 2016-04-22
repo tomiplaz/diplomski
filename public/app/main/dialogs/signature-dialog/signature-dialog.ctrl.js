@@ -5,8 +5,8 @@
         .module('main')
         .controller('SignatureDialogCtrl', SignatureDialogCtrl);
 
-    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'requestId', 'type', 'helperService', 'apiService'];
-    function SignatureDialogCtrl($scope, $mdDialog, $document, requestId, type, helperService, apiService) {
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'docType', 'docId', 'userType', 'helperService', 'apiService'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document, docType, docId, userType, helperService, apiService) {
         var vm = this;
         var signaturePad = null;
         var confirmButton = null;
@@ -37,17 +37,35 @@
         }
 
         function confirm() {
-            switch (type) {
+            var data = null;
+            switch (userType) {
                 case 0:
-                    $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
+                    if (docType == 'r') {
+                        $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
+                    } else {
+                        $scope['pendingWarrants']['applicantSignature'] = signaturePad.toDataURL();
+                    }
                     break;
                 case 2:
-                    var data = {
+                    data = {
                         approved: true,
                         approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
                         approver_signature: signaturePad.toDataURL()
                     };
-                    apiService.updateRequest(requestId, data, null, true);
+
+                    if (docType == 'r') apiService.updateRequest(docId, data, null, true);
+                    else apiService.updateWarrant(docId, data, "Putni nalog odobren!", true);
+
+                    break;
+                case 3:
+                    data = {
+                        accounting_check: true,
+                        accounting_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        accountant_signature: signaturePad.toDataURL()
+                    };
+
+                    apiService.updateWarrant(docId, data, "Putni nalog odobren!", true);
+
                     break;
                 default:
                     break;

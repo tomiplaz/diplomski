@@ -59,17 +59,18 @@
                     other_total: data.otherTotal,
                     all_total: data.allTotal,
                     report: data.report,
+                    applicant_signature: data.applicantSignature,
                     sent: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
                 };
-                for (var i = 0; i < data.numOfRoutes; i++) {
-                    warrant['routes_from_' + i] = data['routesFrom' + i];
-                    warrant['routes_to_' + i] = data['routesTo' + i];
-                    warrant['routes_transportation_' + i] = data['routesTransportation' + i];
-                    warrant['routes_cost_' + i] = data['routesCost' + i];
+                for (var i = 0; i < 7; i++) {
+                    warrant['routes_from_' + i] = !data['routesFrom' + i] ? null : data['routesFrom' + i];
+                    warrant['routes_to_' + i] = !data['routesTo' + i] ? null : data['routesTo' + i];
+                    warrant['routes_transportation_' + i] = !data['routesTransportation' + i] ? null : data['routesTransportation' + i];
+                    warrant['routes_cost_' + i] = !data['routesCost' + i] ? null : data['routesCost' + i];
                 }
-                for (i = 0; i < data.numOfOther; i++) {
-                    warrant['other_description_' + i] = data['otherDescription' + i];
-                    warrant['other_cost_' + i] = data['otherCost' + i];
+                for (i = 0; i < 4; i++) {
+                    warrant['other_description_' + i] = !data['otherDescription' + i] ? null : data['otherDescription' + i];
+                    warrant['other_cost_' + i] = !data['otherCost' + i] ? null : data['otherCost' + i];
                 }
 
                 if (data.attachments) {

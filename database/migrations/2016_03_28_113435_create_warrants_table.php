@@ -32,7 +32,8 @@ class CreateWarrantsTable extends Migration
             $table->text('description');
             $table->string('transportation', 50);
             $table->string('expenses_responsible', 50);
-            $table->text('approver_signature');
+
+            $table->text('approver_start_signature');
 
             $table->timestamp('sent')->nullable();
 
@@ -57,9 +58,16 @@ class CreateWarrantsTable extends Migration
             $table->boolean('quality_check')->nullable();
             $table->timestamp('quality_check_timestamp')->nullable();
             $table->text('invalidity_reason')->nullable();
+            $table->boolean('accounting_check')->nullable();
+            $table->timestamp('accounting_check_timestamp')->nullable();
+            $table->text('accounting_reason')->nullable();
             $table->boolean('approved')->nullable();
             $table->timestamp('approved_timestamp')->nullable();
             $table->text('disapproval_reason')->nullable();
+
+            $table->text('applicant_signature');
+            $table->text('accountant_signature')->nullable();
+            $table->text('approver_signature')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
         });

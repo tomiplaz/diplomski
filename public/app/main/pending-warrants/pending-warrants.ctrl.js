@@ -5,8 +5,8 @@
         .module('main')
         .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
 
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService) {
+    PendingWarrantsCtrl.$inject = ['$scope', 'warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService'];
+    function PendingWarrantsCtrl($scope, warrants, helperService, apiService, dialogService, $mdDialog, toastService) {
         var vm = this;
 
         vm.warrants = warrants;
@@ -30,6 +30,7 @@
         vm.removeOther = removeOther;
         vm.updateOtherTotal = updateOtherTotal;
         vm.removeAttachments = removeAttachments;
+        vm.sign = sign;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -46,7 +47,6 @@
             vm.current = index;
 
             var warrant = warrants[vm.current];
-            console.log(warrant);
 
             vm.wage = warrant.wage;
             vm.numOfWages = helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp);
@@ -74,6 +74,8 @@
             apiService.getAttachments(warrant.id).then(function(attachments) {
                 vm.attachments = attachments.length == 0 ? null : attachments;
             });
+
+            vm.applicantSignature = warrant.applicant_signature;
         }
 
         function updateWagesTotal() {
@@ -109,6 +111,7 @@
             var i = --vm.numOfOther;
             vm['otherDescription' + i] = null;
             vm['otherCost' + i] = null;
+            if (vm.numOfOther == 0) vm.otherTotal = 0;
         }
 
         function updateOtherTotal() {
@@ -127,6 +130,11 @@
             vm.attachments = null;
         }
 
+        function sign($event) {
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', null, 0);
+            $mdDialog.show(signatureDialogObject);
+        }
+
         function save() {
             var warrantId = warrants[vm.current].id;
             var data = {
@@ -135,17 +143,18 @@
                 routes_total: vm.routesTotal,
                 other_total: vm.otherTotal,
                 all_total: vm.allTotal,
-                report: vm.report
+                report: vm.report,
+                applicant_signature: vm.applicantSignature
             };
-            for (var i = 0; i < vm.numOfRoutes; i++) {
-                data['routes_from_' + i] = vm['routesFrom' + i];
-                data['routes_to_' + i] = vm['routesTo' + i];
-                data['routes_transportation_' + i] = vm['routesTransportation' + i];
-                data['routes_cost_' + i] = vm['routesCost' + i];
+            for (var i = 0; i < 7; i++) {
+                data['routes_from_' + i] = !vm['routesFrom' + i] ? null : vm['routesFrom' + i];
+                data['routes_to_' + i] = !vm['routesTo' + i] ? null : vm['routesTo' + i];
+                data['routes_transportation_' + i] = !vm['routesTransportation' + i] ? null : vm['routesTransportation' + i];
+                data['routes_cost_' + i] = !vm['routesCost' + i] ? null : vm['routesCost' + i];
             }
-            for (i = 0; i < vm.numOfOther; i++) {
-                data['other_description_' + i] = vm['otherDescription' + i];
-                data['other_cost_' + i] = vm['otherCost' + i];
+            for (i = 0; i < 4; i++) {
+                data['other_description_' + i] = !vm['otherDescription' + i] ? null : vm['otherDescription' + i];
+                data['other_cost_' + i] = !vm['otherCost' + i] ? null : vm['otherCost' + i];
             }
 
             if (vm.attachments) {
@@ -185,7 +194,7 @@
                 transportation: warrant.transportation,
                 expensesResponsible: warrant.expenses_responsible,
                 advancePayment: warrant.advance_payment,
-                approverSignature: warrant.approver_signature,
+                approverStartSignature: warrant.approver_start_signature,
                 wage: vm.wage,
                 wagesTotal: vm.wagesTotal,
                 numOfRoutes: vm.numOfRoutes,
@@ -194,7 +203,8 @@
                 otherTotal: vm.otherTotal,
                 allTotal: vm.allTotal,
                 report: vm.report,
-                attachments: vm.attachments
+                attachments: vm.attachments,
+                applicantSignature: vm.applicantSignature
             };
             for (var i = 0; i < vm.numOfRoutes; i++) {
                 data['routesFrom' + i] = vm['routesFrom' + i];

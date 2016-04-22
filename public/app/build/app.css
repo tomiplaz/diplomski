@@ -72,9 +72,9 @@ body {
       padding: 16px;
       background-color: #ececec;
       z-index: 99; }
-  body .invalid-request-dialog, body .details-dialog {
+  body .reject-dialog-reason, body .details-dialog {
     width: 40%; }
-    body .invalid-request-dialog md-dialog-content, body .details-dialog md-dialog-content {
+    body .reject-dialog-reason md-dialog-content, body .details-dialog md-dialog-content {
       padding: 20px 10px 10px 10px;
       width: 100%; }
   body .mark-request-dialog md-dialog-content {
@@ -89,12 +89,12 @@ body {
     pointer-events: none; }
   body .details-dialog em {
     text-align: center; }
-  body .pending-warrants-form {
+  body .pending-warrants-form, body .reject-dialog-bill {
     margin-left: 20px;
     margin-right: 20px; }
-    body .pending-warrants-form .small-width {
+    body .pending-warrants-form .small-width, body .reject-dialog-bill .small-width {
       width: 100px; }
-    body .pending-warrants-form .select-input {
+    body .pending-warrants-form .select-input, body .reject-dialog-bill .select-input {
       width: 180px; }
 
 /*# sourceMappingURL=app.css.map */

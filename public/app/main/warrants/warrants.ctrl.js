@@ -75,13 +75,16 @@
                 transportation: warrant.transportation,
                 expensesResponsible: warrant.expenses_responsible,
                 advancePayment: warrant.advance_payment,
-                approverSignature: warrant.approver_signature,
+                approverStartSignature: warrant.approver_start_signature,
                 wage: warrant.wage,
                 wagesTotal: warrant.wages_total,
                 routesTotal: warrant.routes_total,
                 otherTotal: warrant.other_total,
                 allTotal: warrant.all_total,
-                report: warrant.report
+                report: warrant.report,
+                applicantSignature: warrant.applicant_signature,
+                accountantSignature: warrant.accountant_signature,
+                approverSignature: warrant.approver_signature
             };
             for (var i = 0; i < helperService.getNumberOfRoutes(warrant); i++) {
                 data['routesFrom' + i] = warrant['routes_from_' + i];

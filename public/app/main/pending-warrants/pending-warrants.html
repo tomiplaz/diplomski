@@ -25,7 +25,7 @@
             <div layout="row" layout-align="start center">
                 <md-input-container class="small-width">
                     <label>Iznos (kn)</label>
-                    <input type="number" name="wage" ng-model="pendingWarrants.wage" required step="any" min="0" max="10000"
+                    <input type="number" name="wage" ng-model="pendingWarrants.wage" required step="any" min="1" max="10000"
                             ng-change="pendingWarrants.updateWagesTotal()">
                     <div ng-messages="pendingWarrantsForm.wage.$error">
                         <div ng-message="required">Potrebno!</div>
@@ -97,7 +97,7 @@
 
                 <md-input-container class="small-width">
                     <label>Iznos (kn)</label>
-                    <input type="number" name="{{ routesCost + n }}" ng-model="pendingWarrants['routesCost' + n]" required step="any" min="0" max="50000"
+                    <input type="number" name="{{ routesCost + n }}" ng-model="pendingWarrants['routesCost' + n]" required step="any" min="1" max="50000"
                             ng-change="pendingWarrants.updateRoutesTotal()">
                     <div ng-messages="pendingWarrantsForm['routesCost' + n].$error">
                         <div ng-message="required">Potrebno!</div>
@@ -111,7 +111,7 @@
                 <p>Ukupan iznos: {{ pendingWarrants.routesTotal }} kn</p>
             </div>
 
-            <div layout="row" layout-align="center center">
+            <div layout="row" layout-align="start center">
                 <h4>Ostali troškovi</h4>
 
                 <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.addOther()" aria-label="Dodaj trošak"
@@ -139,7 +139,7 @@
 
                 <md-input-container class="small-width">
                     <label>Iznos (kn)</label>
-                    <input type="number" name="{{ otherCost + n }}" ng-model="pendingWarrants['otherCost' + n]" required step="any" min="0" max="50000"
+                    <input type="number" name="{{ otherCost + n }}" ng-model="pendingWarrants['otherCost' + n]" required step="any" min="1" max="50000"
                             ng-change="pendingWarrants.updateOtherTotal()">
                     <div ng-messages="pendingWarrantsForm['otherCost' + n].$error">
                         <div ng-message="required">Potrebno!</div>
@@ -162,7 +162,7 @@
 
                 <md-input-container class="full-width">
                     <label>Izvješće</label>
-                    <textarea name="report" ng-model="pendingWarrants.report" required md-maxlength="1500"></textarea>
+                    <textarea name="report" ng-model="pendingWarrants.report" required md-maxlength="2000"></textarea>
                     <div ng-messages="pendingWarrantsForm.report.$error">
                         <div ng-message="required">Potrebno!</div>
                         <div ng-message="maxlength">Predugačko!</div>
@@ -189,6 +189,22 @@
             </div>
             <p ng-if="!pendingWarrants.attachments">Nema priloga</p>
 
+            <div layout="row" layout-align="start top">
+                <img ng-src="{{ pendingWarrants.applicantSignature }}" ng-if="pendingWarrants.applicantSignature">
+
+                <div class="signature-input" ng-if="!pendingWarrants.applicantSignature">
+                    <md-input-container class="full-width">
+                        <label>Podnositelj zahtjeva</label>
+                        <input type="text" readonly>
+                    </md-input-container>
+                </div>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.sign($event)" aria-label="Potpiši">
+                    <md-tooltip md-direction="right">Potpiši</md-tooltip>
+                    <md-icon md-svg-src="edit"></md-icon>
+                </md-button>
+            </div>
+
         </form>
 
         <div layout="column" layout-align="center center">
@@ -199,7 +215,7 @@
             </md-button>
 
             <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.showDocumentDialog($event)"
-                       ng-disabled="!pendingWarrantsForm.$valid" aria-label="Prikaži dokument">
+                       ng-disabled="pendingWarrantsForm.$invalid || !pendingWarrants.applicantSignature" aria-label="Prikaži dokument">
                 <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
                 <md-icon md-svg-src="picture_as_pdf"></md-icon>
             </md-button>

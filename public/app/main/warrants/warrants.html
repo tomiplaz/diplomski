@@ -5,8 +5,8 @@
         <md-input-container class="full-width">
             <label>Poredaj po</label>
             <md-select ng-model="warrants.orderBy">
-                <md-option value="">primitku (novo-staro)</md-option>
-                <md-option value="-">primitku (staro-novo)</md-option>
+                <md-option value="">primitku (staro-novo)</md-option>
+                <md-option value="-">primitku (novo-staro)</md-option>
                 <md-option value="surname">prezimenu (A-Z)</md-option>
                 <md-option value="-surname">prezimenu (Z-A)</md-option>
                 <md-option value="start_timestamp">polasku (prije-poslije)</md-option>
@@ -70,7 +70,9 @@
                 <md-icon md-svg-src="file_download"></md-icon>
             </md-button>
         </div>
-        <p ng-if="!warrants.attachments">Nema priloga</p>
+        <div layout="row" layout-align="center center" ng-if="!warrants.attachments">
+            <p>Nema priloga</p>
+        </div>
 
         <iframe class="attachments-frame" ng-hide="true"></iframe>
 

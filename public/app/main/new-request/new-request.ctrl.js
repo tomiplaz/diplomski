@@ -74,7 +74,7 @@
         }
 
         function sign($event) {
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, null, 0);
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'r', null, 0);
             $mdDialog.show(signatureDialogObject);
         }
 

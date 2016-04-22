@@ -61,6 +61,24 @@
                 label: 'Putni nalozi',
                 icon: 'library_books',
                 type: [1]
+            },
+            {
+                name: 'main.warrants.accounting',
+                label: 'Putni nalozi',
+                icon: 'library_books',
+                type: [3]
+            },
+            {
+                name: 'main.warrants.approval',
+                label: 'Putni nalozi',
+                icon: 'library_books',
+                type: [2]
+            },
+            {
+                name: 'main.warrants.sent',
+                label: 'Poslani putni nalozi',
+                icon: 'library_books',
+                type: [0]
             }
         ];
 

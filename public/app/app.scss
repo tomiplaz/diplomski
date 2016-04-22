@@ -153,7 +153,7 @@ body {
     }
   }
 
-  .invalid-request-dialog, .details-dialog {
+  .reject-dialog-reason, .details-dialog {
     width: 40%;
 
     md-dialog-content {
@@ -190,7 +190,7 @@ body {
     }
   }
 
-  .pending-warrants-form {
+  .pending-warrants-form, .reject-dialog-bill {
     margin-left: 20px;
     margin-right: 20px;
 

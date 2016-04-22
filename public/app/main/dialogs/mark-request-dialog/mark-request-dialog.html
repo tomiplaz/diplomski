@@ -22,7 +22,7 @@
     </md-dialog-content>
     <md-dialog-actions>
         <md-button class="md-fab md-mini md-raised" ng-click="markRequestDialog.confirm()" aria-label="Potvrdi"
-                   ng-disabled="!markRequestDialogForm.mark.$valid">
+                   ng-disabled="markRequestDialogForm.mark.$invalid">
             <md-tooltip md-direction="left">Potvrdi</md-tooltip>
             <md-icon md-svg-src="check"></md-icon>
         </md-button>

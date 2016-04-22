@@ -1,0 +1,165 @@
+<md-dialog aria-label="Odbijanje putnog računa" ng-cloak>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 flex>Odbijanje putnog računa</h2>
+            <md-button class="md-icon-button" ng-click="rejectDialog.hide()" aria-label="Zatvori">
+                <md-icon md-svg-src="close"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content layout="row" layout-align="center start">
+
+        <form name="rejectDialogForm" class="reject-dialog-bill">
+
+            <h4>Dnevnica</h4>
+
+            <div layout="row" layout-align="start center">
+                <md-input-container class="small-width">
+                    <label>Iznos (kn)</label>
+                    <input type="number" name="wage" ng-model="rejectDialog.wage" step="any" min="1" max="10000"
+                           ng-change="rejectDialog.updateWagesTotal()">
+                    <div ng-messages="rejectDialogForm.wage.$error">
+                        <div ng-message="min">Neispravan iznos!</div>
+                        <div ng-message="max">Prevelik iznos!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="small-width">
+                    <label>Broj dnevnica</label>
+                    <input type="text" ng-model="rejectDialog.numOfWages" readonly>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Ukupan iznos: {{ rejectDialog.wagesTotal }} kn</p>
+            </div>
+
+            <div layout="row" layout-align="start center">
+                <h4>Troškovi prijevoza</h4>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="rejectDialog.addRoute()" aria-label="Dodaj relaciju"
+                           ng-disabled="rejectDialog.numOfRoutes == 7">
+                    <md-tooltip md-direction="bottom">Dodaj relaciju</md-tooltip>
+                    <md-icon md-svg-src="add_circle"></md-icon>
+                </md-button>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="rejectDialog.removeRoute()" aria-label="Ukloni relaciju"
+                           ng-disabled="rejectDialog.numOfRoutes == 2">
+                    <md-tooltip md-direction="bottom">Ukloni relaciju</md-tooltip>
+                    <md-icon md-svg-src="remove_circle"></md-icon>
+                </md-button>
+            </div>
+
+            <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3, 4, 5, 6]" ng-if="rejectDialog.numOfRoutes > n">
+                <md-input-container>
+                    <label>Od</label>
+                    <input type="text" name="{{ routesFrom + n }}" ng-model="rejectDialog['routesFrom' + n]" ng-maxlength="50">
+                    <div ng-messages="rejectDialogForm['routesFrom' + n].$error">
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Do</label>
+                    <input type="text" name="{{ routesTo + n }}" ng-model="rejectDialog['routesTo' + n]" ng-maxlength="50">
+                    <div ng-messages="rejectDialogForm['routesTo' + n].$error">
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <div class="md-input-container-height">
+                    <md-input-container class="select-input">
+                        <label>Prijevozno sredstvo</label>
+                        <md-select name="{{ routesTransportation + n }}" ng-model="rejectDialog['routesTransportation' + n]">
+                            <md-option value="autobus">autobus</md-option>
+                            <md-option value="automobil">automobil</md-option>
+                            <md-option value="vlak">vlak</md-option>
+                            <md-option value="zrakoplov">zrakoplov</md-option>
+                            <md-option value="ostalo">ostalo</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+                <md-input-container class="small-width">
+                    <label>Iznos (kn)</label>
+                    <input type="number" name="{{ routesCost + n }}" ng-model="rejectDialog['routesCost' + n]" step="any" min="1" max="50000"
+                           ng-change="rejectDialog.updateRoutesTotal()">
+                    <div ng-messages="rejectDialogForm['routesCost' + n].$error">
+                        <div ng-message="min">Neispravan iznos!</div>
+                        <div ng-message="max">Prevelik iznos!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Ukupan iznos: {{ rejectDialog.routesTotal }} kn</p>
+            </div>
+
+            <div layout="row" layout-align="start center">
+                <h4>Ostali troškovi</h4>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="rejectDialog.addOther()" aria-label="Dodaj trošak"
+                           ng-disabled="rejectDialog.numOfOther == 4">
+                    <md-tooltip md-direction="bottom">Dodaj trošak</md-tooltip>
+                    <md-icon md-svg-src="add_circle"></md-icon>
+                </md-button>
+
+                <md-button class="md-fab md-mini md-raised" ng-click="rejectDialog.removeOther()" aria-label="Ukloni trošak"
+                           ng-disabled="rejectDialog.numOfOther == 0">
+                    <md-tooltip md-direction="bottom">Ukloni trošak</md-tooltip>
+                    <md-icon md-svg-src="remove_circle"></md-icon>
+                </md-button>
+            </div>
+
+            <div layout="row" layout-align="start center" ng-repeat="n in [0, 1, 2, 3]" ng-if="rejectDialog.numOfOther > n" class="full-width">
+                <md-input-container flex>
+                    <label>Opis troška</label>
+                    <input type="text" name="{{ otherDescription + n }}" ng-model="rejectDialog['otherDescription' + n]" ng-maxlength="100">
+                    <div ng-messages="rejectDialogForm['otherDescription' + n].$error">
+                        <div ng-message="maxlength">Predugačko!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="small-width">
+                    <label>Iznos (kn)</label>
+                    <input type="number" name="{{ otherCost + n }}" ng-model="rejectDialog['otherCost' + n]" step="any" min="1" max="50000"
+                           ng-change="rejectDialog.updateOtherTotal()">
+                    <div ng-messages="rejectDialogForm['otherCost' + n].$error">
+                        <div ng-message="min">Neispravan iznos!</div>
+                        <div ng-message="max">Prevelik iznos!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Ukupan iznos: {{ rejectDialog.otherTotal }} kn</p>
+            </div>
+
+            <div layout="row" layout-align="end center" class="full-width">
+                <p>Sveukupno: {{ rejectDialog.allTotal }} kn</p>
+            </div>
+
+            <md-input-container class="full-width">
+                <label>Razlog odbijanja</label>
+                <textarea name="reason" ng-model="rejectDialog.reason" required md-maxlength="300"></textarea>
+                <div ng-messages="rejectDialogForm.reason.$error">
+                    <div ng-message="required">Potrebno!</div>
+                    <div ng-message="maxlength">Predugačko!</div>
+                </div>
+            </md-input-container>
+
+        </form>
+
+    </md-dialog-content>
+
+    <md-dialog-actions>
+        <md-button class="md-fab md-mini md-raised" ng-click="rejectDialog.confirm()" aria-label="Potvrdi"
+                   ng-disabled="rejectDialogForm.$invalid">
+            <md-tooltip md-direction="left">Potvrdi</md-tooltip>
+            <md-icon md-svg-src="check"></md-icon>
+        </md-button>
+    </md-dialog-actions>
+
+</md-dialog>

@@ -41,6 +41,8 @@ Route::group(['prefix' => 'api/v1'], function() {
             Route::get('user/pending', 'WarrantsController@getUserPendingWarrants');
             Route::get('user/sent', 'WarrantsController@getUserSentWarrants');
             Route::get('nonvalidated', 'WarrantsController@getNonvalidatedWarrants');
+            Route::get('nonaccounted', 'WarrantsController@getNonaccountedWarrants');
+            Route::get('approvable', 'WarrantsController@getApprovableWarrants');
             Route::put('{warrantId}', 'WarrantsController@updateWarrant');
             Route::post('{warrantId}/attachments', 'WarrantsController@postAttachments');
             Route::delete('{warrantId}/attachments', 'WarrantsController@deleteAttachments');

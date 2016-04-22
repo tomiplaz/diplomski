@@ -63,7 +63,7 @@
         </md-button>
 
         <md-button class="md-fab md-mini md-raised" ng-click="newUser.createUser()" aria-label="Dodaj korisnika"
-                   ng-disabled="!newUserForm.$valid">
+                   ng-disabled="newUserForm.$invalid">
             <md-tooltip md-direction="left">Dodaj korisnika</md-tooltip>
             <md-icon md-svg-src="check"></md-icon>
         </md-button>

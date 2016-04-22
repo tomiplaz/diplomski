@@ -9,7 +9,7 @@
     function WarrantsValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
         if ($scope['main'].user.type != 1) return $state.go('main.home');
 
-        $scope['warrants'].emptyInfo = "Nema putnih naloga za validaciju.";
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
         $scope['warrants'].warrants = warrants;
         $scope['warrants'].init();
 
@@ -20,8 +20,8 @@
 
         function invalid($event) {
             var warrantId = warrants[$scope['warrants'].current].id;
-            /*var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
-            $mdDialog.show(rejectRequestDialogObject);*/
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrantId, 1);
+            $mdDialog.show(rejectDialogObject);
         }
 
         function valid() {

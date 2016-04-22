@@ -110,7 +110,8 @@
                 size += files[i].size;
             }
 
-            return size < 10000;
+            console.log(size);
+            return size < 10000000;
         }
     }
 })();

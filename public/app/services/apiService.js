@@ -31,7 +31,7 @@
 
         function createUser(newUser) {
             return Restangular.all('users').post(newUser).then(function() {
-                toastService.show("Korisnik kreiran!");
+                toastService.show("Korisnik stvoren!");
                 $state.go('main.home');
             }, function() {
                 toastService.show("Greška tijekom spremanja korisnika!", 3000);
@@ -50,10 +50,10 @@
 
         function createRequest(newRequest) {
             Restangular.all('requests').post(newRequest).then(function() {
-                toastService.show("Zahtjev kreiran!");
-                $state.go('main.sent');
+                toastService.show("Zahtjev stvoren!");
+                $state.go('main.requests.sent');
             }, function() {
-                toastService.show("Greška tijekom kreiranja zahtjeva!", 3000);
+                toastService.show("Greška tijekom stvaranja zahtjeva!", 3000);
             });
         }
 
@@ -76,13 +76,13 @@
                         description: request.description,
                         transportation: request.transportation,
                         expenses_responsible: request.expenses_responsible,
-                        approver_signature: request.approver_signature
+                        approver_start_signature: request.approver_signature
                     };
                     Restangular.all('warrants').post(newWarrant).then(function() {
-                        toastService.show("Putni nalog kreiran i poslan podnositelju zahtjeva!", 3000);
+                        toastService.show("Putni nalog stvoren i poslan podnositelju zahtjeva!", 3000);
                         if (refresh) $state.go($state.current, {}, { reload: true });
                     }, function() {
-                        toastService.show("Greška tijekom kreiranja putnog naloga!", 3000);
+                        toastService.show("Greška tijekom stvaranja putnog naloga!", 3000);
                     });
                 } else {
                     toastService.show(message);

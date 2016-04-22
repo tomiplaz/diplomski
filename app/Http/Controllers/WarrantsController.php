@@ -89,6 +89,26 @@ class WarrantsController extends Controller
     }
 
     /**
+     * Get warrants that need to be accounted.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getNonaccountedWarrants() {
+        $warrants = Warrant::where('quality_check', true)->whereNull('accounting_check')->get()->toArray();
+        return response()->json($warrants);
+    }
+
+    /**
+     * Get warrants that need to be approved.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getApprovableWarrants() {
+        $warrants = Warrant::where('quality_check', true)->where('accounting_check', true)->whereNull('approved')->get()->toArray();
+        return response()->json($warrants);
+    }
+
+    /**
      * Update warrant.
      *
      * @param $warrantId

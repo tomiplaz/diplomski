@@ -1,0 +1,11 @@
+<md-button class="md-fab md-mini md-raised" ng-click="warrantsAccounting.disapprove($event)" aria-label="Odbij putni nalog">
+    <md-tooltip md-direction="bottom">Odbij putni nalog</md-tooltip>
+    <md-icon md-svg-src="cancel"></md-icon>
+</md-button>
+
+<p>{{ warrants.current + 1 }}/{{ warrants.warrants.length }}</p>
+
+<md-button class="md-fab md-mini md-raised" ng-click="warrantsAccounting.approve($event)" aria-label="Odobrij putni nalog">
+    <md-tooltip md-direction="bottom">Odobrij putni nalog</md-tooltip>
+    <md-icon md-svg-src="check_circle"></md-icon>
+</md-button>

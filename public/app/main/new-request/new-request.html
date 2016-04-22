@@ -190,7 +190,7 @@
         </md-button>
 
         <md-button class="md-fab md-mini md-raised" ng-click="newRequest.showDocumentDialog($event)"
-                   ng-disabled="!newRequestForm.$valid || !newRequest.applicantSignature" aria-label="Prikaži dokument">
+                   ng-disabled="newRequestForm.$invalid || !newRequest.applicantSignature" aria-label="Prikaži dokument">
             <md-tooltip md-direction="left">Prikaži dokument</md-tooltip>
             <md-icon md-svg-src="picture_as_pdf"></md-icon>
         </md-button>

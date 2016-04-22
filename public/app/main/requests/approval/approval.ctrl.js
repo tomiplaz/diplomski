@@ -20,13 +20,13 @@
 
         function disapprove($event) {
             var requestId = requests[$scope['requests'].current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 2);
-            $mdDialog.show(rejectRequestDialogObject);
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 2);
+            $mdDialog.show(rejectDialogObject);
         }
 
         function approve($event) {
             var requestId = requests[$scope['requests'].current].id;
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, requestId, 2);
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'r', requestId, 2);
             $mdDialog.show(signatureDialogObject);
         }
     }

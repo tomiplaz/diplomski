@@ -116,7 +116,7 @@
 
         function createUser(newUser) {
             return Restangular.all('users').post(newUser).then(function() {
-                toastService.show("Korisnik kreiran!");
+                toastService.show("Korisnik stvoren!");
                 $state.go('main.home');
             }, function() {
                 toastService.show("Greška tijekom spremanja korisnika!", 3000);
@@ -135,10 +135,10 @@
 
         function createRequest(newRequest) {
             Restangular.all('requests').post(newRequest).then(function() {
-                toastService.show("Zahtjev kreiran!");
-                $state.go('main.sent');
+                toastService.show("Zahtjev stvoren!");
+                $state.go('main.requests.sent');
             }, function() {
-                toastService.show("Greška tijekom kreiranja zahtjeva!", 3000);
+                toastService.show("Greška tijekom stvaranja zahtjeva!", 3000);
             });
         }
 
@@ -161,13 +161,13 @@
                         description: request.description,
                         transportation: request.transportation,
                         expenses_responsible: request.expenses_responsible,
-                        approver_signature: request.approver_signature
+                        approver_start_signature: request.approver_signature
                     };
                     Restangular.all('warrants').post(newWarrant).then(function() {
-                        toastService.show("Putni nalog kreiran i poslan podnositelju zahtjeva!", 3000);
+                        toastService.show("Putni nalog stvoren i poslan podnositelju zahtjeva!", 3000);
                         if (refresh) $state.go($state.current, {}, { reload: true });
                     }, function() {
-                        toastService.show("Greška tijekom kreiranja putnog naloga!", 3000);
+                        toastService.show("Greška tijekom stvaranja putnog naloga!", 3000);
                     });
                 } else {
                     toastService.show(message);
@@ -234,7 +234,7 @@
             getDateTimeDialogObject: getDateTimeDialogObject,
             getDocumentDialogObject: getDocumentDialogObject,
             getSignatureDialogObject: getSignatureDialogObject,
-            getRejectRequestDialogObject: getRejectRequestDialogObject,
+            getRejectDialogObject: getRejectDialogObject,
             getDetailsDialogObject: getDetailsDialogObject,
             getMarkRequestDialogObject: getMarkRequestDialogObject
         };
@@ -267,7 +267,7 @@
             }
         }
 
-        function getSignatureDialogObject(scope, event, requestId, type) {
+        function getSignatureDialogObject(scope, event, docType, docId, userType) {
             return {
                 controller: 'SignatureDialogCtrl as signatureDialog',
                 templateUrl: 'app/main/dialogs/signature-dialog/signature-dialog.html',
@@ -277,27 +277,30 @@
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    requestId: requestId,
-                    type: type
+                    docType: docType,
+                    docId: docId,
+                    userType: userType
                 }
             }
         }
 
-        function getRejectRequestDialogObject(event, requestId, type) {
+        function getRejectDialogObject(event, docType, docId, userType, warrant) {
             return {
-                controller: 'RejectRequestDialogCtrl as rejectRequestDialog',
-                templateUrl: 'app/main/dialogs/reject-request-dialog/reject-request-dialog.html',
+                controller: 'RejectDialogCtrl as rejectDialog',
+                templateUrl: 'app/main/dialogs/reject-dialog/reject-dialog-' + (userType != 3 ? 'reason' : 'bill') + '.html',
                 parent: angular.element(document.body),
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    requestId: requestId,
-                    type: type
+                    docType: docType,
+                    docId: docId,
+                    userType: userType,
+                    warrant: warrant
                 }
             }
         }
 
-        function getDetailsDialogObject(event, request) {
+        function getDetailsDialogObject(event, doc) {
             return {
                 controller: 'DetailsDialogCtrl as detailsDialog',
                 templateUrl: 'app/main/dialogs/details-dialog/details-dialog.html',
@@ -305,7 +308,7 @@
                 targetEvent: event,
                 clickOutsideToClose: true,
                 locals: {
-                    request: request
+                    doc: doc
                 }
             }
         }
@@ -569,14 +572,14 @@
                     ],
                     style: 'topMargin20'
                 },
-                { text: "Odobrava:", style: ['regular', 'topMargin40', 'right'] },
+                { text: "Odobrava:", style: ['regularBold', 'topMargin40', 'right'] },
                 {
                     columns: [
                         { text: "", width: '*' },
-                        { image: data.approverSignature, width: 125, height: 35 }
+                        { image: data.approverStartSignature, width: 125, height: 35 }
                     ]
                 },
-                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regular', 'right'] },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regularBold', 'right'] },
 
                 { text: "Putni račun".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
                 {
@@ -647,9 +650,40 @@
                     ],
                     style: 'right'
                 },
+                {
+                    columns: [
+                        { text: "Podnositelj računa:", style: ['regularBold', 'topMargin40', 'left'] },
+                        { text: "Pregledao likvidator:", style: ['regularBold', 'topMargin40', 'center'] },
+                        { text: "Odobrava:", style: ['regularBold', 'topMargin40', 'right'] }
+                    ]
+                },
+                {
+                    columns: [
+                        { image: data.applicantSignature, width: 125, height: 35 },
+                        { text: "", width: '*' },
+                        !data.accountantSignature ? {} : { image: data.accountantSignature, width: 125, height: 35 },
+                        { text: "", width: '*' },
+                        !data.approverSignature ? {} : { image: data.approverSignature, width: 125, height: 35 }
+                    ]
+                },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regularBold', 'right'] },
 
                 { text: "Izvješće".toUpperCase(), style: 'titleStandalone', pageBreak: 'before' },
-                { text: data.report, style: 'inputItalics' }
+                { text: data.report, style: 'inputItalics' },
+                {
+                    columns: [
+                        { text: "Podnositelj izvješća:", style: ['regularBold', 'topMargin40', 'left'] },
+                        { text: "Odobrava:", style: ['regularBold', 'topMargin40', 'right'] }
+                    ]
+                },
+                {
+                    columns: [
+                        { image: data.applicantSignature, width: 125, height: 35 },
+                        { text: "", width: '*' },
+                        !data.approverSignature ? {} : { image: data.approverSignature, width: 125, height: 35 }
+                    ]
+                },
+                { text: "(dekan: prof. dr. sc. Drago Žagar)", style: ['regularBold', 'right'] }
             ];
         }
 
@@ -831,7 +865,8 @@
                 size += files[i].size;
             }
 
-            return size < 10000;
+            console.log(size);
+            return size < 10000000;
         }
     }
 })();
@@ -857,19 +892,6 @@
                     .capsule(true)
                     .hideDelay(duration == undefined ? 2000 : duration)
             );
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('app')
-        .filter('fileName', fileName);
-
-    function fileName() {
-        return function(filePath) {
-            return filePath.replace(/^.*[\\\/]/, '');
         }
     }
 })();
@@ -1192,13 +1214,16 @@
                 transportation: warrant.transportation,
                 expensesResponsible: warrant.expenses_responsible,
                 advancePayment: warrant.advance_payment,
-                approverSignature: warrant.approver_signature,
+                approverStartSignature: warrant.approver_start_signature,
                 wage: warrant.wage,
                 wagesTotal: warrant.wages_total,
                 routesTotal: warrant.routes_total,
                 otherTotal: warrant.other_total,
                 allTotal: warrant.all_total,
-                report: warrant.report
+                report: warrant.report,
+                applicantSignature: warrant.applicant_signature,
+                accountantSignature: warrant.accountant_signature,
+                approverSignature: warrant.approver_signature
             };
             for (var i = 0; i < helperService.getNumberOfRoutes(warrant); i++) {
                 data['routesFrom' + i] = warrant['routes_from_' + i];
@@ -1337,6 +1362,24 @@
                 label: 'Putni nalozi',
                 icon: 'library_books',
                 type: [1]
+            },
+            {
+                name: 'main.warrants.accounting',
+                label: 'Putni nalozi',
+                icon: 'library_books',
+                type: [3]
+            },
+            {
+                name: 'main.warrants.approval',
+                label: 'Putni nalozi',
+                icon: 'library_books',
+                type: [2]
+            },
+            {
+                name: 'main.warrants.sent',
+                label: 'Poslani putni nalozi',
+                icon: 'library_books',
+                type: [0]
             }
         ];
 
@@ -1352,6 +1395,268 @@
 
         function goToState(state) {
             $state.go(state);
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('NewUserCtrl', NewUserCtrl);
+
+    NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
+    function NewUserCtrl($scope, $state, apiService) {
+        if ($scope['main'].user.type != 4) return $state.go('main.home');
+
+        var vm = this;
+
+        vm.clear = clear;
+        vm.createUser = createUser;
+
+        function clear() {
+            vm.type = null;
+            vm.name = null;
+            vm.surname = null;
+            vm.email = null;
+            vm.password = null;
+        }
+
+        function createUser() {
+            var data = {
+                type: vm.type,
+                name: vm.name,
+                surname: vm.surname,
+                email: vm.email,
+                password: vm.password
+            };
+
+            apiService.createUser(data);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
+
+    PendingWarrantsCtrl.$inject = ['$scope', 'warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService'];
+    function PendingWarrantsCtrl($scope, warrants, helperService, apiService, dialogService, $mdDialog, toastService) {
+        var vm = this;
+
+        vm.warrants = warrants;
+        vm.current = null;
+        vm.numOfWages = null;
+        vm.wagesTotal = null;
+        vm.numOfRoutes = null;
+        vm.routesTotal = null;
+        vm.numOfOther = null;
+        vm.otherTotal = null;
+        vm.allTotal = null;
+        vm.attachments = null;
+
+        vm.formatDate = helperService.formatDate;
+        vm.selectWarrant = selectWarrant;
+        vm.updateWagesTotal = updateWagesTotal;
+        vm.addRoute = addRoute;
+        vm.removeRoute = removeRoute;
+        vm.updateRoutesTotal = updateRoutesTotal;
+        vm.addOther = addOther;
+        vm.removeOther = removeOther;
+        vm.updateOtherTotal = updateOtherTotal;
+        vm.removeAttachments = removeAttachments;
+        vm.sign = sign;
+        vm.save = save;
+        vm.showDocumentDialog = showDocumentDialog;
+
+        init();
+
+        function init() {
+            if (vm.warrants.length > 0) {
+                vm.current = 0;
+                selectWarrant(0);
+            }
+        }
+
+        function selectWarrant(index) {
+            vm.current = index;
+
+            var warrant = warrants[vm.current];
+
+            vm.wage = warrant.wage;
+            vm.numOfWages = helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp);
+            vm.wagesTotal = warrant.wages_total == null ? 0 : warrant.wages_total;
+
+            vm.numOfRoutes = helperService.getNumberOfRoutes(warrant);
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                vm['routesFrom' + i] = warrant['routes_from_' + i];
+                vm['routesTo' + i] = warrant['routes_to_' + i];
+                vm['routesTransportation' + i] = warrant['routes_transportation_' + i];
+                vm['routesCost' + i] = warrant['routes_cost_' + i];
+            }
+            vm.routesTotal = warrant.routes_total == null ? 0 : warrant.routes_total;
+
+            vm.numOfOther = helperService.getNumberOfOther(warrant);
+            for (i = 0; i < vm.numOfOther; i++) {
+                vm['otherDescription' + i] = warrant['other_description_' + i];
+                vm['otherCost' + i] = warrant['other_cost_' + i];
+            }
+            vm.otherTotal = warrant.other_total == null ? 0 : warrant.other_total;
+
+            vm.allTotal = warrant.all_total == null ? 0 : warrant.all_total;
+            vm.report = warrant.report;
+
+            apiService.getAttachments(warrant.id).then(function(attachments) {
+                vm.attachments = attachments.length == 0 ? null : attachments;
+            });
+
+            vm.applicantSignature = warrant.applicant_signature;
+        }
+
+        function updateWagesTotal() {
+            vm.wagesTotal = vm.wage * vm.numOfWages;
+            updateAllTotal();
+        }
+
+        function addRoute() {
+            vm.numOfRoutes++;
+        }
+
+        function removeRoute() {
+            var i = --vm.numOfRoutes;
+            vm['routesFrom' + i] = null;
+            vm['routesTo' + i] = null;
+            vm['routesTransportation' + i] = null;
+            vm['routesCost' + i] = null;
+        }
+
+        function updateRoutesTotal() {
+            vm.routesTotal = 0;
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                if (vm['routesCost' + i]) vm.routesTotal += vm['routesCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function addOther() {
+            vm.numOfOther++;
+        }
+
+        function removeOther() {
+            var i = --vm.numOfOther;
+            vm['otherDescription' + i] = null;
+            vm['otherCost' + i] = null;
+            if (vm.numOfOther == 0) vm.otherTotal = 0;
+        }
+
+        function updateOtherTotal() {
+            vm.otherTotal = 0;
+            for (var i = 0; i < vm.numOfOther; i++) {
+                if (vm['otherCost' + i]) vm.otherTotal += vm['otherCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function updateAllTotal() {
+            vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
+        }
+
+        function removeAttachments() {
+            vm.attachments = null;
+        }
+
+        function sign($event) {
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', null, 0);
+            $mdDialog.show(signatureDialogObject);
+        }
+
+        function save() {
+            var warrantId = warrants[vm.current].id;
+            var data = {
+                wage: vm.wage,
+                wages_total: vm.wagesTotal,
+                routes_total: vm.routesTotal,
+                other_total: vm.otherTotal,
+                all_total: vm.allTotal,
+                report: vm.report,
+                applicant_signature: vm.applicantSignature
+            };
+            for (var i = 0; i < 7; i++) {
+                data['routes_from_' + i] = !vm['routesFrom' + i] ? null : vm['routesFrom' + i];
+                data['routes_to_' + i] = !vm['routesTo' + i] ? null : vm['routesTo' + i];
+                data['routes_transportation_' + i] = !vm['routesTransportation' + i] ? null : vm['routesTransportation' + i];
+                data['routes_cost_' + i] = !vm['routesCost' + i] ? null : vm['routesCost' + i];
+            }
+            for (i = 0; i < 4; i++) {
+                data['other_description_' + i] = !vm['otherDescription' + i] ? null : vm['otherDescription' + i];
+                data['other_cost_' + i] = !vm['otherCost' + i] ? null : vm['otherCost' + i];
+            }
+
+            if (vm.attachments) {
+                if (!helperService.areFilesExtensionsValid(vm.attachments)) {
+                    vm.attachments = null;
+                    toastService.show("Odabrani neprihvatljivi tipovi datoteka! Prihvatljivi tipovi datoteka su .pdf, .png, .jpg, .jpeg.", 6000);
+                } else if (!helperService.isFilesArrayUnderMaxSize(vm.attachments)) {
+                    vm.attachments = null;
+                    toastService.show("Odabrane datoteke zauzimaju previše memorije! Skup odabranih datoteka mora zauzimati manje od 10 MB.", 6000);
+                } else {
+                    apiService.postAttachments(warrantId, vm.attachments);
+                    apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+
+                }
+            } else {
+                apiService.deleteAttachments(warrantId);
+                apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
+            }
+        }
+
+        function showDocumentDialog($event) {
+            var warrant = warrants[vm.current];
+            var data = {
+                warrantId: warrant.id,
+                mark: warrant.mark,
+                type: warrant.type,
+                documentDate: helperService.formatDate(warrant.document_date, 'dd.MM.yyyy.'),
+                name: warrant.name,
+                surname: warrant.surname,
+                workplace: warrant.workplace,
+                startDate: helperService.formatDate(warrant.start_timestamp, 'dd.MM.yyyy.'),
+                forPlace: warrant.for_place,
+                description: warrant.description,
+                startTimestamp: helperService.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
+                endTimestamp: helperService.formatDate(warrant.end_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
+                durationDays: helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp),
+                transportation: warrant.transportation,
+                expensesResponsible: warrant.expenses_responsible,
+                advancePayment: warrant.advance_payment,
+                approverStartSignature: warrant.approver_start_signature,
+                wage: vm.wage,
+                wagesTotal: vm.wagesTotal,
+                numOfRoutes: vm.numOfRoutes,
+                routesTotal: vm.routesTotal,
+                numOfOther: vm.numOfOther,
+                otherTotal: vm.otherTotal,
+                allTotal: vm.allTotal,
+                report: vm.report,
+                attachments: vm.attachments,
+                applicantSignature: vm.applicantSignature
+            };
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                data['routesFrom' + i] = vm['routesFrom' + i];
+                data['routesTo' + i] = vm['routesTo' + i];
+                data['routesTransportation' + i] = vm['routesTransportation' + i];
+                data['routesCost' + i] = vm['routesCost' + i];
+            }
+            for (i = 0; i < vm.numOfOther; i++) {
+                data['otherDescription' + i] = vm['otherDescription' + i];
+                data['otherCost' + i] = vm['otherCost' + i];
+            }
+
+            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
+            $mdDialog.show(documentDialogObject);
         }
     }
 })();
@@ -1432,7 +1737,7 @@
         }
 
         function sign($event) {
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, null, 0);
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'r', null, 0);
             $mdDialog.show(signatureDialogObject);
         }
 
@@ -1459,258 +1764,6 @@
         }
     }
 })();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('NewUserCtrl', NewUserCtrl);
-
-    NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
-    function NewUserCtrl($scope, $state, apiService) {
-        if ($scope['main'].user.type != 4) return $state.go('main.home');
-
-        var vm = this;
-
-        vm.clear = clear;
-        vm.createUser = createUser;
-
-        function clear() {
-            vm.type = null;
-            vm.name = null;
-            vm.surname = null;
-            vm.email = null;
-            vm.password = null;
-        }
-
-        function createUser() {
-            var data = {
-                type: vm.type,
-                name: vm.name,
-                surname: vm.surname,
-                email: vm.email,
-                password: vm.password
-            };
-
-            apiService.createUser(data);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('PendingWarrantsCtrl', PendingWarrantsCtrl);
-
-    PendingWarrantsCtrl.$inject = ['warrants', 'helperService', 'apiService', 'dialogService', '$mdDialog', 'toastService'];
-    function PendingWarrantsCtrl(warrants, helperService, apiService, dialogService, $mdDialog, toastService) {
-        var vm = this;
-
-        vm.warrants = warrants;
-        vm.current = null;
-        vm.numOfWages = null;
-        vm.wagesTotal = null;
-        vm.numOfRoutes = null;
-        vm.routesTotal = null;
-        vm.numOfOther = null;
-        vm.otherTotal = null;
-        vm.allTotal = null;
-        vm.attachments = null;
-
-        vm.formatDate = helperService.formatDate;
-        vm.selectWarrant = selectWarrant;
-        vm.updateWagesTotal = updateWagesTotal;
-        vm.addRoute = addRoute;
-        vm.removeRoute = removeRoute;
-        vm.updateRoutesTotal = updateRoutesTotal;
-        vm.addOther = addOther;
-        vm.removeOther = removeOther;
-        vm.updateOtherTotal = updateOtherTotal;
-        vm.removeAttachments = removeAttachments;
-        vm.save = save;
-        vm.showDocumentDialog = showDocumentDialog;
-
-        init();
-
-        function init() {
-            if (vm.warrants.length > 0) {
-                vm.current = 0;
-                selectWarrant(0);
-            }
-        }
-
-        function selectWarrant(index) {
-            vm.current = index;
-
-            var warrant = warrants[vm.current];
-            console.log(warrant);
-
-            vm.wage = warrant.wage;
-            vm.numOfWages = helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp);
-            vm.wagesTotal = warrant.wages_total == null ? 0 : warrant.wages_total;
-
-            vm.numOfRoutes = helperService.getNumberOfRoutes(warrant);
-            for (var i = 0; i < vm.numOfRoutes; i++) {
-                vm['routesFrom' + i] = warrant['routes_from_' + i];
-                vm['routesTo' + i] = warrant['routes_to_' + i];
-                vm['routesTransportation' + i] = warrant['routes_transportation_' + i];
-                vm['routesCost' + i] = warrant['routes_cost_' + i];
-            }
-            vm.routesTotal = warrant.routes_total == null ? 0 : warrant.routes_total;
-
-            vm.numOfOther = helperService.getNumberOfOther(warrant);
-            for (i = 0; i < vm.numOfOther; i++) {
-                vm['otherDescription' + i] = warrant['other_description_' + i];
-                vm['otherCost' + i] = warrant['other_cost_' + i];
-            }
-            vm.otherTotal = warrant.other_total == null ? 0 : warrant.other_total;
-
-            vm.allTotal = warrant.all_total == null ? 0 : warrant.all_total;
-            vm.report = warrant.report;
-
-            apiService.getAttachments(warrant.id).then(function(attachments) {
-                vm.attachments = attachments.length == 0 ? null : attachments;
-            });
-        }
-
-        function updateWagesTotal() {
-            vm.wagesTotal = vm.wage * vm.numOfWages;
-            updateAllTotal();
-        }
-
-        function addRoute() {
-            vm.numOfRoutes++;
-        }
-
-        function removeRoute() {
-            var i = --vm.numOfRoutes;
-            vm['routesFrom' + i] = null;
-            vm['routesTo' + i] = null;
-            vm['routesTransportation' + i] = null;
-            vm['routesCost' + i] = null;
-        }
-
-        function updateRoutesTotal() {
-            vm.routesTotal = 0;
-            for (var i = 0; i < vm.numOfRoutes; i++) {
-                if (vm['routesCost' + i]) vm.routesTotal += vm['routesCost' + i];
-            }
-            updateAllTotal();
-        }
-
-        function addOther() {
-            vm.numOfOther++;
-        }
-
-        function removeOther() {
-            var i = --vm.numOfOther;
-            vm['otherDescription' + i] = null;
-            vm['otherCost' + i] = null;
-        }
-
-        function updateOtherTotal() {
-            vm.otherTotal = 0;
-            for (var i = 0; i < vm.numOfOther; i++) {
-                if (vm['otherCost' + i]) vm.otherTotal += vm['otherCost' + i];
-            }
-            updateAllTotal();
-        }
-
-        function updateAllTotal() {
-            vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
-        }
-
-        function removeAttachments() {
-            vm.attachments = null;
-        }
-
-        function save() {
-            var warrantId = warrants[vm.current].id;
-            var data = {
-                wage: vm.wage,
-                wages_total: vm.wagesTotal,
-                routes_total: vm.routesTotal,
-                other_total: vm.otherTotal,
-                all_total: vm.allTotal,
-                report: vm.report
-            };
-            for (var i = 0; i < vm.numOfRoutes; i++) {
-                data['routes_from_' + i] = vm['routesFrom' + i];
-                data['routes_to_' + i] = vm['routesTo' + i];
-                data['routes_transportation_' + i] = vm['routesTransportation' + i];
-                data['routes_cost_' + i] = vm['routesCost' + i];
-            }
-            for (i = 0; i < vm.numOfOther; i++) {
-                data['other_description_' + i] = vm['otherDescription' + i];
-                data['other_cost_' + i] = vm['otherCost' + i];
-            }
-
-            if (vm.attachments) {
-                if (!helperService.areFilesExtensionsValid(vm.attachments)) {
-                    vm.attachments = null;
-                    toastService.show("Odabrani neprihvatljivi tipovi datoteka! Prihvatljivi tipovi datoteka su .pdf, .png, .jpg, .jpeg.", 6000);
-                } else if (!helperService.isFilesArrayUnderMaxSize(vm.attachments)) {
-                    vm.attachments = null;
-                    toastService.show("Odabrane datoteke zauzimaju previše memorije! Skup odabranih datoteka mora zauzimati manje od 10 MB.", 6000);
-                } else {
-                    apiService.postAttachments(warrantId, vm.attachments);
-                    apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
-
-                }
-            } else {
-                apiService.deleteAttachments(warrantId);
-                apiService.updateWarrant(warrantId, data, "Putni nalog spremljen!", false);
-            }
-        }
-
-        function showDocumentDialog($event) {
-            var warrant = warrants[vm.current];
-            var data = {
-                warrantId: warrant.id,
-                mark: warrant.mark,
-                type: warrant.type,
-                documentDate: helperService.formatDate(warrant.document_date, 'dd.MM.yyyy.'),
-                name: warrant.name,
-                surname: warrant.surname,
-                workplace: warrant.workplace,
-                startDate: helperService.formatDate(warrant.start_timestamp, 'dd.MM.yyyy.'),
-                forPlace: warrant.for_place,
-                description: warrant.description,
-                startTimestamp: helperService.formatDate(warrant.start_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
-                endTimestamp: helperService.formatDate(warrant.end_timestamp, "dd.MM.yyyy. 'u' HH:mm"),
-                durationDays: helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp),
-                transportation: warrant.transportation,
-                expensesResponsible: warrant.expenses_responsible,
-                advancePayment: warrant.advance_payment,
-                approverSignature: warrant.approver_signature,
-                wage: vm.wage,
-                wagesTotal: vm.wagesTotal,
-                numOfRoutes: vm.numOfRoutes,
-                routesTotal: vm.routesTotal,
-                numOfOther: vm.numOfOther,
-                otherTotal: vm.otherTotal,
-                allTotal: vm.allTotal,
-                report: vm.report,
-                attachments: vm.attachments
-            };
-            for (var i = 0; i < vm.numOfRoutes; i++) {
-                data['routesFrom' + i] = vm['routesFrom' + i];
-                data['routesTo' + i] = vm['routesTo' + i];
-                data['routesTransportation' + i] = vm['routesTransportation' + i];
-                data['routesCost' + i] = vm['routesCost' + i];
-            }
-            for (i = 0; i < vm.numOfOther; i++) {
-                data['otherDescription' + i] = vm['otherDescription' + i];
-                data['otherCost' + i] = vm['otherCost' + i];
-            }
-
-            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
-            $mdDialog.show(documentDialogObject);
-        }
-    }
-})();
-
 (function() {
     'use strict';
 
@@ -1761,8 +1814,8 @@
         .module('main')
         .controller('DetailsDialogCtrl', DetailsDialogCtrl);
 
-    DetailsDialogCtrl.$inject = ['request', '$mdDialog', 'helperService'];
-    function DetailsDialogCtrl(request, $mdDialog, helperService) {
+    DetailsDialogCtrl.$inject = ['doc', '$mdDialog', 'helperService'];
+    function DetailsDialogCtrl(doc, $mdDialog, helperService) {
         var vm = this;
 
         vm.hide = hide;
@@ -1776,342 +1829,38 @@
         }
 
         function getCreationInfo() {
-            return "Zahtjev je poslan " + helperService.formatDate(request.created_at, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            if (!doc.report) {
+                return "Zahtjev je poslan " + helperService.formatDate(doc.created_at, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else {
+                return "Putni nalog je poslan " + helperService.formatDate(doc.sent, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            }
         }
 
         function getMainInfo() {
-            if (request.quality_check == null) {
-                return "Provjera ispravnosti zahtjeva još nije izvršena."
-            } else if (request.quality_check == false) {
-                return "Zahtjev je ocijenjen neispravnim " + helperService.formatDate(request.quality_check_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else if (request.approved) {
-                return "Zahtjev je odobren " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
-            } else if (request.approved == false) {
-                return "Zahtjev je odbijen " + helperService.formatDate(request.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            var docType = (!doc.report ? "Zahtjev" : "Putni nalog");
+            if (doc.quality_check == null) {
+                return "Provjera ispravnosti još nije izvršena."
+            } else if (doc.quality_check == false) {
+                return docType + " je ocijenjen neispravnim " + helperService.formatDate(doc.quality_check_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (doc.approved) {
+                return docType + " je odobren " + helperService.formatDate(doc.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
+            } else if (doc.accounting_check == false || doc.approved == false) {
+                return docType + " je odbijen " + helperService.formatDate(doc.approved_timestamp, "dd.MM.yyyy. 'u' HH:mm") + ".";
             } else {
-                return "Zahtjev je ispravan i čeka odobrenje.";
+                return docType + " je ispravan i čeka odobrenje.";
             }
         }
 
         function getReason() {
-            if (request.invalidity_reason != null) {
-                return request.invalidity_reason;
-            } else if (request.disapproval_reason != null) {
-                return request.disapproval_reason;
+            if (doc.invalidity_reason != null) {
+                return doc.invalidity_reason;
+            } else if (doc.accounting_reason != null) {
+                return doc.accounting_reason;
+            } else if (doc.disapproval_reason != null) {
+                return doc.disapproval_reason;
             } else {
                 return null;
             }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
-
-    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
-    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = {
-                mark: vm.mark,
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('RejectRequestDialogCtrl', RejectRequestDialogCtrl);
-
-    RejectRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'type', 'apiService', 'helperService'];
-    function RejectRequestDialogCtrl($mdDialog, requestId, type, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        switch (type) {
-            case 1:
-                vm.title = "Neispravnost zahtjeva";
-                vm.label = "Razlog neispravnosti";
-                break;
-            case 2:
-                vm.title = "Odbijanje zahtjeva";
-                vm.label = "Razlog odbijanja";
-                break;
-            default:
-                vm.title = "Naslov";
-                vm.label = "Labela";
-                break;
-        }
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = getDataObject();
-            if (data != null) apiService.updateRequest(requestId, data, "Zahtjev odbijen!", true);
-            hide();
-        }
-
-        function getDataObject() {
-            switch (type) {
-                case 1:
-                    return {
-                        quality_check: false,
-                        quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
-                        invalidity_reason: vm.reason
-                    };
-                case 2:
-                    return {
-                        approved: false,
-                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
-                        disapproval_reason: vm.reason
-                    };
-                default:
-                    return null;
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('RequestsApprovalCtrl', RequestsApprovalCtrl);
-
-    RequestsApprovalCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function RequestsApprovalCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 2) return $state.go('main.home');
-
-        $scope['requests'].emptyInfo = "Nema zahtjeva za odobravanje.";
-        $scope['requests'].requests = requests;
-        $scope['requests'].init();
-
-        var vm = this;
-
-        vm.disapprove = disapprove;
-        vm.approve = approve;
-
-        function disapprove($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 2);
-            $mdDialog.show(rejectRequestDialogObject);
-        }
-
-        function approve($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, requestId, 2);
-            $mdDialog.show(signatureDialogObject);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('SignatureDialogCtrl', SignatureDialogCtrl);
-
-    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'requestId', 'type', 'helperService', 'apiService'];
-    function SignatureDialogCtrl($scope, $mdDialog, $document, requestId, type, helperService, apiService) {
-        var vm = this;
-        var signaturePad = null;
-        var confirmButton = null;
-
-        vm.hide = hide;
-        vm.clear = clear;
-        vm.confirm = confirm;
-
-        $document.ready(function() {
-            var canvas = document.querySelector('canvas');
-            signaturePad = new SignaturePad(canvas, {
-                minWidth: 0.4,
-                maxWidth: 1.0,
-                onEnd: onEnd
-            });
-
-            confirmButton = angular.element(document.querySelector('button[ng-click="signatureDialog.confirm()"]'));
-            confirmButton.attr('disabled', 'true');
-        });
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function clear() {
-            signaturePad.clear();
-            confirmButton.attr('disabled', 'true');
-        }
-
-        function confirm() {
-            switch (type) {
-                case 0:
-                    $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
-                    break;
-                case 2:
-                    var data = {
-                        approved: true,
-                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
-                        approver_signature: signaturePad.toDataURL()
-                    };
-                    apiService.updateRequest(requestId, data, null, true);
-                    break;
-                default:
-                    break;
-            }
-            hide();
-        }
-
-        function onEnd() {
-            if (!signaturePad.isEmpty()) {
-                confirmButton.removeAttr('disabled');
-            }
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('requests')
-        .controller('RequestsSentCtrl', RequestsSentCtrl);
-
-    RequestsSentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function RequestsSentCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 0) return $state.go('main.home');
-
-        $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
-        $scope['requests'].requests = requests;
-        $scope['requests'].init();
-
-        var vm = this;
-
-        vm.icon = getIcon($scope['requests'].current);
-        vm.class = getClass($scope['requests'].current);
-        vm.showDetails = showDetails;
-
-        $scope.$watch('requests.current', function() {
-            vm.icon = getIcon($scope['requests'].current);
-            vm.class = getClass($scope['requests'].current);
-            vm.classAria = getClassAria();
-        });
-
-        function showDetails($event) {
-            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[$scope['requests'].current]);
-            $mdDialog.show(detailsDialogObject);
-        }
-
-        function getIcon(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
-                return 'thumb_down';
-            } else if ($scope['requests'].requests[i].approved) {
-                return 'thumb_up';
-            } else return 'thumbs_up_down';
-        }
-
-        function getClass(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
-                return 'negative';
-            } else if ($scope['requests'].requests[i].approved) {
-                return 'positive';
-            } else return 'pending';
-        }
-
-        function getClassAria() {
-            if (vm.class == 'negative') {
-                return 'Odbijen';
-            } else if (vm.class == 'positive') {
-                return 'Odobren';
-            } else return 'U tijeku'
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('requests')
-        .controller('RequestsValidationCtrl', RequestsValidationCtrl);
-
-    RequestsValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function RequestsValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 1) return $state.go('main.home');
-
-        $scope['requests'].emptyInfo = "Nema zahtjeva za validaciju.";
-        $scope['requests'].requests = requests;
-        $scope['requests'].init();
-
-        var vm = this;
-
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        function invalid($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
-            $mdDialog.show(rejectRequestDialogObject);
-        }
-
-        function valid($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
-            $mdDialog.show(markRequestDialogObject);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('warrants')
-        .controller('WarrantsValidationCtrl', WarrantsValidationCtrl);
-
-    WarrantsValidationCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog', 'apiService', 'helperService'];
-    function WarrantsValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
-        if ($scope['main'].user.type != 1) return $state.go('main.home');
-
-        $scope['warrants'].emptyInfo = "Nema putnih naloga za validaciju.";
-        $scope['warrants'].warrants = warrants;
-        $scope['warrants'].init();
-
-        var vm = this;
-
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        function invalid($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            /*var rejectRequestDialogObject = dialogService.getRejectRequestDialogObject($event, requestId, 1);
-            $mdDialog.show(rejectRequestDialogObject);*/
-        }
-
-        function valid() {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var data = {
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
         }
     }
 })();
@@ -2176,17 +1925,18 @@
                     other_total: data.otherTotal,
                     all_total: data.allTotal,
                     report: data.report,
+                    applicant_signature: data.applicantSignature,
                     sent: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
                 };
-                for (var i = 0; i < data.numOfRoutes; i++) {
-                    warrant['routes_from_' + i] = data['routesFrom' + i];
-                    warrant['routes_to_' + i] = data['routesTo' + i];
-                    warrant['routes_transportation_' + i] = data['routesTransportation' + i];
-                    warrant['routes_cost_' + i] = data['routesCost' + i];
+                for (var i = 0; i < 7; i++) {
+                    warrant['routes_from_' + i] = !data['routesFrom' + i] ? null : data['routesFrom' + i];
+                    warrant['routes_to_' + i] = !data['routesTo' + i] ? null : data['routesTo' + i];
+                    warrant['routes_transportation_' + i] = !data['routesTransportation' + i] ? null : data['routesTransportation' + i];
+                    warrant['routes_cost_' + i] = !data['routesCost' + i] ? null : data['routesCost' + i];
                 }
-                for (i = 0; i < data.numOfOther; i++) {
-                    warrant['other_description_' + i] = data['otherDescription' + i];
-                    warrant['other_cost_' + i] = data['otherCost' + i];
+                for (i = 0; i < 4; i++) {
+                    warrant['other_description_' + i] = !data['otherDescription' + i] ? null : data['otherDescription' + i];
+                    warrant['other_cost_' + i] = !data['otherCost' + i] ? null : data['otherCost' + i];
                 }
 
                 if (data.attachments) {
@@ -2208,6 +1958,566 @@
             }
 
             hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
+
+    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = {
+                mark: vm.mark,
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('RejectDialogCtrl', RejectDialogCtrl);
+
+    RejectDialogCtrl.$inject = ['$mdDialog', 'docType', 'docId', 'userType', 'warrant', 'apiService', 'helperService'];
+    function RejectDialogCtrl($mdDialog, docType, docId, userType, warrant, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        switch (userType) {
+            case 1:
+                vm.title = "Neispravnost " + (docType == 'r' ? " zahtjeva" : " putnog naloga");
+                vm.label = "Razlog neispravnosti";
+                break;
+            case 2:
+                vm.title = "Odbijanje " + (docType == 'r' ? " zahtjeva" : " putnog naloga");
+                vm.label = "Razlog odbijanja";
+                break;
+            case 3:
+                vm.wage = warrant.wage;
+                vm.numOfWages = helperService.getDurationDays(warrant.start_timestamp, warrant.end_timestamp);
+                vm.wagesTotal = warrant.wages_total == null ? 0 : warrant.wages_total;
+
+                vm.numOfRoutes = helperService.getNumberOfRoutes(warrant);
+                for (var i = 0; i < vm.numOfRoutes; i++) {
+                    vm['routesFrom' + i] = warrant['routes_from_' + i];
+                    vm['routesTo' + i] = warrant['routes_to_' + i];
+                    vm['routesTransportation' + i] = warrant['routes_transportation_' + i];
+                    vm['routesCost' + i] = warrant['routes_cost_' + i];
+                }
+                vm.routesTotal = warrant.routes_total == null ? 0 : warrant.routes_total;
+
+                vm.numOfOther = helperService.getNumberOfOther(warrant);
+                for (i = 0; i < vm.numOfOther; i++) {
+                    vm['otherDescription' + i] = warrant['other_description_' + i];
+                    vm['otherCost' + i] = warrant['other_cost_' + i];
+                }
+                vm.otherTotal = warrant.other_total == null ? 0 : warrant.other_total;
+
+                vm.allTotal = warrant.all_total == null ? 0 : warrant.all_total;
+
+                vm.updateWagesTotal = updateWagesTotal;
+                vm.addRoute = addRoute;
+                vm.removeRoute = removeRoute;
+                vm.updateRoutesTotal = updateRoutesTotal;
+                vm.addOther = addOther;
+                vm.removeOther = removeOther;
+                vm.updateOtherTotal = updateOtherTotal;
+
+                break;
+            default:
+                break;
+        }
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = getDataObject();
+            if (data != null) {
+                if (docType == 'r') apiService.updateRequest(docId, data, "Zahtjev odbijen!", true);
+                else apiService.updateWarrant(docId, data, "Putni nalog odbijen!", true);
+            }
+            hide();
+        }
+
+        function getDataObject() {
+            switch (userType) {
+                case 1:
+                    return {
+                        quality_check: false,
+                        quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        invalidity_reason: vm.reason
+                    };
+                case 2:
+                    return {
+                        approved: false,
+                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        disapproval_reason: vm.reason
+                    };
+                case 3:
+                    var data = {
+                        wage: vm.wage,
+                        wages_total: vm.wagesTotal,
+                        routes_total: vm.routesTotal,
+                        other_total: vm.otherTotal,
+                        all_total: vm.allTotal,
+
+                        accounting_check: false,
+                        accounting_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        accounting_reason: vm.reason
+                    };
+
+                    for (var i = 0; i < 7; i++) {
+                        data['routes_from_' + i] = !vm['routesFrom' + i] ? null : vm['routesFrom' + i];
+                        data['routes_to_' + i] = !vm['routesTo' + i] ? null : vm['routesTo' + i];
+                        data['routes_transportation_' + i] = !vm['routesTransportation' + i] ? null : vm['routesTransportation' + i];
+                        data['routes_cost_' + i] = !vm['routesCost' + i] ? null : vm['routesCost' + i];
+                    }
+                    for (i = 0; i < 4; i++) {
+                        data['other_description_' + i] = !vm['otherDescription' + i] ? null : vm['otherDescription' + i];
+                        data['other_cost_' + i] = !vm['otherCost' + i] ? null : vm['otherCost' + i];
+                    }
+
+                    return data;
+                default:
+                    return null;
+            }
+        }
+
+        function updateWagesTotal() {
+            vm.wagesTotal = vm.wage * vm.numOfWages;
+            updateAllTotal();
+        }
+
+        function addRoute() {
+            vm.numOfRoutes++;
+        }
+
+        function removeRoute() {
+            var i = --vm.numOfRoutes;
+            vm['routesFrom' + i] = null;
+            vm['routesTo' + i] = null;
+            vm['routesTransportation' + i] = null;
+            vm['routesCost' + i] = null;
+        }
+
+        function updateRoutesTotal() {
+            vm.routesTotal = 0;
+            for (var i = 0; i < vm.numOfRoutes; i++) {
+                if (vm['routesCost' + i]) vm.routesTotal += vm['routesCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function addOther() {
+            vm.numOfOther++;
+        }
+
+        function removeOther() {
+            var i = --vm.numOfOther;
+            vm['otherDescription' + i] = null;
+            vm['otherCost' + i] = null;
+            if (vm.numOfOther == 0) vm.otherTotal = 0;
+        }
+
+        function updateOtherTotal() {
+            vm.otherTotal = 0;
+            for (var i = 0; i < vm.numOfOther; i++) {
+                if (vm['otherCost' + i]) vm.otherTotal += vm['otherCost' + i];
+            }
+            updateAllTotal();
+        }
+
+        function updateAllTotal() {
+            vm.allTotal = vm.wagesTotal + vm.routesTotal + vm.otherTotal;
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('SignatureDialogCtrl', SignatureDialogCtrl);
+
+    SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'docType', 'docId', 'userType', 'helperService', 'apiService'];
+    function SignatureDialogCtrl($scope, $mdDialog, $document, docType, docId, userType, helperService, apiService) {
+        var vm = this;
+        var signaturePad = null;
+        var confirmButton = null;
+
+        vm.hide = hide;
+        vm.clear = clear;
+        vm.confirm = confirm;
+
+        $document.ready(function() {
+            var canvas = document.querySelector('canvas');
+            signaturePad = new SignaturePad(canvas, {
+                minWidth: 0.4,
+                maxWidth: 1.0,
+                onEnd: onEnd
+            });
+
+            confirmButton = angular.element(document.querySelector('button[ng-click="signatureDialog.confirm()"]'));
+            confirmButton.attr('disabled', 'true');
+        });
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function clear() {
+            signaturePad.clear();
+            confirmButton.attr('disabled', 'true');
+        }
+
+        function confirm() {
+            var data = null;
+            switch (userType) {
+                case 0:
+                    if (docType == 'r') {
+                        $scope['newRequest']['applicantSignature'] = signaturePad.toDataURL();
+                    } else {
+                        $scope['pendingWarrants']['applicantSignature'] = signaturePad.toDataURL();
+                    }
+                    break;
+                case 2:
+                    data = {
+                        approved: true,
+                        approved_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        approver_signature: signaturePad.toDataURL()
+                    };
+
+                    if (docType == 'r') apiService.updateRequest(docId, data, null, true);
+                    else apiService.updateWarrant(docId, data, "Putni nalog odobren!", true);
+
+                    break;
+                case 3:
+                    data = {
+                        accounting_check: true,
+                        accounting_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
+                        accountant_signature: signaturePad.toDataURL()
+                    };
+
+                    apiService.updateWarrant(docId, data, "Putni nalog odobren!", true);
+
+                    break;
+                default:
+                    break;
+            }
+            hide();
+        }
+
+        function onEnd() {
+            if (!signaturePad.isEmpty()) {
+                confirmButton.removeAttr('disabled');
+            }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('RequestsApprovalCtrl', RequestsApprovalCtrl);
+
+    RequestsApprovalCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function RequestsApprovalCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 2) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema zahtjeva za odobravanje.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        function disapprove($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 2);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function approve($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'r', requestId, 2);
+            $mdDialog.show(signatureDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('RequestsValidationCtrl', RequestsValidationCtrl);
+
+    RequestsValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function RequestsValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 1) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema zahtjeva za pregled.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        function invalid($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 1);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function valid($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
+            $mdDialog.show(markRequestDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('RequestsSentCtrl', RequestsSentCtrl);
+
+    RequestsSentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function RequestsSentCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.icon = getIcon($scope['requests'].current);
+        vm.class = getClass($scope['requests'].current);
+        vm.showDetails = showDetails;
+
+        $scope.$watch('requests.current', function() {
+            vm.icon = getIcon($scope['requests'].current);
+            vm.class = getClass($scope['requests'].current);
+            vm.classAria = getClassAria();
+        });
+
+        function showDetails($event) {
+            var detailsDialogObject = dialogService.getDetailsDialogObject($event, requests[$scope['requests'].current]);
+            $mdDialog.show(detailsDialogObject);
+        }
+
+        function getIcon(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'thumb_down';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'thumb_up';
+            } else return 'thumbs_up_down';
+        }
+
+        function getClass(i) {
+            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+                return 'negative';
+            } else if ($scope['requests'].requests[i].approved) {
+                return 'positive';
+            } else return 'pending';
+        }
+
+        function getClassAria() {
+            if (vm.class == 'negative') {
+                return 'Odbijen';
+            } else if (vm.class == 'positive') {
+                return 'Odobren';
+            } else return 'U tijeku'
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('WarrantsAccountingCtrl', WarrantsAccountingCtrl);
+
+    WarrantsAccountingCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsAccountingCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 3) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        function disapprove($event) {
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 3, warrant);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function approve($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 3);
+            $mdDialog.show(signatureDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('WarrantsApprovalCtrl', WarrantsApprovalCtrl);
+
+    WarrantsApprovalCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsApprovalCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 2) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za odobravanje.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        function disapprove($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrantId, 2);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function approve($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 2);
+            $mdDialog.show(signatureDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('warrants')
+        .controller('WarrantsSentCtrl', WarrantsSentCtrl);
+
+    WarrantsSentCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsSentCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema poslanih zahtjeva.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.icon = getIcon($scope['warrants'].current);
+        vm.class = getClass($scope['warrants'].current);
+        vm.showDetails = showDetails;
+
+        $scope.$watch('warrants.current', function() {
+            vm.icon = getIcon($scope['warrants'].current);
+            vm.class = getClass($scope['warrants'].current);
+            vm.classAria = getClassAria();
+        });
+
+        function showDetails($event) {
+            var detailsDialogObject = dialogService.getDetailsDialogObject($event, warrants[$scope['warrants'].current]);
+            $mdDialog.show(detailsDialogObject);
+        }
+
+        function getIcon(i) {
+            var warrant = $scope['warrants'].warrants[i];
+            if (warrant.invalidity_reason || warrant.accounting_reason || warrant.disapproval_reason) {
+                return 'thumb_down';
+            } else if (warrant.approved) {
+                return 'thumb_up';
+            } else return 'thumbs_up_down';
+        }
+
+        function getClass(i) {
+            var warrant = $scope['warrants'].warrants[i];
+            if (warrant.invalidity_reason || warrant.accounting_reason || warrant.disapproval_reason) {
+                return 'negative';
+            } else if (warrant.approved) {
+                return 'positive';
+            } else return 'pending';
+        }
+
+        function getClassAria() {
+            if (vm.class == 'negative') {
+                return 'Odbijen';
+            } else if (vm.class == 'positive') {
+                return 'Odobren';
+            } else return 'U tijeku'
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('warrants')
+        .controller('WarrantsValidationCtrl', WarrantsValidationCtrl);
+
+    WarrantsValidationCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog', 'apiService', 'helperService'];
+    function WarrantsValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
+        if ($scope['main'].user.type != 1) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        function invalid($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrantId, 1);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function valid() {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var data = {
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
         }
     }
 })();
