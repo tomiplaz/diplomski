@@ -62,15 +62,20 @@
         }
 
         function confirm() {
-            var data = getDataObject();
-            if (data != null) {
-                if (docType == 'r') apiService.updateRequest(docId, data, "Zahtjev odbijen!", true);
-                else apiService.updateWarrant(docId, data, "Putni nalog odbijen!", true);
+            var rejection = getRejectionObject();
+
+            if (rejection != null) {
+                if (docType == 'r') apiService.updateRequest(docId, rejection, "Zahtjev odbijen!", true);
+                else {
+                    var newWarrant = getNewWarrantObject();
+                    apiService.updateWarrant(docId, rejection, "Putni nalog odbijen!", true, newWarrant);
+                }
             }
+
             hide();
         }
 
-        function getDataObject() {
+        function getRejectionObject() {
             switch (userType) {
                 case 1:
                     return {
@@ -85,33 +90,68 @@
                         disapproval_reason: vm.reason
                     };
                 case 3:
-                    var data = {
-                        wage: vm.wage,
-                        wages_total: vm.wagesTotal,
-                        routes_total: vm.routesTotal,
-                        other_total: vm.otherTotal,
-                        all_total: vm.allTotal,
-
+                    return {
                         accounting_check: false,
                         accounting_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
                         accounting_reason: vm.reason
                     };
-
-                    for (var i = 0; i < 7; i++) {
-                        data['routes_from_' + i] = !vm['routesFrom' + i] ? null : vm['routesFrom' + i];
-                        data['routes_to_' + i] = !vm['routesTo' + i] ? null : vm['routesTo' + i];
-                        data['routes_transportation_' + i] = !vm['routesTransportation' + i] ? null : vm['routesTransportation' + i];
-                        data['routes_cost_' + i] = !vm['routesCost' + i] ? null : vm['routesCost' + i];
-                    }
-                    for (i = 0; i < 4; i++) {
-                        data['other_description_' + i] = !vm['otherDescription' + i] ? null : vm['otherDescription' + i];
-                        data['other_cost_' + i] = !vm['otherCost' + i] ? null : vm['otherCost' + i];
-                    }
-
-                    return data;
                 default:
                     return null;
             }
+        }
+
+        function getNewWarrantObject() {
+            var newWarrant = {
+                user_id: warrant.user_id,
+                mark: warrant.mark,
+                type: warrant.type,
+                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
+                name: warrant.name,
+                surname: warrant.surname,
+                workplace: warrant.workplace,
+                for_place: warrant.for_place,
+                start_timestamp: warrant.start_timestamp,
+                end_timestamp: warrant.end_timestamp,
+                duration: warrant.duration,
+                advance_payment: warrant.advance_payment,
+                description: warrant.description,
+                transportation: warrant.transportation,
+                expenses_responsible: warrant.expenses_responsible,
+                approver_start_signature: warrant.approver_start_signature,
+                wage: userType == 3 ? vm.wage : warrant.wage,
+                wages_total: userType == 3 ? vm.wagesTotal : warrant.wages_total,
+                routes_total: userType == 3 ? vm.routesTotal : warrant.routes_total,
+                other_total: userType == 3 ? vm.otherTotal : warrant.other_total,
+                all_total: userType == 3 ? vm.allTotal : warrant.all_total,
+                report: warrant.report
+            };
+
+            var i = null;
+            if (userType == 3) {
+                for (i = 0; i < 7; i++) {
+                    newWarrant['routes_from_' + i] = !vm['routesFrom' + i] ? null : vm['routesFrom' + i];
+                    newWarrant['routes_to_' + i] = !vm['routesTo' + i] ? null : vm['routesTo' + i];
+                    newWarrant['routes_transportation_' + i] = !vm['routesTransportation' + i] ? null : vm['routesTransportation' + i];
+                    newWarrant['routes_cost_' + i] = !vm['routesCost' + i] ? null : vm['routesCost' + i];
+                }
+                for (i = 0; i < 4; i++) {
+                    newWarrant['other_description_' + i] = !vm['otherDescription' + i] ? null : vm['otherDescription' + i];
+                    newWarrant['other_cost_' + i] = !vm['otherCost' + i] ? null : vm['otherCost' + i];
+                }
+            } else {
+                for (i = 0; i < 7; i++) {
+                    newWarrant['routes_from_' + i] = warrant['routes_from_' + i];
+                    newWarrant['routes_to_' + i] = warrant['routes_to_' + i];
+                    newWarrant['routes_transportation_' + i] = warrant['routes_transportation_' + i];
+                    newWarrant['routes_cost_' + i] = warrant['routes_cost_' + i];
+                }
+                for (i = 0; i < 4; i++) {
+                    newWarrant['other_description_' + i] = warrant['other_description_' + i];
+                    newWarrant['other_cost_' + i] = warrant['other_cost_' + i];
+                }
+            }
+
+            return newWarrant;
         }
 
         function updateWagesTotal() {

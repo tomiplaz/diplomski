@@ -17,7 +17,7 @@ class CreateWarrantsTable extends Migration
             $table->timestamps();
             $table->integer('user_id')->unsigned();
 
-            $table->char('mark', 10)->unique();
+            $table->char('mark', 10);
             $table->char('type', 1);
             $table->date('document_date');
 

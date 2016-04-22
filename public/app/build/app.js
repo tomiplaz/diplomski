@@ -188,10 +188,20 @@
             });
         }
 
-        function updateWarrant(warrantId, data, message, refresh) {
+        function updateWarrant(warrantId, data, message, refresh, newWarrant) {
             Restangular.one('warrants', warrantId).doPUT(data).then(function() {
-                toastService.show(message);
-                if (refresh) $state.go($state.current, {}, { reload: true });
+                if (newWarrant) {
+                    Restangular.all('warrants').post(newWarrant).then(function() {
+                        toastService.show(message + " Kopija stvorena i poslana podnositelju putnog naloga!", 3000);
+                    }, function() {
+                        toastService.show(message + " Greška tijekom stvaranja kopije putnog naloga!", 3000);
+                    }).finally(function() {
+                        if (refresh) $state.go($state.current, {}, { reload: true });
+                    });
+                } else {
+                    toastService.show(message);
+                    if (refresh) $state.go($state.current, {}, { reload: true });
+                }
             }, function() {
                 toastService.show("Greška tijekom ažuriranja putnog naloga!", 3000);
             });
@@ -1404,6 +1414,109 @@
 
     angular
         .module('main')
+        .controller('NewRequestCtrl', NewRequestCtrl);
+
+    NewRequestCtrl.$inject = ['$scope', '$state', 'dialogService', '$mdDialog', 'helperService'];
+    function NewRequestCtrl($scope, $state, dialogService, $mdDialog, helperService) {
+        if ($scope['main'].user.type != 0) return $state.go('main.home');
+
+        var vm = this;
+
+        vm.name = $scope['main'].user.name;
+        vm.surname = $scope['main'].user.surname;
+
+        vm.showDateTimeDialog = showDateTimeDialog;
+        vm.showDocumentDialog = showDocumentDialog;
+        vm.sign = sign;
+        vm.clear = clear;
+
+        function showDateTimeDialog($event, label, property) {
+            var mindate = helperService.formatDate(Date.now() + 7 * 86400000, 'yyyy/MM/dd');
+            var maxdate;
+
+            if (property == 'startTimestamp') {
+                if (vm.endTimestamp) {
+                    maxdate = helperService.formatDate(vm.endTimestampRaw, 'yyyy/MM/dd');
+                }
+            } else if (property == 'endTimestamp') {
+                if (vm.startTimestamp) {
+                    mindate = helperService.formatDate(vm.startTimestampRaw, 'yyyy/MM/dd');
+                }
+            }
+
+            var data = {
+                label: label,
+                property: property,
+                mindate: mindate,
+                maxdate: maxdate
+            };
+
+            var dateTimeDialogObject = dialogService.getDateTimeDialogObject($scope, $event, data);
+            $mdDialog.show(dateTimeDialogObject);
+        }
+
+        function showDocumentDialog($event) {
+            var data = {
+                userId: $scope['main'].user.id,
+                type: vm.type,
+                documentDate: helperService.formatDate(null, 'dd.MM.yyyy.'),
+                name: vm.name,
+                surname: vm.surname,
+                workplace: vm.workplace,
+                forPlace: vm.forPlace,
+                forFaculty: vm.forFaculty,
+                forSubject: vm.forSubject,
+                projectLeader: vm.projectLeader,
+                startTimestamp: vm.startTimestamp,
+                endTimestamp: vm.endTimestamp,
+                startTimestampRaw: vm.startTimestampRaw,
+                endTimestampRaw: vm.endTimestampRaw,
+                duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
+                advancePayment: vm.advancePayment,
+                description: vm.description,
+                transportation: helperService.formatTransportation(vm.transportation),
+                expensesResponsible: vm.expensesResponsible,
+                expensesExplanation: vm.expensesExplanation,
+                applicantSignature: vm.applicantSignature
+            };
+
+            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
+            $mdDialog.show(documentDialogObject);
+        }
+
+        function sign($event) {
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'r', null, 0);
+            $mdDialog.show(signatureDialogObject);
+        }
+
+        function clear() {
+            vm.type = null;
+            vm.name = null;
+            vm.surname = null;
+            vm.workplace = null;
+            vm.forPlace = null;
+            vm.forFaculty = null;
+            vm.forSubject = null;
+            vm.projectLeader = null;
+            vm.advancePayment = null;
+            vm.startTimestamp = null;
+            vm.endTimestamp = null;
+            vm.startTimestampRaw = null;
+            vm.endTimestampRaw = null;
+            vm.advancePayment = null;
+            vm.description = null;
+            vm.transportation = null;
+            vm.expensesResponsible = null;
+            vm.expensesExplanation = null;
+            vm.applicantSignature = null;
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('NewUserCtrl', NewUserCtrl);
 
     NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
@@ -1661,109 +1774,6 @@
     }
 })();
 
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('NewRequestCtrl', NewRequestCtrl);
-
-    NewRequestCtrl.$inject = ['$scope', '$state', 'dialogService', '$mdDialog', 'helperService'];
-    function NewRequestCtrl($scope, $state, dialogService, $mdDialog, helperService) {
-        if ($scope['main'].user.type != 0) return $state.go('main.home');
-
-        var vm = this;
-
-        vm.name = $scope['main'].user.name;
-        vm.surname = $scope['main'].user.surname;
-
-        vm.showDateTimeDialog = showDateTimeDialog;
-        vm.showDocumentDialog = showDocumentDialog;
-        vm.sign = sign;
-        vm.clear = clear;
-
-        function showDateTimeDialog($event, label, property) {
-            var mindate = helperService.formatDate(Date.now() + 7 * 86400000, 'yyyy/MM/dd');
-            var maxdate;
-
-            if (property == 'startTimestamp') {
-                if (vm.endTimestamp) {
-                    maxdate = helperService.formatDate(vm.endTimestampRaw, 'yyyy/MM/dd');
-                }
-            } else if (property == 'endTimestamp') {
-                if (vm.startTimestamp) {
-                    mindate = helperService.formatDate(vm.startTimestampRaw, 'yyyy/MM/dd');
-                }
-            }
-
-            var data = {
-                label: label,
-                property: property,
-                mindate: mindate,
-                maxdate: maxdate
-            };
-
-            var dateTimeDialogObject = dialogService.getDateTimeDialogObject($scope, $event, data);
-            $mdDialog.show(dateTimeDialogObject);
-        }
-
-        function showDocumentDialog($event) {
-            var data = {
-                userId: $scope['main'].user.id,
-                type: vm.type,
-                documentDate: helperService.formatDate(null, 'dd.MM.yyyy.'),
-                name: vm.name,
-                surname: vm.surname,
-                workplace: vm.workplace,
-                forPlace: vm.forPlace,
-                forFaculty: vm.forFaculty,
-                forSubject: vm.forSubject,
-                projectLeader: vm.projectLeader,
-                startTimestamp: vm.startTimestamp,
-                endTimestamp: vm.endTimestamp,
-                startTimestampRaw: vm.startTimestampRaw,
-                endTimestampRaw: vm.endTimestampRaw,
-                duration: helperService.getDuration(vm.startTimestampRaw, vm.endTimestampRaw),
-                advancePayment: vm.advancePayment,
-                description: vm.description,
-                transportation: helperService.formatTransportation(vm.transportation),
-                expensesResponsible: vm.expensesResponsible,
-                expensesExplanation: vm.expensesExplanation,
-                applicantSignature: vm.applicantSignature
-            };
-
-            var documentDialogObject = dialogService.getDocumentDialogObject($event, data);
-            $mdDialog.show(documentDialogObject);
-        }
-
-        function sign($event) {
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'r', null, 0);
-            $mdDialog.show(signatureDialogObject);
-        }
-
-        function clear() {
-            vm.type = null;
-            vm.name = null;
-            vm.surname = null;
-            vm.workplace = null;
-            vm.forPlace = null;
-            vm.forFaculty = null;
-            vm.forSubject = null;
-            vm.projectLeader = null;
-            vm.advancePayment = null;
-            vm.startTimestamp = null;
-            vm.endTimestamp = null;
-            vm.startTimestampRaw = null;
-            vm.endTimestampRaw = null;
-            vm.advancePayment = null;
-            vm.description = null;
-            vm.transportation = null;
-            vm.expensesResponsible = null;
-            vm.expensesExplanation = null;
-            vm.applicantSignature = null;
-        }
-    }
-})();
 (function() {
     'use strict';
 
@@ -2054,15 +2064,20 @@
         }
 
         function confirm() {
-            var data = getDataObject();
-            if (data != null) {
-                if (docType == 'r') apiService.updateRequest(docId, data, "Zahtjev odbijen!", true);
-                else apiService.updateWarrant(docId, data, "Putni nalog odbijen!", true);
+            var rejection = getRejectionObject();
+
+            if (rejection != null) {
+                if (docType == 'r') apiService.updateRequest(docId, rejection, "Zahtjev odbijen!", true);
+                else {
+                    var newWarrant = getNewWarrantObject();
+                    apiService.updateWarrant(docId, rejection, "Putni nalog odbijen!", true, newWarrant);
+                }
             }
+
             hide();
         }
 
-        function getDataObject() {
+        function getRejectionObject() {
             switch (userType) {
                 case 1:
                     return {
@@ -2077,33 +2092,68 @@
                         disapproval_reason: vm.reason
                     };
                 case 3:
-                    var data = {
-                        wage: vm.wage,
-                        wages_total: vm.wagesTotal,
-                        routes_total: vm.routesTotal,
-                        other_total: vm.otherTotal,
-                        all_total: vm.allTotal,
-
+                    return {
                         accounting_check: false,
                         accounting_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss'),
                         accounting_reason: vm.reason
                     };
-
-                    for (var i = 0; i < 7; i++) {
-                        data['routes_from_' + i] = !vm['routesFrom' + i] ? null : vm['routesFrom' + i];
-                        data['routes_to_' + i] = !vm['routesTo' + i] ? null : vm['routesTo' + i];
-                        data['routes_transportation_' + i] = !vm['routesTransportation' + i] ? null : vm['routesTransportation' + i];
-                        data['routes_cost_' + i] = !vm['routesCost' + i] ? null : vm['routesCost' + i];
-                    }
-                    for (i = 0; i < 4; i++) {
-                        data['other_description_' + i] = !vm['otherDescription' + i] ? null : vm['otherDescription' + i];
-                        data['other_cost_' + i] = !vm['otherCost' + i] ? null : vm['otherCost' + i];
-                    }
-
-                    return data;
                 default:
                     return null;
             }
+        }
+
+        function getNewWarrantObject() {
+            var newWarrant = {
+                user_id: warrant.user_id,
+                mark: warrant.mark,
+                type: warrant.type,
+                document_date: helperService.formatDate(null, 'yyyy-MM-dd'),
+                name: warrant.name,
+                surname: warrant.surname,
+                workplace: warrant.workplace,
+                for_place: warrant.for_place,
+                start_timestamp: warrant.start_timestamp,
+                end_timestamp: warrant.end_timestamp,
+                duration: warrant.duration,
+                advance_payment: warrant.advance_payment,
+                description: warrant.description,
+                transportation: warrant.transportation,
+                expenses_responsible: warrant.expenses_responsible,
+                approver_start_signature: warrant.approver_start_signature,
+                wage: userType == 3 ? vm.wage : warrant.wage,
+                wages_total: userType == 3 ? vm.wagesTotal : warrant.wages_total,
+                routes_total: userType == 3 ? vm.routesTotal : warrant.routes_total,
+                other_total: userType == 3 ? vm.otherTotal : warrant.other_total,
+                all_total: userType == 3 ? vm.allTotal : warrant.all_total,
+                report: warrant.report
+            };
+
+            var i = null;
+            if (userType == 3) {
+                for (i = 0; i < 7; i++) {
+                    newWarrant['routes_from_' + i] = !vm['routesFrom' + i] ? null : vm['routesFrom' + i];
+                    newWarrant['routes_to_' + i] = !vm['routesTo' + i] ? null : vm['routesTo' + i];
+                    newWarrant['routes_transportation_' + i] = !vm['routesTransportation' + i] ? null : vm['routesTransportation' + i];
+                    newWarrant['routes_cost_' + i] = !vm['routesCost' + i] ? null : vm['routesCost' + i];
+                }
+                for (i = 0; i < 4; i++) {
+                    newWarrant['other_description_' + i] = !vm['otherDescription' + i] ? null : vm['otherDescription' + i];
+                    newWarrant['other_cost_' + i] = !vm['otherCost' + i] ? null : vm['otherCost' + i];
+                }
+            } else {
+                for (i = 0; i < 7; i++) {
+                    newWarrant['routes_from_' + i] = warrant['routes_from_' + i];
+                    newWarrant['routes_to_' + i] = warrant['routes_to_' + i];
+                    newWarrant['routes_transportation_' + i] = warrant['routes_transportation_' + i];
+                    newWarrant['routes_cost_' + i] = warrant['routes_cost_' + i];
+                }
+                for (i = 0; i < 4; i++) {
+                    newWarrant['other_description_' + i] = warrant['other_description_' + i];
+                    newWarrant['other_cost_' + i] = warrant['other_cost_' + i];
+                }
+            }
+
+            return newWarrant;
         }
 
         function updateWagesTotal() {
@@ -2275,39 +2325,6 @@
 
     angular
         .module('requests')
-        .controller('RequestsValidationCtrl', RequestsValidationCtrl);
-
-    RequestsValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function RequestsValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 1) return $state.go('main.home');
-
-        $scope['requests'].emptyInfo = "Nema zahtjeva za pregled.";
-        $scope['requests'].requests = requests;
-        $scope['requests'].init();
-
-        var vm = this;
-
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        function invalid($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 1);
-            $mdDialog.show(rejectDialogObject);
-        }
-
-        function valid($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
-            $mdDialog.show(markRequestDialogObject);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('requests')
         .controller('RequestsSentCtrl', RequestsSentCtrl);
 
     RequestsSentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
@@ -2357,6 +2374,39 @@
             } else if (vm.class == 'positive') {
                 return 'Odobren';
             } else return 'U tijeku'
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('RequestsValidationCtrl', RequestsValidationCtrl);
+
+    RequestsValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function RequestsValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 1) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema zahtjeva za pregled.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        function invalid($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 1);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function valid($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
+            $mdDialog.show(markRequestDialogObject);
         }
     }
 })();
@@ -2414,8 +2464,8 @@
         vm.approve = approve;
 
         function disapprove($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrantId, 2);
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 2, warrant);
             $mdDialog.show(rejectDialogObject);
         }
 
@@ -2506,8 +2556,8 @@
         vm.valid = valid;
 
         function invalid($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrantId, 1);
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 1, warrant);
             $mdDialog.show(rejectDialogObject);
         }
 

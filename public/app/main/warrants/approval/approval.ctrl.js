@@ -19,8 +19,8 @@
         vm.approve = approve;
 
         function disapprove($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrantId, 2);
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 2, warrant);
             $mdDialog.show(rejectDialogObject);
         }
 

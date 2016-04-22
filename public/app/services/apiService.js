@@ -103,10 +103,20 @@
             });
         }
 
-        function updateWarrant(warrantId, data, message, refresh) {
+        function updateWarrant(warrantId, data, message, refresh, newWarrant) {
             Restangular.one('warrants', warrantId).doPUT(data).then(function() {
-                toastService.show(message);
-                if (refresh) $state.go($state.current, {}, { reload: true });
+                if (newWarrant) {
+                    Restangular.all('warrants').post(newWarrant).then(function() {
+                        toastService.show(message + " Kopija stvorena i poslana podnositelju putnog naloga!", 3000);
+                    }, function() {
+                        toastService.show(message + " Greška tijekom stvaranja kopije putnog naloga!", 3000);
+                    }).finally(function() {
+                        if (refresh) $state.go($state.current, {}, { reload: true });
+                    });
+                } else {
+                    toastService.show(message);
+                    if (refresh) $state.go($state.current, {}, { reload: true });
+                }
             }, function() {
                 toastService.show("Greška tijekom ažuriranja putnog naloga!", 3000);
             });

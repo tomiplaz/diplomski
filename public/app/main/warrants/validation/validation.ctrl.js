@@ -19,8 +19,8 @@
         vm.valid = valid;
 
         function invalid($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrantId, 1);
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 1, warrant);
             $mdDialog.show(rejectDialogObject);
         }
 
