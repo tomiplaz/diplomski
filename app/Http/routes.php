@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/v1'], function() {
         Route::group(['prefix' => 'warrants'], function() {
             Route::get('/', 'WarrantsController@getWarrants');
             Route::post('/', 'WarrantsController@createWarrant');
+            Route::get('user', 'WarrantsController@getUserWarrants');
             Route::get('user/pending', 'WarrantsController@getUserPendingWarrants');
             Route::get('user/sent', 'WarrantsController@getUserSentWarrants');
             Route::get('nonvalidated', 'WarrantsController@getNonvalidatedWarrants');

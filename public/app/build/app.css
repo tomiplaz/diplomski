@@ -96,5 +96,11 @@ body {
       width: 100px; }
     body .pending-warrants-form .select-input, body .reject-dialog-bill .select-input {
       width: 180px; }
+  body .home-page {
+    margin-top: 15%; }
+    body .home-page .info-box div[layout="column"] {
+      margin: 0 50px; }
+  body .bold {
+    font-weight: bold; }
 
 /*# sourceMappingURL=app.css.map */

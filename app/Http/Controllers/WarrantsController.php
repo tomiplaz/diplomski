@@ -35,6 +35,28 @@ class WarrantsController extends Controller
     }
 
     /**
+     * Get current user's warrants.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserWarrants() {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['error' => 'user_not_found'], 404);
+            }
+        } catch(TokenExpiredException $e) {
+            return response()->json(['error' => 'token_expired'], $e->getStatusCode());
+        } catch(TokenInvalidException $e) {
+            return response()->json(['error' => 'token_invalid'], $e->getStatusCode());
+        } catch(JWTException $e) {
+            return response()->json(['error' => 'token_missing'], $e->getStatusCode());
+        }
+
+        $warrants = $user->warrants()->get();
+        return response()->json($warrants);
+    }
+
+    /**
      * Get current user's pending warrants.
      *
      * @return \Illuminate\Http\JsonResponse

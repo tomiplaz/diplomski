@@ -20,7 +20,8 @@
             })
             .state('main.home', {
                 url: '/home',
-                templateUrl: 'app/main/main.home.html'
+                templateUrl: 'app/main/home/home.html',
+                controller: 'HomeCtrl as home'
             })
             .state('main.new-request', {
                 url: '/new-request',
