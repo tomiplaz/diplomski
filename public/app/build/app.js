@@ -1335,24 +1335,28 @@
             {
                 name: 'main.new-request',
                 label: 'Novi zahtjev',
+                character: 'Z',
                 icon: 'library_add',
                 type: [0]
             },
             {
                 name: 'main.requests.validation',
                 label: 'Validacija zahtjeva',
+                character: 'Z',
                 icon: 'library_books',
                 type: [1]
             },
             {
                 name: 'main.requests.approval',
                 label: 'Odobravanje zahtjeva',
+                character: 'Z',
                 icon: 'library_books',
                 type: [2]
             },
             {
                 name: 'main.requests.sent',
                 label: 'Poslani zahtjevi',
+                character: 'Z',
                 icon: 'library_books',
                 type: [0]
             },
@@ -1365,30 +1369,35 @@
             {
                 name: 'main.pending-warrants',
                 label: 'Tekući putni nalozi',
+                character: 'N',
                 icon: 'library_add',
                 type: [0]
             },
             {
                 name: 'main.warrants.validation',
-                label: 'Putni nalozi',
+                label: 'Validacija putnih naloga',
+                character: 'N',
                 icon: 'library_books',
                 type: [1]
             },
             {
                 name: 'main.warrants.accounting',
-                label: 'Putni nalozi',
+                label: 'Računovođenje putnih naloga',
+                character: 'N',
                 icon: 'library_books',
                 type: [3]
             },
             {
                 name: 'main.warrants.approval',
-                label: 'Putni nalozi',
+                label: 'Odobravanje putnih naloga',
+                character: 'N',
                 icon: 'library_books',
                 type: [2]
             },
             {
                 name: 'main.warrants.sent',
                 label: 'Poslani putni nalozi',
+                character: 'N',
                 icon: 'library_books',
                 type: [0]
             }
@@ -1482,43 +1491,6 @@
     }
 })();
 
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('NewUserCtrl', NewUserCtrl);
-
-    NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
-    function NewUserCtrl($scope, $state, apiService) {
-        if ($scope['main'].user.type != 4) return $state.go('main.home');
-
-        var vm = this;
-
-        vm.clear = clear;
-        vm.createUser = createUser;
-
-        function clear() {
-            vm.type = null;
-            vm.name = null;
-            vm.surname = null;
-            vm.email = null;
-            vm.password = null;
-        }
-
-        function createUser() {
-            var data = {
-                type: vm.type,
-                name: vm.name,
-                surname: vm.surname,
-                email: vm.email,
-                password: vm.password
-            };
-
-            apiService.createUser(data);
-        }
-    }
-})();
 (function() {
     'use strict';
 
@@ -1619,6 +1591,43 @@
             vm.expensesResponsible = null;
             vm.expensesExplanation = null;
             vm.applicantSignature = null;
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('NewUserCtrl', NewUserCtrl);
+
+    NewUserCtrl.$inject = ['$scope', '$state', 'apiService'];
+    function NewUserCtrl($scope, $state, apiService) {
+        if ($scope['main'].user.type != 4) return $state.go('main.home');
+
+        var vm = this;
+
+        vm.clear = clear;
+        vm.createUser = createUser;
+
+        function clear() {
+            vm.type = null;
+            vm.name = null;
+            vm.surname = null;
+            vm.email = null;
+            vm.password = null;
+        }
+
+        function createUser() {
+            var data = {
+                type: vm.type,
+                name: vm.name,
+                surname: vm.surname,
+                email: vm.email,
+                password: vm.password
+            };
+
+            apiService.createUser(data);
         }
     }
 })();
