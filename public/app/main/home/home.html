@@ -1,4 +1,4 @@
-<div layout="column" layout-align="center center" class="home-page">
+<div layout="column" layout-align="center center" class="info-page">
 
     <p>Prijavljeni ste s email adresom <span class="bold">{{ main.user.email }}</span>.</p>
 
@@ -19,32 +19,30 @@
         </div>
     </div>
 
-    <div ng-if="main.user.type == 1" layout="row" layout-align="center center" class="info-box">
+    <div ng-if="main.user.type == 1 || main.user.type == 2" layout="row" layout-align="center center" class="info-box">
         <div layout="column" layout-align="center center">
             <h4>Zahtjevi</h4>
-            <div>Za provjeriti: <span class="bold">{{home.nonvalidatedRequests.length}}</span></div>
+            <div>Ukupno: <span class="bold">{{home.requests.length}}</span></div>
+            <div>Nepregledano: <span class="bold">{{home.pendingRequests.length}}</span></div>
+            <div>Odobreno: <span class="bold">{{home.approvedRequests.length}}</span></div>
+            <div>Odbijeno: <span class="bold">{{home.rejectedRequests.length}}</span></div>
         </div>
         <div layout="column" layout-align="center center">
             <h4>Putni nalozi</h4>
-            <div>Za provjeriti: <span class="bold">{{home.nonvalidatedWarrants.length}}</span></div>
-        </div>
-    </div>
-
-    <div ng-if="main.user.type == 2" layout="row" layout-align="center center" class="info-box">
-        <div layout="column" layout-align="center center">
-            <h4>Zahtjevi</h4>
-            <div>Za odobriti: <span class="bold">{{home.approvableRequests.length}}</span></div>
-        </div>
-        <div layout="column" layout-align="center center">
-            <h4>Putni nalozi</h4>
-            <div>Za odobriti: <span class="bold">{{home.approvableRequests.length}}</span></div>
+            <div>Ukupno: <span class="bold">{{home.warrants.length}}</span></div>
+            <div>Nepregledano: <span class="bold">{{home.pendingWarrants.length}}</span></div>
+            <div>Odobreno: <span class="bold">{{home.approvedWarrants.length}}</span></div>
+            <div>Odbijeno:  <span class="bold">{{home.rejectedWarrants.length}}</span></div>
         </div>
     </div>
 
     <div ng-if="main.user.type == 3" layout="row" layout-align="center center" class="info-box">
         <div layout="column" layout-align="center center">
             <h4>Putni nalozi</h4>
-            <div>Za odobriti: <span class="bold">{{home.nonaccountedWarrants.length}}</span></div>
+            <div>Ukupno: <span class="bold">{{home.warrants.length}}</span></div>
+            <div>Nepregledano: <span class="bold">{{home.pendingWarrants.length}}</span></div>
+            <div>Odobreno: <span class="bold">{{home.approvedWarrants.length}}</span></div>
+            <div>Odbijeno:  <span class="bold">{{home.rejectedWarrants.length}}</span></div>
         </div>
     </div>
 

@@ -1460,28 +1460,73 @@
 
                 break;
             case 1:
-                apiService.getRequests('nonvalidated').then(function(requests) {
-                    vm.nonvalidatedRequests = requests;
+                apiService.getRequests().then(function(requests) {
+                    vm.requests = requests;
+                    vm.pendingRequests = _.filter(requests, function(request) {
+                        return request.quality_check == null;
+                    });
+                    vm.approvedRequests = _.filter(requests, function(request) {
+                        return request.quality_check;
+                    });
+                    vm.rejectedRequests = _.filter(requests, function(request) {
+                        return request.quality_check == false;
+                    });
                 });
 
-                apiService.getWarrants('nonvalidated').then(function(warrants) {
-                    vm.nonvalidatedWarrants = warrants;
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == null;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == false;
+                    });
                 });
 
                 break;
             case 2:
-                apiService.getRequests('approvable').then(function(requests) {
-                    vm.approvableRequests = requests;
+                apiService.getRequests().then(function(requests) {
+                    vm.requests = requests;
+                    vm.pendingRequests = _.filter(requests, function(request) {
+                        return request.approved == null && request.quality_check;
+                    });
+                    vm.approvedRequests = _.filter(requests, function(request) {
+                        return request.approved;
+                    });
+                    vm.rejectedRequests = _.filter(requests, function(request) {
+                        return request.approved == false;
+                    });
                 });
 
-                apiService.getWarrants('approvable').then(function(warrants) {
-                    vm.approvableWarrants = warrants;
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved == null && warrant.accounting_check;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved == false;
+                    });
                 });
 
                 break;
             case 3:
-                apiService.getWarrants('nonaccounted').then(function(warrants) {
-                    vm.nonaccountedWarrants = warrants;
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check == null && warrant.quality_check;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check == false;
+                    });
                 });
 
                 break;
@@ -2496,72 +2541,6 @@
     'use strict';
 
     angular
-        .module('main')
-        .controller('WarrantsAccountingCtrl', WarrantsAccountingCtrl);
-
-    WarrantsAccountingCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
-    function WarrantsAccountingCtrl($scope, $state, warrants, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 3) return $state.go('main.home');
-
-        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
-        $scope['warrants'].warrants = warrants;
-        $scope['warrants'].init();
-
-        var vm = this;
-
-        vm.disapprove = disapprove;
-        vm.approve = approve;
-
-        function disapprove($event) {
-            var warrant = warrants[$scope['warrants'].current];
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 3, warrant);
-            $mdDialog.show(rejectDialogObject);
-        }
-
-        function approve($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 3);
-            $mdDialog.show(signatureDialogObject);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('WarrantsApprovalCtrl', WarrantsApprovalCtrl);
-
-    WarrantsApprovalCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
-    function WarrantsApprovalCtrl($scope, $state, warrants, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 2) return $state.go('main.home');
-
-        $scope['warrants'].emptyInfo = "Nema putnih naloga za odobravanje.";
-        $scope['warrants'].warrants = warrants;
-        $scope['warrants'].init();
-
-        var vm = this;
-
-        vm.disapprove = disapprove;
-        vm.approve = approve;
-
-        function disapprove($event) {
-            var warrant = warrants[$scope['warrants'].current];
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 2, warrant);
-            $mdDialog.show(rejectDialogObject);
-        }
-
-        function approve($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 2);
-            $mdDialog.show(signatureDialogObject);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
         .module('warrants')
         .controller('WarrantsSentCtrl', WarrantsSentCtrl);
 
@@ -2621,6 +2600,39 @@
     'use strict';
 
     angular
+        .module('main')
+        .controller('WarrantsAccountingCtrl', WarrantsAccountingCtrl);
+
+    WarrantsAccountingCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsAccountingCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 3) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        function disapprove($event) {
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 3, warrant);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function approve($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 3);
+            $mdDialog.show(signatureDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
         .module('warrants')
         .controller('WarrantsValidationCtrl', WarrantsValidationCtrl);
 
@@ -2650,6 +2662,39 @@
                 quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
             };
             apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('WarrantsApprovalCtrl', WarrantsApprovalCtrl);
+
+    WarrantsApprovalCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsApprovalCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 2) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za odobravanje.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        function disapprove($event) {
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 2, warrant);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function approve($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 2);
+            $mdDialog.show(signatureDialogObject);
         }
     }
 })();

@@ -39,28 +39,73 @@
 
                 break;
             case 1:
-                apiService.getRequests('nonvalidated').then(function(requests) {
-                    vm.nonvalidatedRequests = requests;
+                apiService.getRequests().then(function(requests) {
+                    vm.requests = requests;
+                    vm.pendingRequests = _.filter(requests, function(request) {
+                        return request.quality_check == null;
+                    });
+                    vm.approvedRequests = _.filter(requests, function(request) {
+                        return request.quality_check;
+                    });
+                    vm.rejectedRequests = _.filter(requests, function(request) {
+                        return request.quality_check == false;
+                    });
                 });
 
-                apiService.getWarrants('nonvalidated').then(function(warrants) {
-                    vm.nonvalidatedWarrants = warrants;
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == null;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == false;
+                    });
                 });
 
                 break;
             case 2:
-                apiService.getRequests('approvable').then(function(requests) {
-                    vm.approvableRequests = requests;
+                apiService.getRequests().then(function(requests) {
+                    vm.requests = requests;
+                    vm.pendingRequests = _.filter(requests, function(request) {
+                        return request.approved == null && request.quality_check;
+                    });
+                    vm.approvedRequests = _.filter(requests, function(request) {
+                        return request.approved;
+                    });
+                    vm.rejectedRequests = _.filter(requests, function(request) {
+                        return request.approved == false;
+                    });
                 });
 
-                apiService.getWarrants('approvable').then(function(warrants) {
-                    vm.approvableWarrants = warrants;
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved == null && warrant.accounting_check;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved == false;
+                    });
                 });
 
                 break;
             case 3:
-                apiService.getWarrants('nonaccounted').then(function(warrants) {
-                    vm.nonaccountedWarrants = warrants;
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check == null && warrant.quality_check;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check == false;
+                    });
                 });
 
                 break;
