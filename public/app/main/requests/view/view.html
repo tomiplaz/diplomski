@@ -1,0 +1,10 @@
+<md-button class="md-fab md-mini md-raised badge" aria-label="{{ requestsView.classAria }}">
+    <md-icon md-svg-src="{{ requestsView.icon }}" class="{{ requestsView.class }}"></md-icon>
+</md-button>
+
+<p>{{ requests.current + 1 }}/{{ requests.requests.length }}</p>
+
+<md-button class="md-fab md-mini md-raised" ng-click="requestsView.showDetails($event)" aria-label="Detalji">
+    <md-tooltip md-direction="bottom">Detalji</md-tooltip>
+    <md-icon md-svg-src="details"></md-icon>
+</md-button>

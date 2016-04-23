@@ -3,11 +3,11 @@
 
     angular
         .module('warrants')
-        .controller('WarrantsSentCtrl', WarrantsSentCtrl);
+        .controller('WarrantsViewCtrl', WarrantsViewCtrl);
 
-    WarrantsSentCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
-    function WarrantsSentCtrl($scope, $state, warrants, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 0) return $state.go('main.home');
+    WarrantsViewCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsViewCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if (!_.includes([0, 1, 2, 3], $scope['main'].user.type)) return $state.go('main.home');
 
         $scope['warrants'].emptyInfo = "Nema poslanih zahtjeva.";
         $scope['warrants'].warrants = warrants;

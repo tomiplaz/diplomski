@@ -45,11 +45,21 @@
             })
             .state('main.warrants.sent', {
                 url: '/sent',
-                templateUrl: 'app/main/warrants/sent/sent.html',
-                controller: 'WarrantsSentCtrl as warrantsSent',
+                templateUrl: 'app/main/warrants/view/view.html',
+                controller: 'WarrantsViewCtrl as warrantsView',
                 resolve: {
                     warrants: function(apiService) {
                         return apiService.getWarrants('user/sent');
+                    }
+                }
+            })
+            .state('main.warrants.processed', {
+                url: '/processed',
+                templateUrl: 'app/main/warrants/view/view.html',
+                controller: 'WarrantsViewCtrl as warrantsView',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('processed');
                     }
                 }
             });

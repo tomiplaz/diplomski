@@ -64,7 +64,8 @@
             .icon('add_circle', 'app/icons/ic_add_circle_black_24px.svg')
             .icon('remove_circle', 'app/icons/ic_remove_circle_black_24px.svg')
             .icon('attachment', 'app/icons/ic_attachment_black_24px.svg')
-            .icon('file_download', 'app/icons/ic_file_download_black_24px.svg');
+            .icon('file_download', 'app/icons/ic_file_download_black_24px.svg')
+            .icon('assessment', 'app/icons/ic_assessment_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';

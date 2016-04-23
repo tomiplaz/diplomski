@@ -35,11 +35,21 @@
             })
             .state('main.requests.sent', {
                 url: '/sent',
-                templateUrl: 'app/main/requests/sent/sent.html',
-                controller: 'RequestsSentCtrl as requestsSent',
+                templateUrl: 'app/main/requests/view/view.html',
+                controller: 'RequestsViewCtrl as requestsView',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('user');
+                    }
+                }
+            })
+            .state('main.requests.processed', {
+                url: '/processed',
+                templateUrl: 'app/main/requests/view/view.html',
+                controller: 'RequestsViewCtrl as requestsView',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('processed');
                     }
                 }
             });

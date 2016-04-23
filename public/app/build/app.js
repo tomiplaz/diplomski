@@ -73,7 +73,8 @@
             .icon('add_circle', 'app/icons/ic_add_circle_black_24px.svg')
             .icon('remove_circle', 'app/icons/ic_remove_circle_black_24px.svg')
             .icon('attachment', 'app/icons/ic_attachment_black_24px.svg')
-            .icon('file_download', 'app/icons/ic_file_download_black_24px.svg');
+            .icon('file_download', 'app/icons/ic_file_download_black_24px.svg')
+            .icon('assessment', 'app/icons/ic_assessment_black_24px.svg');
 
 
         $authProvider.loginUrl = 'api/v1/auth';
@@ -993,11 +994,21 @@
             })
             .state('main.requests.sent', {
                 url: '/sent',
-                templateUrl: 'app/main/requests/sent/sent.html',
-                controller: 'RequestsSentCtrl as requestsSent',
+                templateUrl: 'app/main/requests/view/view.html',
+                controller: 'RequestsViewCtrl as requestsView',
                 resolve: {
                     requests: function(apiService) {
                         return apiService.getRequests('user');
+                    }
+                }
+            })
+            .state('main.requests.processed', {
+                url: '/processed',
+                templateUrl: 'app/main/requests/view/view.html',
+                controller: 'RequestsViewCtrl as requestsView',
+                resolve: {
+                    requests: function(apiService) {
+                        return apiService.getRequests('processed');
                     }
                 }
             });
@@ -1136,11 +1147,21 @@
             })
             .state('main.warrants.sent', {
                 url: '/sent',
-                templateUrl: 'app/main/warrants/sent/sent.html',
-                controller: 'WarrantsSentCtrl as warrantsSent',
+                templateUrl: 'app/main/warrants/view/view.html',
+                controller: 'WarrantsViewCtrl as warrantsView',
                 resolve: {
                     warrants: function(apiService) {
                         return apiService.getWarrants('user/sent');
+                    }
+                }
+            })
+            .state('main.warrants.processed', {
+                url: '/processed',
+                templateUrl: 'app/main/warrants/view/view.html',
+                controller: 'WarrantsViewCtrl as warrantsView',
+                resolve: {
+                    warrants: function(apiService) {
+                        return apiService.getWarrants('processed');
                     }
                 }
             });
@@ -1343,14 +1364,14 @@
                 name: 'main.requests.validation',
                 label: 'Validacija zahtjeva',
                 character: 'Z',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [1]
             },
             {
                 name: 'main.requests.approval',
                 label: 'Odobravanje zahtjeva',
                 character: 'Z',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [2]
             },
             {
@@ -1359,6 +1380,13 @@
                 character: 'Z',
                 icon: 'library_books',
                 type: [0]
+            },
+            {
+                name: 'main.requests.processed',
+                label: 'Obrađeni zahtjevi',
+                character: 'Z',
+                icon: 'library_books',
+                type: [1, 2]
             },
             {
                 name: 'main.new-user',
@@ -1377,21 +1405,21 @@
                 name: 'main.warrants.validation',
                 label: 'Validacija putnih naloga',
                 character: 'N',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [1]
             },
             {
                 name: 'main.warrants.accounting',
                 label: 'Računovođenje putnih naloga',
                 character: 'N',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [3]
             },
             {
                 name: 'main.warrants.approval',
                 label: 'Odobravanje putnih naloga',
                 character: 'N',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [2]
             },
             {
@@ -1400,6 +1428,13 @@
                 character: 'N',
                 icon: 'library_books',
                 type: [0]
+            },
+            {
+                name: 'main.warrants.processed',
+                label: 'Obrađeni putni nalozi',
+                character: 'N',
+                icon: 'library_books',
+                type: [1, 2, 3]
             }
         ];
 
@@ -2452,11 +2487,44 @@
 
     angular
         .module('requests')
-        .controller('RequestsSentCtrl', RequestsSentCtrl);
+        .controller('RequestsValidationCtrl', RequestsValidationCtrl);
 
-    RequestsSentCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function RequestsSentCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 0) return $state.go('main.home');
+    RequestsValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function RequestsValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 1) return $state.go('main.home');
+
+        $scope['requests'].emptyInfo = "Nema zahtjeva za pregled.";
+        $scope['requests'].requests = requests;
+        $scope['requests'].init();
+
+        var vm = this;
+
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        function invalid($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 1);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function valid($event) {
+            var requestId = requests[$scope['requests'].current].id;
+            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
+            $mdDialog.show(markRequestDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('requests')
+        .controller('RequestsViewCtrl', RequestsViewCtrl);
+
+    RequestsViewCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
+    function RequestsViewCtrl($scope, $state, requests, dialogService, $mdDialog) {
+        if (!_.includes([0, 1, 2], $scope['main'].user.type)) return $state.go('main.home');
 
         $scope['requests'].emptyInfo = "Nema poslanih zahtjeva.";
         $scope['requests'].requests = requests;
@@ -2508,32 +2576,65 @@
     'use strict';
 
     angular
-        .module('requests')
-        .controller('RequestsValidationCtrl', RequestsValidationCtrl);
+        .module('main')
+        .controller('WarrantsAccountingCtrl', WarrantsAccountingCtrl);
 
-    RequestsValidationCtrl.$inject = ['$scope', '$state', 'requests', 'dialogService', '$mdDialog'];
-    function RequestsValidationCtrl($scope, $state, requests, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 1) return $state.go('main.home');
+    WarrantsAccountingCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsAccountingCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 3) return $state.go('main.home');
 
-        $scope['requests'].emptyInfo = "Nema zahtjeva za pregled.";
-        $scope['requests'].requests = requests;
-        $scope['requests'].init();
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
 
         var vm = this;
 
-        vm.invalid = invalid;
-        vm.valid = valid;
+        vm.disapprove = disapprove;
+        vm.approve = approve;
 
-        function invalid($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'r', requestId, 1);
+        function disapprove($event) {
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 3, warrant);
             $mdDialog.show(rejectDialogObject);
         }
 
-        function valid($event) {
-            var requestId = requests[$scope['requests'].current].id;
-            var markRequestDialogObject = dialogService.getMarkRequestDialogObject($event, requestId);
-            $mdDialog.show(markRequestDialogObject);
+        function approve($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 3);
+            $mdDialog.show(signatureDialogObject);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('WarrantsApprovalCtrl', WarrantsApprovalCtrl);
+
+    WarrantsApprovalCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsApprovalCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if ($scope['main'].user.type != 2) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za odobravanje.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.disapprove = disapprove;
+        vm.approve = approve;
+
+        function disapprove($event) {
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 2, warrant);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function approve($event) {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 2);
+            $mdDialog.show(signatureDialogObject);
         }
     }
 })();
@@ -2542,11 +2643,47 @@
 
     angular
         .module('warrants')
-        .controller('WarrantsSentCtrl', WarrantsSentCtrl);
+        .controller('WarrantsValidationCtrl', WarrantsValidationCtrl);
 
-    WarrantsSentCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
-    function WarrantsSentCtrl($scope, $state, warrants, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 0) return $state.go('main.home');
+    WarrantsValidationCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog', 'apiService', 'helperService'];
+    function WarrantsValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
+        if ($scope['main'].user.type != 1) return $state.go('main.home');
+
+        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
+        $scope['warrants'].warrants = warrants;
+        $scope['warrants'].init();
+
+        var vm = this;
+
+        vm.invalid = invalid;
+        vm.valid = valid;
+
+        function invalid($event) {
+            var warrant = warrants[$scope['warrants'].current];
+            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 1, warrant);
+            $mdDialog.show(rejectDialogObject);
+        }
+
+        function valid() {
+            var warrantId = warrants[$scope['warrants'].current].id;
+            var data = {
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('warrants')
+        .controller('WarrantsViewCtrl', WarrantsViewCtrl);
+
+    WarrantsViewCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
+    function WarrantsViewCtrl($scope, $state, warrants, dialogService, $mdDialog) {
+        if (!_.includes([0, 1, 2, 3], $scope['main'].user.type)) return $state.go('main.home');
 
         $scope['warrants'].emptyInfo = "Nema poslanih zahtjeva.";
         $scope['warrants'].warrants = warrants;
@@ -2593,108 +2730,6 @@
             } else if (vm.class == 'positive') {
                 return 'Odobren';
             } else return 'U tijeku'
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('WarrantsAccountingCtrl', WarrantsAccountingCtrl);
-
-    WarrantsAccountingCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
-    function WarrantsAccountingCtrl($scope, $state, warrants, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 3) return $state.go('main.home');
-
-        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
-        $scope['warrants'].warrants = warrants;
-        $scope['warrants'].init();
-
-        var vm = this;
-
-        vm.disapprove = disapprove;
-        vm.approve = approve;
-
-        function disapprove($event) {
-            var warrant = warrants[$scope['warrants'].current];
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 3, warrant);
-            $mdDialog.show(rejectDialogObject);
-        }
-
-        function approve($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 3);
-            $mdDialog.show(signatureDialogObject);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('warrants')
-        .controller('WarrantsValidationCtrl', WarrantsValidationCtrl);
-
-    WarrantsValidationCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog', 'apiService', 'helperService'];
-    function WarrantsValidationCtrl($scope, $state, warrants, dialogService, $mdDialog, apiService, helperService) {
-        if ($scope['main'].user.type != 1) return $state.go('main.home');
-
-        $scope['warrants'].emptyInfo = "Nema putnih naloga za pregled.";
-        $scope['warrants'].warrants = warrants;
-        $scope['warrants'].init();
-
-        var vm = this;
-
-        vm.invalid = invalid;
-        vm.valid = valid;
-
-        function invalid($event) {
-            var warrant = warrants[$scope['warrants'].current];
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 1, warrant);
-            $mdDialog.show(rejectDialogObject);
-        }
-
-        function valid() {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var data = {
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateWarrant(warrantId, data, "Putni nalog prosljeđen!", true);
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('WarrantsApprovalCtrl', WarrantsApprovalCtrl);
-
-    WarrantsApprovalCtrl.$inject = ['$scope', '$state', 'warrants', 'dialogService', '$mdDialog'];
-    function WarrantsApprovalCtrl($scope, $state, warrants, dialogService, $mdDialog) {
-        if ($scope['main'].user.type != 2) return $state.go('main.home');
-
-        $scope['warrants'].emptyInfo = "Nema putnih naloga za odobravanje.";
-        $scope['warrants'].warrants = warrants;
-        $scope['warrants'].init();
-
-        var vm = this;
-
-        vm.disapprove = disapprove;
-        vm.approve = approve;
-
-        function disapprove($event) {
-            var warrant = warrants[$scope['warrants'].current];
-            var rejectDialogObject = dialogService.getRejectDialogObject($event, 'w', warrant.id, 2, warrant);
-            $mdDialog.show(rejectDialogObject);
-        }
-
-        function approve($event) {
-            var warrantId = warrants[$scope['warrants'].current].id;
-            var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', warrantId, 2);
-            $mdDialog.show(signatureDialogObject);
         }
     }
 })();

@@ -1,0 +1,10 @@
+<md-button class="md-fab md-mini md-raised badge" aria-label="{{ warrantsView.classAria }}">
+    <md-icon md-svg-src="{{ warrantsView.icon }}" class="{{ warrantsView.class }}"></md-icon>
+</md-button>
+
+<p>{{ warrants.current + 1 }}/{{ warrants.warrants.length }}</p>
+
+<md-button class="md-fab md-mini md-raised" ng-click="warrantsView.showDetails($event)" aria-label="Detalji">
+    <md-tooltip md-direction="bottom">Detalji</md-tooltip>
+    <md-icon md-svg-src="details"></md-icon>
+</md-button>

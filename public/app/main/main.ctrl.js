@@ -31,14 +31,14 @@
                 name: 'main.requests.validation',
                 label: 'Validacija zahtjeva',
                 character: 'Z',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [1]
             },
             {
                 name: 'main.requests.approval',
                 label: 'Odobravanje zahtjeva',
                 character: 'Z',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [2]
             },
             {
@@ -47,6 +47,13 @@
                 character: 'Z',
                 icon: 'library_books',
                 type: [0]
+            },
+            {
+                name: 'main.requests.processed',
+                label: 'Obrađeni zahtjevi',
+                character: 'Z',
+                icon: 'library_books',
+                type: [1, 2]
             },
             {
                 name: 'main.new-user',
@@ -65,21 +72,21 @@
                 name: 'main.warrants.validation',
                 label: 'Validacija putnih naloga',
                 character: 'N',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [1]
             },
             {
                 name: 'main.warrants.accounting',
                 label: 'Računovođenje putnih naloga',
                 character: 'N',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [3]
             },
             {
                 name: 'main.warrants.approval',
                 label: 'Odobravanje putnih naloga',
                 character: 'N',
-                icon: 'library_books',
+                icon: 'assessment',
                 type: [2]
             },
             {
@@ -88,6 +95,13 @@
                 character: 'N',
                 icon: 'library_books',
                 type: [0]
+            },
+            {
+                name: 'main.warrants.processed',
+                label: 'Obrađeni putni nalozi',
+                character: 'N',
+                icon: 'library_books',
+                type: [1, 2, 3]
             }
         ];
 

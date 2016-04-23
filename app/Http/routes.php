@@ -32,6 +32,7 @@ Route::group(['prefix' => 'api/v1'], function() {
             Route::get('nonvalidated', 'RequestsController@getNonvalidatedRequests');
             Route::get('approvable', 'RequestsController@getApprovableRequests');
             Route::get('user', 'RequestsController@getUserRequests');
+            Route::get('processed', 'RequestsController@getProcessedRequests');
             Route::put('{requestId}', 'RequestsController@updateRequest');
         });
 
@@ -44,6 +45,7 @@ Route::group(['prefix' => 'api/v1'], function() {
             Route::get('nonvalidated', 'WarrantsController@getNonvalidatedWarrants');
             Route::get('nonaccounted', 'WarrantsController@getNonaccountedWarrants');
             Route::get('approvable', 'WarrantsController@getApprovableWarrants');
+            Route::get('processed', 'WarrantsController@getProcessedWarrants');
             Route::put('{warrantId}', 'WarrantsController@updateWarrant');
             Route::post('{warrantId}/attachments', 'WarrantsController@postAttachments');
             Route::delete('{warrantId}/attachments', 'WarrantsController@deleteAttachments');

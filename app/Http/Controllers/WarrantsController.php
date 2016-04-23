@@ -131,6 +131,16 @@ class WarrantsController extends Controller
     }
 
     /**
+     * Get processed warrants.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProcessedWarrants() {
+        $warrants = Warrant::whereNotNull('quality_check')->orWhereNotNull('accounting_check')->orWhereNotNull('approved')->get()->toArray();
+        return response()->json($warrants);
+    }
+
+    /**
      * Update warrant.
      *
      * @param $warrantId

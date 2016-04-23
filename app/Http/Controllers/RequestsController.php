@@ -87,4 +87,14 @@ class RequestsController extends Controller
         $requests = $user->requests;
         return response()->json($requests);
     }
+
+    /**
+     * Get processed requests.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProcessedRequests() {
+        $requests = Request::whereNotNull('quality_check')->orWhereNotNull('approved')->get()->toArray();
+        return response()->json($requests);
+    }
 }
