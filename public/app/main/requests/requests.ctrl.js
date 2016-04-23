@@ -17,6 +17,7 @@
         vm.select = select;
         vm.previous = previous;
         vm.next = next;
+        vm.getClass = getClass;
 
         function init() {
             if (vm.requests.length > 0) {
@@ -36,6 +37,14 @@
 
         function next() {
             setRequest(++vm.current);
+        }
+
+        function getClass(i) {
+            if (vm.requests[i].invalidity_reason || vm.requests[i].disapproval_reason) {
+                return 'negative';
+            } else if (vm.requests[i].approved) {
+                return 'positive';
+            } else return 'pending';
         }
 
         function setRequest(i) {

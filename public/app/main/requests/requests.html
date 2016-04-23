@@ -25,7 +25,7 @@
             <md-list-item ng-repeat="request in requests.requests | filter: { surname: requests.searchSurname } | orderBy: requests.orderBy"
                           ng-click="requests.select($index)" ng-class="{ 'selected' : $index == requests.current }" class="md-2-line"
                           ng-mouseenter="requests.verbose[$index] = true" ng-mouseleave="requests.verbose[$index] = false">
-                <div class="index">{{ $index + 1 }}</div>
+                <div class="index {{ requests.getClass($index) }}">{{ $index + 1 }}</div>
                 <div class="md-list-item-text">
                     <p>{{ request.name + " " + request.surname }}</p>
                     <p>{{ request.for_place }}</p>

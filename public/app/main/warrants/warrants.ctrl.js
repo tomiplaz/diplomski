@@ -18,6 +18,7 @@
         vm.select = select;
         vm.previous = previous;
         vm.next = next;
+        vm.getClass = getClass;
         vm.downloadAttachment = downloadAttachment;
 
         function init() {
@@ -38,6 +39,14 @@
 
         function next() {
             setWarrant(++vm.current);
+        }
+
+        function getClass(i) {
+            if (vm.warrants[i].invalidity_reason || vm.warrants[i].disapproval_reason || vm.warrants[i].accounting_reason) {
+                return 'negative';
+            } else if (vm.warrants[i].approved) {
+                return 'positive';
+            } else return 'pending';
         }
 
         function setWarrant(i) {

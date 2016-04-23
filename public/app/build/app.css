@@ -64,6 +64,12 @@ body {
     body .requests-list .index, body .warrants-list .index {
       margin-right: 16px;
       font-weight: bold; }
+      body .requests-list .index.negative, body .warrants-list .index.negative {
+        color: #ffab00; }
+      body .requests-list .index.positive, body .warrants-list .index.positive {
+        color: #4caf50; }
+      body .requests-list .index.pending, body .warrants-list .index.pending {
+        color: #448aff; }
     body .requests-list .selected, body .warrants-list .selected {
       background-color: #ececec; }
     body .requests-list .verbose, body .warrants-list .verbose {

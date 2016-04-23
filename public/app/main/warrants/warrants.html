@@ -25,7 +25,7 @@
             <md-list-item ng-repeat="warrant in warrants.warrants | filter: { surname: warrants.searchSurname } | orderBy: warrants.orderBy"
                           ng-click="warrants.select($index)" ng-class="{ 'selected': $index == warrants.current }" class="md-2-line"
                           ng-mouseenter="warrants.verbose[$index] = true" ng-mouseleave="warrants.verbose[$index] = false">
-                <div class="index">{{ $index + 1 }}</div>
+                <div class="index {{ warrants.getClass($index) }}">{{ $index + 1 }}</div>
                 <div class="md-list-item-text">
                     <p>{{ warrant.name + " " + warrant.surname }}</p>
                     <p>{{ warrant.for_place }}</p>
