@@ -189,12 +189,14 @@
             </div>
             <p ng-if="!pendingWarrants.attachments">Nema priloga</p>
 
+            <h2>Potpis</h2>
+
             <div layout="row" layout-align="start top">
                 <img ng-src="{{ pendingWarrants.applicantSignature }}" ng-if="pendingWarrants.applicantSignature">
 
                 <div class="signature-input" ng-if="!pendingWarrants.applicantSignature">
                     <md-input-container class="full-width">
-                        <label>Podnositelj zahtjeva</label>
+                        <label>Podnositelj putnog naloga</label>
                         <input type="text" readonly>
                     </md-input-container>
                 </div>
@@ -208,6 +210,11 @@
         </form>
 
         <div layout="column" layout-align="center center">
+
+            <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.clear()" aria-label="Obriši sve">
+                <md-tooltip md-direction="left">Obriši sve</md-tooltip>
+                <md-icon md-svg-src="delete"></md-icon>
+            </md-button>
 
             <md-button class="md-fab md-mini md-raised" ng-click="pendingWarrants.save()" aria-label="Spremi">
                 <md-tooltip md-direction="left">Spremi</md-tooltip>

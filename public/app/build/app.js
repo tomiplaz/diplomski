@@ -1744,6 +1744,7 @@
         vm.updateOtherTotal = updateOtherTotal;
         vm.removeAttachments = removeAttachments;
         vm.sign = sign;
+        vm.clear = clear;
         vm.save = save;
         vm.showDocumentDialog = showDocumentDialog;
 
@@ -1846,6 +1847,27 @@
         function sign($event) {
             var signatureDialogObject = dialogService.getSignatureDialogObject($scope, $event, 'w', null, 0);
             $mdDialog.show(signatureDialogObject);
+        }
+
+        function clear() {
+            vm.wage = null;
+            vm.wagesTotal = null;
+            vm.routesTotal = null;
+            vm.otherTotal = null;
+            vm.allTotal = null;
+            vm.report = null;
+            vm.applicantSignature = null;
+            vm.attachments = null;
+            for (var i = 0; i < 7; i++) {
+                vm['routesFrom' + i] = null;
+                vm['routesTo' + i] = null;
+                vm['routesTransportation' + i] = null;
+                vm['routesCost' + i] = null;
+            }
+            for (i = 0; i < 4; i++) {
+                vm['otherDescription' + i] = null;
+                vm['otherCost' + i] = null;
+            }
         }
 
         function save() {
