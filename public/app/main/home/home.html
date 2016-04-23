@@ -2,48 +2,52 @@
 
     <p>Prijavljeni ste s email adresom <span class="bold">{{ main.user.email }}</span>.</p>
 
-    <div ng-if="main.user.type == 0" layout="row" layout-align="center center" class="info-box">
-        <div layout="column" layout-align="center center">
-            <h4>Zahtjevi</h4>
-            <div>Poslano: <span class="bold">{{home.requests.length}}</span></div>
-            <div>U tijeku: <span class="bold">{{home.pendingRequests.length}}</span></div>
-            <div>Odobreno: <span class="bold">{{home.approvedRequests.length}}</span></div>
-            <div>Odbijeno: <span class="bold">{{home.rejectedRequests.length}}</span></div>
-        </div>
-        <div layout="column" layout-align="center center">
-            <h4>Putni nalozi</h4>
-            <div>Poslano: <span class="bold">{{home.warrants.length}}</span></div>
-            <div>U tijeku: <span class="bold">{{home.pendingWarrants.length}}</span></div>
-            <div>Odobreno: <span class="bold">{{home.approvedWarrants.length}}</span></div>
-            <div>Odbijeno:  <span class="bold">{{home.rejectedWarrants.length}}</span></div>
-        </div>
-    </div>
+    <div layout="row" layout-align="center center" class="info-box">
 
-    <div ng-if="main.user.type == 1 || main.user.type == 2" layout="row" layout-align="center center" class="info-box">
-        <div layout="column" layout-align="center center">
+        <div layout="column" layout-align="center center" ng-if="main.user.type != 3">
             <h4>Zahtjevi</h4>
-            <div>Ukupno: <span class="bold">{{home.requests.length}}</span></div>
-            <div>Nepregledano: <span class="bold">{{home.pendingRequests.length}}</span></div>
-            <div>Odobreno: <span class="bold">{{home.approvedRequests.length}}</span></div>
-            <div>Odbijeno: <span class="bold">{{home.rejectedRequests.length}}</span></div>
+            <div layout="row" layout-align="center center">
+                <md-button class="md-fab md-mini md-raised badge" aria-label="Ukupno">
+                    <span class="bold">{{home.requests.length}}</span>
+                    <md-icon md-svg-src="library_books"></md-icon>
+                </md-button>
+                <md-button class="md-fab md-mini md-raised badge" aria-label="U tijeku">
+                    <span class="bold pending">{{home.pendingRequests.length}}</span>
+                    <md-icon md-svg-src="thumbs_up_down" class="pending"></md-icon>
+                </md-button>
+                <md-button class="md-fab md-mini md-raised badge" aria-label="Odobreno">
+                    <span class="bold positive">{{home.approvedRequests.length}}</span>
+                    <md-icon md-svg-src="thumb_up" class="positive"></md-icon>
+                </md-button>
+                <md-button class="md-fab md-mini md-raised badge" aria-label="Odbijeno">
+                    <span class="bold negative">{{home.rejectedRequests.length}}</span>
+                    <md-icon md-svg-src="thumb_down" class="negative"></md-icon>
+                </md-button>
+            </div>
         </div>
-        <div layout="column" layout-align="center center">
-            <h4>Putni nalozi</h4>
-            <div>Ukupno: <span class="bold">{{home.warrants.length}}</span></div>
-            <div>Nepregledano: <span class="bold">{{home.pendingWarrants.length}}</span></div>
-            <div>Odobreno: <span class="bold">{{home.approvedWarrants.length}}</span></div>
-            <div>Odbijeno:  <span class="bold">{{home.rejectedWarrants.length}}</span></div>
-        </div>
-    </div>
 
-    <div ng-if="main.user.type == 3" layout="row" layout-align="center center" class="info-box">
         <div layout="column" layout-align="center center">
             <h4>Putni nalozi</h4>
-            <div>Ukupno: <span class="bold">{{home.warrants.length}}</span></div>
-            <div>Nepregledano: <span class="bold">{{home.pendingWarrants.length}}</span></div>
-            <div>Odobreno: <span class="bold">{{home.approvedWarrants.length}}</span></div>
-            <div>Odbijeno:  <span class="bold">{{home.rejectedWarrants.length}}</span></div>
+            <div layout="row" layout-align="center center">
+                <md-button class="md-fab md-mini md-raised badge" aria-label="Ukupno">
+                    <span class="bold">{{home.warrants.length}}</span>
+                    <md-icon md-svg-src="library_books"></md-icon>
+                </md-button>
+                <md-button class="md-fab md-mini md-raised badge" aria-label="U tijeku">
+                    <span class="bold pending">{{home.pendingWarrants.length}}</span>
+                    <md-icon md-svg-src="thumbs_up_down" class="pending"></md-icon>
+                </md-button>
+                <md-button class="md-fab md-mini md-raised badge" aria-label="Odobreno">
+                    <span class="bold positive">{{home.approvedWarrants.length}}</span>
+                    <md-icon md-svg-src="thumb_up" class="positive"></md-icon>
+                </md-button>
+                <md-button class="md-fab md-mini md-raised badge" aria-label="Odbijeno">
+                    <span class="bold negative">{{home.rejectedWarrants.length}}</span>
+                    <md-icon md-svg-src="thumb_down" class="negative"></md-icon>
+                </md-button>
+            </div>
         </div>
+
     </div>
 
 </div>

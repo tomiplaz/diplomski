@@ -1,5 +1,11 @@
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif; }
+  body .negative {
+    color: #ffab00; }
+  body .positive {
+    color: #4caf50; }
+  body .pending {
+    color: #448aff; }
   body header, body footer {
     padding: 1% 2%; }
   body button.md-mini:not([disabled])[ng-click="main.logout()"]:hover, body button.md-mini:not([disabled])[ng-click="newRequestN.clear()"]:hover, body button.md-mini:not([disabled])[ng-click="validation.invalid($event)"]:hover, body button.md-mini:not([disabled])[ng-click="approval.disapprove($event)"]:hover {
@@ -64,12 +70,6 @@ body {
     body .requests-list .index, body .warrants-list .index {
       margin-right: 16px;
       font-weight: bold; }
-      body .requests-list .index.negative, body .warrants-list .index.negative {
-        color: #ffab00; }
-      body .requests-list .index.positive, body .warrants-list .index.positive {
-        color: #4caf50; }
-      body .requests-list .index.pending, body .warrants-list .index.pending {
-        color: #448aff; }
     body .requests-list .selected, body .warrants-list .selected {
       background-color: #ececec; }
     body .requests-list .verbose, body .warrants-list .verbose {

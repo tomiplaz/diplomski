@@ -7,6 +7,16 @@ $selected: rgb(236, 236, 236);
 body {
   font-family: $font-default;
 
+  .negative {
+    color: $md-warn;
+  }
+  .positive {
+    color: $md-primary;
+  }
+  .pending {
+    color: $md-accent;
+  }
+
   header, footer {
     padding: 1% 2%;
   }
@@ -138,16 +148,6 @@ body {
     .index {
       margin-right: 16px;
       font-weight: bold;
-
-      &.negative {
-        color: $md-warn;
-      }
-      &.positive {
-        color: $md-primary;
-      }
-      &.pending {
-        color: $md-accent;
-      }
     }
 
     .selected {
