@@ -67,7 +67,6 @@
             .icon('file_download', 'app/icons/ic_file_download_black_24px.svg')
             .icon('assessment', 'app/icons/ic_assessment_black_24px.svg');
 
-
         $authProvider.loginUrl = 'api/v1/auth';
 
         RestangularProvider.setBaseUrl('api/v1');

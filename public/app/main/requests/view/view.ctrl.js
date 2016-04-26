@@ -31,17 +31,19 @@
         }
 
         function getIcon(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+            var request = $scope['warrants'].requests[i];
+            if (request.invalidity_reason || request.disapproval_reason) {
                 return 'thumb_down';
-            } else if ($scope['requests'].requests[i].approved) {
+            } else if (request.approved) {
                 return 'thumb_up';
             } else return 'thumbs_up_down';
         }
 
         function getClass(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+            var request = $scope['warrants'].requests[i];
+            if (request.invalidity_reason || request.disapproval_reason) {
                 return 'negative';
-            } else if ($scope['requests'].requests[i].approved) {
+            } else if (request.approved) {
                 return 'positive';
             } else return 'pending';
         }
