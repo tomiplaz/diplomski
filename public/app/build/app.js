@@ -76,7 +76,6 @@
             .icon('file_download', 'app/icons/ic_file_download_black_24px.svg')
             .icon('assessment', 'app/icons/ic_assessment_black_24px.svg');
 
-
         $authProvider.loginUrl = 'api/v1/auth';
 
         RestangularProvider.setBaseUrl('api/v1');
@@ -1477,6 +1476,120 @@
 
     angular
         .module('main')
+        .controller('HomeCtrl', HomeCtrl);
+
+    HomeCtrl.$inject = ['$scope', 'apiService'];
+    function HomeCtrl($scope, apiService) {
+        var vm = this;
+
+        switch ($scope['main'].user.type) {
+            case 0:
+            case 4:
+                apiService.getRequests($scope['main'].user.type == 0 ? 'user' : null).then(function(requests) {
+                    vm.requests = requests;
+                    vm.pendingRequests = _.filter(requests, function(request) {
+                        return request.quality_check == null ||
+                            (request.quality_check && request.approved == null);
+                    });
+                    vm.approvedRequests = _.filter(requests, function(request) {
+                        return request.approved;
+                    });
+                    vm.rejectedRequests = _.filter(requests, function(request) {
+                        return request.quality_check == false || request.approved == false;
+                    });
+                });
+                apiService.getWarrants($scope['main'].user.type == 0 ? 'user' : null).then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == null ||
+                            (warrant.quality_check && warrant.accounting_check == null) ||
+                            (warrant.accounting_check && warrant.approved == null);
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == false || warrant.accounting_check == false || warrant.approved == false;
+                    });
+                });
+                break;
+            case 1:
+                apiService.getRequests().then(function(requests) {
+                    vm.requests = requests;
+                    vm.pendingRequests = _.filter(requests, function(request) {
+                        return request.quality_check == null;
+                    });
+                    vm.approvedRequests = _.filter(requests, function(request) {
+                        return request.quality_check;
+                    });
+                    vm.rejectedRequests = _.filter(requests, function(request) {
+                        return request.quality_check == false;
+                    });
+                });
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == null;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check == false;
+                    });
+                });
+                break;
+            case 2:
+                apiService.getRequests().then(function(requests) {
+                    vm.requests = requests;
+                    vm.pendingRequests = _.filter(requests, function(request) {
+                        return request.quality_check && request.approved == null;
+                    });
+                    vm.approvedRequests = _.filter(requests, function(request) {
+                        return request.approved;
+                    });
+                    vm.rejectedRequests = _.filter(requests, function(request) {
+                        return request.approved == false;
+                    });
+                });
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check && warrant.approved == null;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.approved == false;
+                    });
+                });
+                break;
+            case 3:
+                apiService.getWarrants().then(function(warrants) {
+                    vm.warrants = warrants;
+                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.quality_check && warrant.accounting_check == null;
+                    });
+                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check;
+                    });
+                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
+                        return warrant.accounting_check == false;
+                    });
+                });
+                break;
+            default:
+                break;
+        }
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('NewRequestCtrl', NewRequestCtrl);
 
     NewRequestCtrl.$inject = ['$scope', '$state', 'dialogService', '$mdDialog', 'helperService'];
@@ -1601,7 +1714,7 @@
 
         function createUser() {
             var data = {
-                type: vm.type,
+                type: parseInt(vm.type),
                 name: vm.name,
                 surname: vm.surname,
                 email: vm.email,
@@ -1864,120 +1977,6 @@
 
     angular
         .module('main')
-        .controller('HomeCtrl', HomeCtrl);
-
-    HomeCtrl.$inject = ['$scope', 'apiService'];
-    function HomeCtrl($scope, apiService) {
-        var vm = this;
-
-        switch ($scope['main'].user.type) {
-            case 0:
-            case 4:
-                apiService.getRequests($scope['main'].user.type == 0 ? 'user' : null).then(function(requests) {
-                    vm.requests = requests;
-                    vm.pendingRequests = _.filter(requests, function(request) {
-                        return request.quality_check == null ||
-                            (request.quality_check && request.approved == null);
-                    });
-                    vm.approvedRequests = _.filter(requests, function(request) {
-                        return request.approved;
-                    });
-                    vm.rejectedRequests = _.filter(requests, function(request) {
-                        return request.quality_check == false || request.approved == false;
-                    });
-                });
-                apiService.getWarrants($scope['main'].user.type == 0 ? 'user' : null).then(function(warrants) {
-                    vm.warrants = warrants;
-                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == null ||
-                            (warrant.quality_check && warrant.accounting_check == null) ||
-                            (warrant.accounting_check && warrant.approved == null);
-                    });
-                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.approved;
-                    });
-                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == false || warrant.accounting_check == false || warrant.approved == false;
-                    });
-                });
-                break;
-            case 1:
-                apiService.getRequests().then(function(requests) {
-                    vm.requests = requests;
-                    vm.pendingRequests = _.filter(requests, function(request) {
-                        return request.quality_check == null;
-                    });
-                    vm.approvedRequests = _.filter(requests, function(request) {
-                        return request.quality_check;
-                    });
-                    vm.rejectedRequests = _.filter(requests, function(request) {
-                        return request.quality_check == false;
-                    });
-                });
-                apiService.getWarrants().then(function(warrants) {
-                    vm.warrants = warrants;
-                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == null;
-                    });
-                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check;
-                    });
-                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == false;
-                    });
-                });
-                break;
-            case 2:
-                apiService.getRequests().then(function(requests) {
-                    vm.requests = requests;
-                    vm.pendingRequests = _.filter(requests, function(request) {
-                        return request.quality_check && request.approved == null;
-                    });
-                    vm.approvedRequests = _.filter(requests, function(request) {
-                        return request.approved;
-                    });
-                    vm.rejectedRequests = _.filter(requests, function(request) {
-                        return request.approved == false;
-                    });
-                });
-                apiService.getWarrants().then(function(warrants) {
-                    vm.warrants = warrants;
-                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.accounting_check && warrant.approved == null;
-                    });
-                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.approved;
-                    });
-                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.approved == false;
-                    });
-                });
-                break;
-            case 3:
-                apiService.getWarrants().then(function(warrants) {
-                    vm.warrants = warrants;
-                    vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check && warrant.accounting_check == null;
-                    });
-                    vm.approvedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.accounting_check;
-                    });
-                    vm.rejectedWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.accounting_check == false;
-                    });
-                });
-                break;
-            default:
-                break;
-        }
-    }
-})();
-
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
 
     DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
@@ -2078,6 +2077,35 @@
 
     angular
         .module('main')
+        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
+
+    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = {
+                mark: vm.mark,
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
     DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService', '$scope', 'toastService'];
@@ -2166,35 +2194,6 @@
                 }
             }
 
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
-
-    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
-    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = {
-                mark: vm.mark,
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
             hide();
         }
     }
@@ -2585,17 +2584,19 @@
         }
 
         function getIcon(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+            var request = $scope['warrants'].requests[i];
+            if (request.invalidity_reason || request.disapproval_reason) {
                 return 'thumb_down';
-            } else if ($scope['requests'].requests[i].approved) {
+            } else if (request.approved) {
                 return 'thumb_up';
             } else return 'thumbs_up_down';
         }
 
         function getClass(i) {
-            if ($scope['requests'].requests[i].invalidity_reason || $scope['requests'].requests[i].disapproval_reason) {
+            var request = $scope['warrants'].requests[i];
+            if (request.invalidity_reason || request.disapproval_reason) {
                 return 'negative';
-            } else if ($scope['requests'].requests[i].approved) {
+            } else if (request.approved) {
                 return 'positive';
             } else return 'pending';
         }

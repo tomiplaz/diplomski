@@ -4,11 +4,15 @@
 
         <md-input-container>
             <label>Tip korisnika</label>
-            <input type="number" name="type" ng-model="newUser.type" required step="any" min="0" max="5">
+            <md-select name="type" ng-model="newUser.type" required>
+                <md-option value="0">podnositelj</md-option>
+                <md-option value="1">pregledavač</md-option>
+                <md-option value="2">odobritelj</md-option>
+                <md-option value="3">likvidator</md-option>
+                <md-option value="4">administrator</md-option>
+            </md-select>
             <div ng-messages="newUserForm.type.$error">
                 <div ng-message="required">Potrebno!</div>
-                <div ng-message="min">Neispravan broj!</div>
-                <div ng-message="max">Prevelik broj!</div>
             </div>
         </md-input-container>
 

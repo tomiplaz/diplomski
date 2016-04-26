@@ -24,7 +24,7 @@
 
         function createUser() {
             var data = {
-                type: vm.type,
+                type: parseInt(vm.type),
                 name: vm.name,
                 surname: vm.surname,
                 email: vm.email,
