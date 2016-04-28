@@ -28,7 +28,7 @@
                 apiService.getWarrants($scope['main'].user.type == 0 ? 'user' : null).then(function(warrants) {
                     vm.warrants = warrants;
                     vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == null ||
+                        return (warrant.sent && warrant.quality_check == null) ||
                             (warrant.quality_check && warrant.accounting_check == null) ||
                             (warrant.accounting_check && warrant.approved == null);
                     });
@@ -56,7 +56,7 @@
                 apiService.getWarrants().then(function(warrants) {
                     vm.warrants = warrants;
                     vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == null;
+                        return warrant.sent && warrant.quality_check == null;
                     });
                     vm.approvedWarrants = _.filter(warrants, function(warrant) {
                         return warrant.quality_check;

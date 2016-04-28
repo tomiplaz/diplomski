@@ -1501,7 +1501,7 @@
                 apiService.getWarrants($scope['main'].user.type == 0 ? 'user' : null).then(function(warrants) {
                     vm.warrants = warrants;
                     vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == null ||
+                        return (warrant.sent && warrant.quality_check == null) ||
                             (warrant.quality_check && warrant.accounting_check == null) ||
                             (warrant.accounting_check && warrant.approved == null);
                     });
@@ -1529,7 +1529,7 @@
                 apiService.getWarrants().then(function(warrants) {
                     vm.warrants = warrants;
                     vm.pendingWarrants = _.filter(warrants, function(warrant) {
-                        return warrant.quality_check == null;
+                        return warrant.sent && warrant.quality_check == null;
                     });
                     vm.approvedWarrants = _.filter(warrants, function(warrant) {
                         return warrant.quality_check;
@@ -2077,35 +2077,6 @@
 
     angular
         .module('main')
-        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
-
-    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
-    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = {
-                mark: vm.mark,
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('DocumentDialogCtrl', DocumentDialogCtrl);
 
     DocumentDialogCtrl.$inject = ['$mdDialog', 'documentService', '$document', 'data', 'helperService', 'apiService', '$scope', 'toastService'];
@@ -2194,6 +2165,35 @@
                 }
             }
 
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
+
+    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = {
+                mark: vm.mark,
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
             hide();
         }
     }
