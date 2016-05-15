@@ -15,14 +15,16 @@
 
         var vm = this;
 
-        vm.icon = getIcon($scope['warrants'].current);
-        vm.class = getClass($scope['warrants'].current);
+        vm.icon = warrants.length != 0 ? getIcon($scope['warrants'].current) : null;
+        vm.class = warrants.length != 0 ? getClass($scope['warrants'].current) : null;
         vm.showDetails = showDetails;
 
         $scope.$watch('warrants.current', function() {
-            vm.icon = getIcon($scope['warrants'].current);
-            vm.class = getClass($scope['warrants'].current);
-            vm.classAria = getClassAria();
+            if (warrants.length != 0) {
+                vm.icon = getIcon($scope['warrants'].current);
+                vm.class = getClass($scope['warrants'].current);
+                vm.classAria = getClassAria();
+            }
         });
 
         function showDetails($event) {

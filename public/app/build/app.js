@@ -1977,49 +1977,6 @@
 
     angular
         .module('main')
-        .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
-
-    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
-    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
-        var vm = this;
-
-        vm.label = data.label;
-        vm.mindate = data.mindate;
-        vm.maxdate = data.maxdate;
-
-        vm.hide = hide;
-        vm.cancel = cancel;
-        vm.save = save;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function cancel() {
-            $scope['newRequest'][data.property] = null;
-            hide();
-        }
-
-        function save($value) {
-            $scope['newRequest'][data.property + 'Raw'] = $value;
-
-            if (data.property == 'endTimestamp') {
-                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
-                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
-                }
-            } else {
-                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
-            }
-
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
         .controller('DetailsDialogCtrl', DetailsDialogCtrl);
 
     DetailsDialogCtrl.$inject = ['doc', '$mdDialog', 'helperService'];
@@ -2069,6 +2026,49 @@
             } else {
                 return null;
             }
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
+        .controller('DateTimeDialogCtrl', DateTimeDialogCtrl);
+
+    DateTimeDialogCtrl.$inject = ['$scope', '$mdDialog', 'data', 'helperService'];
+    function DateTimeDialogCtrl($scope, $mdDialog, data, helperService) {
+        var vm = this;
+
+        vm.label = data.label;
+        vm.mindate = data.mindate;
+        vm.maxdate = data.maxdate;
+
+        vm.hide = hide;
+        vm.cancel = cancel;
+        vm.save = save;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function cancel() {
+            $scope['newRequest'][data.property] = null;
+            hide();
+        }
+
+        function save($value) {
+            $scope['newRequest'][data.property + 'Raw'] = $value;
+
+            if (data.property == 'endTimestamp') {
+                if ($scope['newRequest']['startTimestamp'] != undefined && new Date($value) > new Date($scope['newRequest']['startTimestampRaw'])) {
+                    $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
+                }
+            } else {
+                $scope['newRequest'][data.property] = helperService.formatDate($value, 'dd.MM.yyyy., HH:mm');
+            }
+
+            hide();
         }
     }
 })();
@@ -2165,35 +2165,6 @@
                 }
             }
 
-            hide();
-        }
-    }
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module('main')
-        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
-
-    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
-    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
-        var vm = this;
-
-        vm.hide = hide;
-        vm.confirm = confirm;
-
-        function hide() {
-            $mdDialog.hide();
-        }
-
-        function confirm() {
-            var data = {
-                mark: vm.mark,
-                quality_check: true,
-                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
-            };
-            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
             hide();
         }
     }
@@ -2408,6 +2379,35 @@
 
     angular
         .module('main')
+        .controller('MarkRequestDialogCtrl', MarkRequestDialogCtrl);
+
+    MarkRequestDialogCtrl.$inject = ['$mdDialog', 'requestId', 'apiService', 'helperService'];
+    function MarkRequestDialogCtrl($mdDialog, requestId, apiService, helperService) {
+        var vm = this;
+
+        vm.hide = hide;
+        vm.confirm = confirm;
+
+        function hide() {
+            $mdDialog.hide();
+        }
+
+        function confirm() {
+            var data = {
+                mark: vm.mark,
+                quality_check: true,
+                quality_check_timestamp: helperService.formatDate(null, 'yyyy-MM-dd HH:mm:ss')
+            };
+            apiService.updateRequest(requestId, data, "Zahtjev prosljeđen!", true);
+            hide();
+        }
+    }
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module('main')
         .controller('SignatureDialogCtrl', SignatureDialogCtrl);
 
     SignatureDialogCtrl.$inject = ['$scope', '$mdDialog', '$document', 'docType', 'docId', 'userType', 'helperService', 'apiService'];
@@ -2568,14 +2568,16 @@
 
         var vm = this;
 
-        vm.icon = getIcon($scope['requests'].current);
-        vm.class = getClass($scope['requests'].current);
+        vm.icon = requests.length != 0 ? getIcon($scope['requests'].current) : null;
+        vm.class = requests.length != 0 ? getClass($scope['requests'].current) : null;
         vm.showDetails = showDetails;
 
         $scope.$watch('requests.current', function() {
-            vm.icon = getIcon($scope['requests'].current);
-            vm.class = getClass($scope['requests'].current);
-            vm.classAria = getClassAria();
+            if (requests.length != 0) {
+                vm.icon = getIcon($scope['requests'].current);
+                vm.class = getClass($scope['requests'].current);
+                vm.classAria = getClassAria();
+            }
         });
 
         function showDetails($event) {
@@ -2584,7 +2586,7 @@
         }
 
         function getIcon(i) {
-            var request = $scope['warrants'].requests[i];
+            var request = $scope['requests'].requests[i];
             if (request.invalidity_reason || request.disapproval_reason) {
                 return 'thumb_down';
             } else if (request.approved) {
@@ -2593,7 +2595,7 @@
         }
 
         function getClass(i) {
-            var request = $scope['warrants'].requests[i];
+            var request = $scope['requests'].requests[i];
             if (request.invalidity_reason || request.disapproval_reason) {
                 return 'negative';
             } else if (request.approved) {
@@ -2729,14 +2731,16 @@
 
         var vm = this;
 
-        vm.icon = getIcon($scope['warrants'].current);
-        vm.class = getClass($scope['warrants'].current);
+        vm.icon = warrants.length != 0 ? getIcon($scope['warrants'].current) : null;
+        vm.class = warrants.length != 0 ? getClass($scope['warrants'].current) : null;
         vm.showDetails = showDetails;
 
         $scope.$watch('warrants.current', function() {
-            vm.icon = getIcon($scope['warrants'].current);
-            vm.class = getClass($scope['warrants'].current);
-            vm.classAria = getClassAria();
+            if (warrants.length != 0) {
+                vm.icon = getIcon($scope['warrants'].current);
+                vm.class = getClass($scope['warrants'].current);
+                vm.classAria = getClassAria();
+            }
         });
 
         function showDetails($event) {

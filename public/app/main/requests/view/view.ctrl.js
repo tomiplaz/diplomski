@@ -15,14 +15,16 @@
 
         var vm = this;
 
-        vm.icon = getIcon($scope['requests'].current);
-        vm.class = getClass($scope['requests'].current);
+        vm.icon = requests.length != 0 ? getIcon($scope['requests'].current) : null;
+        vm.class = requests.length != 0 ? getClass($scope['requests'].current) : null;
         vm.showDetails = showDetails;
 
         $scope.$watch('requests.current', function() {
-            vm.icon = getIcon($scope['requests'].current);
-            vm.class = getClass($scope['requests'].current);
-            vm.classAria = getClassAria();
+            if (requests.length != 0) {
+                vm.icon = getIcon($scope['requests'].current);
+                vm.class = getClass($scope['requests'].current);
+                vm.classAria = getClassAria();
+            }
         });
 
         function showDetails($event) {
@@ -31,7 +33,7 @@
         }
 
         function getIcon(i) {
-            var request = $scope['warrants'].requests[i];
+            var request = $scope['requests'].requests[i];
             if (request.invalidity_reason || request.disapproval_reason) {
                 return 'thumb_down';
             } else if (request.approved) {
@@ -40,7 +42,7 @@
         }
 
         function getClass(i) {
-            var request = $scope['warrants'].requests[i];
+            var request = $scope['requests'].requests[i];
             if (request.invalidity_reason || request.disapproval_reason) {
                 return 'negative';
             } else if (request.approved) {
